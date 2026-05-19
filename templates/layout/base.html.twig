@@ -21,13 +21,8 @@
 <header>
     {% include 'layout/fragments/nav-bar.html.twig' %}
 </header>
-<main class="bg-background min-h-[95vh] pt-16 md:pt-20 flex justify-center min-h-screen flex items-center p-3 sm:p-4">
-    <div class="
-    w-full max-w-lg
-    bg-surface backdrop-blur rounded-2xl shadow-xl
-    border border-green-100
-    p-5 sm:p-8
-    flex items-center flex-col">
+<main class="bg-background min-h-[90vh] flex justify-center items-center py-24 px-4">
+    <div class="w-full max-w-2xl bg-surface rounded-2xl shadow-xl px-10 py-10 flex flex-col">
         {% block main %}{% endblock %}
     </div>
 </main>

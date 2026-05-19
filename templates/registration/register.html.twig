@@ -16,9 +16,9 @@
     <div class="flex flex-col items-center mb-4 sm:mb-6">
 
         <div
-            class="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-secondary overflow-hidden flex items-center justify-center">
+            class="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden flex items-center justify-center shadow-inner">
             <img id="preview"
-                 src="https://ui-avatars.com/api/?name={{ registrationForm.vars.data.pseudo ?? 'User' }}"
+                 src="{{ asset('img/default-profile.png') }}"
                  class="w-full h-full object-cover">
         </div>
 
@@ -112,9 +112,8 @@
     </div>
 
     <!-- Terms -->
-    <div class="flex items-center gap-2 text-gray-700">
+    <div class="flex gap-2">
         {{ form_widget(registrationForm.agreeTerms) }}
-
         {{ form_label(registrationForm.agreeTerms, 'Accepter les conditions') }}
     </div>
 

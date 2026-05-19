@@ -15,7 +15,7 @@
     --color-navbar: #FFFFFF;
 
     /* Carte / contenu */
-    --color-surface: #E7EDE6;
+    --color-surface: #EDF2ED;
 
     /* Texte */
     --color-text: #363636;
@@ -91,9 +91,9 @@ p {
 label {
     font-size: 0.75em;
     font-weight: 700;
-    color: #000000;
     margin-bottom: 0.4em;
     display: block;
+    color: var(--color-primary);
 }
 
 input, textarea, select {
@@ -110,8 +110,39 @@ input, textarea, select {
 
 input:focus, textarea:focus, select:focus {
     border-color: var(--color-secondary);
-    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-accent) 30%, transparent);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-accent) 50%, transparent);
 }
+
+input[type="checkbox"],
+input[type="radio"] {
+    width: auto;
+}
+
+button {
+    font-family: "DM Sans", sans-serif;
+    font-weight: 600;
+    font-size: 0.95em;
+    width: 100%;
+    background-color: var(--color-primary);
+    color: var(--color-surface);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.4rem;
+    transition: background-color 200ms ease;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: var(--color-secondary);
+}
+
+button:active {
+    background-color: var(--color-accent);
+}
+button#burger-btn {
+    width: auto;
+    padding: 0;
+}
+
 
 /* =================== NAV-BAR ================== */
 /* Burger animation */
