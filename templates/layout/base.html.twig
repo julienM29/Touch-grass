@@ -15,6 +15,14 @@
 
     </head>
     <body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col"  >
-        {% block body %}{% endblock %}
+        <header>
+            {% include 'layout/fragments/nav-bar.html.twig' %}
+        </header>
+        <main>
+            {% block main %}{% endblock %}
+        </main>
+        <footer>
+
+        </footer>
     </body>
 </html>
