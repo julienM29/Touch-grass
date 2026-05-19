@@ -1,0 +1,51 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block title %}Create Site{% endblock %}
+
+{% block main %}
+    <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-white p-4">
+
+        <div class="w-full max-w-lg bg-white rounded-2xl shadow-xl border border-green-100 p-8">
+
+            <h1 class="text-3xl font-bold text-center text-green-700 mb-6">
+                Ajouter un site
+            </h1>
+
+            {# erreurs globales du form #}
+            {{ form_errors(siteForm) }}
+
+            {{ form_start(siteForm, {'attr': {'class': 'space-y-4'}}) }}
+
+            <div>
+                {{ form_row(siteForm.nom, {
+                    'attr': {'class': 'input'},
+                    'label': 'Nom du site'
+                }) }}
+            </div>
+
+            <button type="submit"
+                    class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition shadow-md">
+                Ajouter le site
+            </button>
+
+            {{ form_end(siteForm) }}
+
+        </div>
+    </div>
+
+    <style>
+        .input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #bbf7d0;
+            border-radius: 10px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .input:focus {
+            border-color: #22c55e;
+            box-shadow: 0 0 0 3px rgba(34,197,94,0.2);
+        }
+    </style>
+{% endblock %}
