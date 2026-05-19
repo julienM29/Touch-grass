@@ -44,6 +44,18 @@ class Sortie
     #[ORM\Column(nullable: true)]
     private ?\DateTime $dateModification = null;
 
+    #[ORM\ManyToOne(inversedBy: 'sorties')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Site $siteOrganisateur = null;
+
+    #[ORM\ManyToOne(inversedBy: 'sorties')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Lieu $lieu = null;
+
+    #[ORM\ManyToOne(inversedBy: 'sorties')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Etat $etat = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -165,6 +177,42 @@ class Sortie
     public function setDateModification(\DateTime $dateModification): static
     {
         $this->dateModification = $dateModification;
+
+        return $this;
+    }
+
+    public function getSiteOrganisateur(): ?Site
+    {
+        return $this->siteOrganisateur;
+    }
+
+    public function setSiteOrganisateur(?Site $siteOrganisateur): static
+    {
+        $this->siteOrganisateur = $siteOrganisateur;
+
+        return $this;
+    }
+
+    public function getLieu(): ?Lieu
+    {
+        return $this->lieu;
+    }
+
+    public function setLieu(?Lieu $lieu): static
+    {
+        $this->lieu = $lieu;
+
+        return $this;
+    }
+
+    public function getEtat(): ?Etat
+    {
+        return $this->etat;
+    }
+
+    public function setEtat(?Etat $etat): static
+    {
+        $this->etat = $etat;
 
         return $this;
     }
