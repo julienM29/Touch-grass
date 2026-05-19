@@ -2,19 +2,21 @@
 <html>
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}Welcome!{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
         {% block stylesheets %}
+            <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
         {% endblock %}
 
         {% block javascripts %}
+            <script src="{{ asset('js/navbar.js') }}" defer></script>
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
 
     </head>
-    <body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col"  >
+    <body class="bg-background text-gray-800 min-h-screen flex flex-col"  >
         <header>
             {% include 'layout/fragments/nav-bar.html.twig' %}
         </header>

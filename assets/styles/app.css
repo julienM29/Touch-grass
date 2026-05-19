@@ -1,5 +1,45 @@
 @import "tailwindcss";
 
-body {
-    background-color: skyblue;
+/* =================== COLORS =================== */
+@theme {
+    --color-primary: #1a2e1a;
+    --color-secondary: #3d6b35;
+    --color-accent: #7bc67a;
+    --color-background: #E1F0E1;
+    --color-surface: #ffffff;
+    --color-text: #1a1a1a;
+}
+
+/* ==================== BODY ==================== */
+
+/* =================== NAV-BAR ================== */
+/* Burger animation */
+.burger-line {
+    transition: transform 300ms ease;
+}
+[data-open] .burger-line {
+    transform: translateY(1.5rem);
+}
+
+.burger-cross {
+    top: 50%;
+    transition: transform 500ms ease, width 500ms ease;
+    transform: translateX(-2.5rem) translateY(-50%);
+    width: 0;
+}
+
+[data-open] .burger-cross {
+    transform: translateX(0) translateY(-50%);
+    width: 1.25rem;
+}
+
+.burger-cross-line-1,
+.burger-cross-line-2 {
+    transition: transform 500ms ease 300ms;
+}
+[data-open] .burger-cross-line-1 {
+    transform: rotate(45deg);
+}
+[data-open] .burger-cross-line-2 {
+    transform: rotate(-45deg);
 }
