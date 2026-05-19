@@ -1,5 +1,4 @@
-<nav class="fixed top-0 left-0 right-0 z-50 px-4 md:px-8 py-2 md:py-3 w-full bg-white text-accent border-b-1 border-secondary">
-
+<nav class="fixed top-0 left-0 right-0 z-50 px-4 md:px-8 py-2 md:py-3 w-full bg-white text-accent">
 
     {# Barre principale #}
     <div class="flex items-center justify-between">
@@ -40,11 +39,6 @@
         <ul>
             <li>
                 <a href="#" class="block text-primary text-lg font-semibold py-2 hover:text-gray-400">
-                    Accueil
-                </a>
-            </li>
-            <li>
-                <a href="#" class="block text-primary text-lg font-semibold py-2 hover:text-gray-400">
                     Explorer
                 </a>
             </li>
@@ -59,10 +53,10 @@
 
         <ul>
             <li>
-                <a href="#" class="block text-primary py-2 hover:text-gray-400">Connexion</a>
+                <a href="{{ path('app_login')}}" class="block text-primary py-2 hover:text-gray-400">Connexion</a>
             </li>
             <li>
-                <a href="#" class="block text-primary py-2 hover:text-gray-400">S'inscrire</a>
+                <a href="{{ path('app_register') }}" class="block text-primary py-2 hover:text-gray-400">S'inscrire</a>
             </li>
         </ul>
 
