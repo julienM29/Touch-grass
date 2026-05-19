@@ -1,11 +1,12 @@
-<nav class="px-4 md:px-8 py-2 md:py-3 w-full bg-white text-accent border-b-1 border-secondary">
+<nav class="fixed top-0 left-0 right-0 z-50 px-4 md:px-8 py-2 md:py-3 w-full bg-white text-accent border-b-1 border-secondary">
+
 
     {# Barre principale #}
     <div class="flex items-center justify-between">
 
         {# Logo #}
         <a href="{{ path('app_home') }}">
-            <img class="h-10 md:h-14 w-auto object-contain hover:scale-110 transition-transform duration-200"
+            <img class="h-10 md:h-13 w-auto object-contain hover:scale-110 transition-transform duration-200"
                  src="{{ asset('img/logo.png') }}" alt="Logo">
         </a>
 

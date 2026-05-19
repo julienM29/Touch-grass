@@ -16,15 +16,15 @@
     {% endblock %}
 
 </head>
-<body class="bg-background text-gray-800 min-h-screen flex flex-col"  >
+<body class="bg-background text-gray-800 min-95vh flex flex-col"  >
 <header>
     {% include 'layout/fragments/nav-bar.html.twig' %}
 </header>
-<main>
+<main class="min-h-[95vh] pt-16 md:pt-20">
     {% block main %}{% endblock %}
 </main>
 <footer>
-
+    {% include 'layout/fragments/footer.html.twig' %}
 </footer>
 </body>
 </html>
