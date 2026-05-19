@@ -1,0 +1,14 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block title %}Lieux{% endblock %}
+
+{% block main %}
+    <h1>Liste des lieux</h1>
+    {% for lieu in lieux %}
+        <p>{{ lieu.nom }}</p>
+        <p>{{ lieu.rue }}</p>
+        <p>{{ lieu.longitude }}</p>
+        <p>{{ lieu.latitude }}</p>
+    {% endfor %}
+
+{% endblock %}

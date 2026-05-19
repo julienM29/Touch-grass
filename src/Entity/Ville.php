@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: VilleRepository::class)]
 class Ville
@@ -17,9 +18,13 @@ class Ville
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     private ?string $nom = null;
 
     #[ORM\Column(type: Types::INTEGER)]
+    #[Assert\NotBlank]
+    #[Assert\Length(exactly: 5, exactMessage: 'Le code postal doit contenir 5 chiffres')]
+    #[Assert\Regex(pattern: '/^[0-9]{5}$/', message: 'Le code postal doit contenir uniquement des chiffres')]
     private ?int $codePostal = null;
 
     /**

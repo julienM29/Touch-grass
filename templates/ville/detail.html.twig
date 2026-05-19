@@ -1,0 +1,15 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block title %}{{ ville.nom }}{% endblock %}
+
+{% block main %}
+    <h1>Détail de la ville de {{ ville.nom }}</h1>
+    <p>Nom de la ville : {{ ville.nom }}</p>
+    <p>Code postal : {{ ville.codePostal }}</p>
+    <div>
+        <a class="w-full bg-red-600 hover:bg-red-700 active:scale-[0.99] text-white font-semibold py-3 rounded-xl transition shadow-md" href="{{ path('ville_delete', {'id': ville.id}) }}"
+           onclick="return confirm('Delete {{ ville.nom }} ?')">Delete</a>
+{#        <a href="{{ path('', {'id': ville.id}) }}">Update</a>#}
+    </div>
+
+{% endblock %}
