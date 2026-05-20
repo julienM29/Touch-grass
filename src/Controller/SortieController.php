@@ -10,28 +10,34 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('sortie', name: 'sortie')]
+#[Route('/sortie', name: 'sortie')]
 final class SortieController extends AbstractController
 {
     #[Route('/list', name: '_list', methods: ['GET'])]
-    public function list(): Response
+    public function list(
+        EntityManagerInterface $em,
+    ): Response
     {
-        return $this->render('sortie/list.html.twig');
+        $sorties = $em->getRepository(Sortie::class)->findAll();
+        return $this->render('sortie/list.html.twig',[
+            'sorties' => $sorties,
+        ]);
     }
 
-    #[Route('/create', name: 'sortie_create', methods: ['GET', 'POST'])]
+    #[Route('/create', name: '_create', methods: ['GET', 'POST'])]
     public function create(EntityManagerInterface $em, Request $request): Response
     {
         $sortie = new Sortie();
-        $form = $this->createForm(SortieType::class, $sortie);
-        $form->handleRequest($request);
+        $sortieForm = $this->createForm(SortieType::class, $sortie);
+        $sortieForm->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
             $em->persist($sortie);
             $em->flush();
 
             return $this->redirectToRoute('sortie_show', [
                 'id' => $sortie->getId(),
+                'sortieForm' => $sortieForm,
             ]);
         }
 

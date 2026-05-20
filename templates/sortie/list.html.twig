@@ -4,8 +4,13 @@
 
 {% block main %}
     <h1>Liste des sorties</h1>
-    {% for sortie in sorties %}
-        <p>coucou</p>
-    {% endfor %}
-
+    <a class="btn" href="{{ path('sortie_create') }}">Proposer une sortie</a>
+    {% if sorties is empty %}
+        <br>
+        <p>Il n'y actuellement aucune sorties programmées.</p>
+    {% else %}
+        {% for sortie in sorties %}
+            <p>coucou</p>
+        {% endfor %}
+    {% endif %}
 {% endblock %}
