@@ -7,9 +7,9 @@
     <p>Nom du lieu : {{ lieu.nom }}</p>
     <p>Coordonnées GPS : {{ lieu.latitude }}, {{ lieu.longitude }}</p>
     <div>
-        <a class="w-full bg-red-600 hover:bg-red-700 active:scale-[0.99] text-white font-semibold py-3 rounded-xl transition shadow-md" href="{{ path('lieu_delete', {'id': lieu.id}) }}"
+        <a class="btn" href="{{ path('lieu_delete', {'id': lieu.id}) }}"
            onclick="return confirm('Delete {{ lieu.nom }} ?')">Delete</a>
-        <a class="w-full bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-semibold py-3 rounded-xl transition shadow-md" href="{{ path('lieu_update', {'id': lieu.id}) }}">Update</a>
+        <a class="btn" href="{{ path('lieu_update', {'id': lieu.id}) }}">Update</a>
     </div>
 
 {% endblock %}

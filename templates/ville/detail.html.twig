@@ -7,9 +7,9 @@
     <p>Nom de la ville : {{ ville.nom }}</p>
     <p>Code postal : {{ ville.codePostal }}</p>
     <div>
-        <a class="w-full bg-red-600 hover:bg-red-700 active:scale-[0.99] text-white font-semibold py-3 rounded-xl transition shadow-md" href="{{ path('ville_delete', {'id': ville.id}) }}"
+        <a class="btn" href="{{ path('ville_delete', {'id': ville.id}) }}"
            onclick="return confirm('Delete {{ ville.nom }} ?')">Delete</a>
-        <a class="w-full bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-semibold py-3 rounded-xl transition shadow-md" href="{{ path('ville_update', {'id': ville.id}) }}">Update</a>
+        <a class="btn" href="{{ path('ville_update', {'id': ville.id}) }}">Update</a>
     </div>
 
 {% endblock %}

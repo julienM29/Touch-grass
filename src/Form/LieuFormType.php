@@ -28,15 +28,21 @@ class LieuFormType extends AbstractType
                 'html5' => true, // input type=number
             ])
             ->add('longitude', NumberType::class, [
-                'label' => 'Latitude',
+                'label' => 'Longitude',
                 'scale' => 6,
                 'html5' => true,
             ])
             ->add('ville', EntityType::class, [
                 'class' => Ville::class,
                 'choice_label' => 'nom',
-                'label' => 'Ville',
-                'placeholder' => '-- Choisir une ville --',
+                'label' => 'Ville existante',
+                'placeholder' => '-- Choisir une ville existante --',
+                'required' => false,
+            ])
+            ->add('nouvelleVille', VilleFormType::class, [
+                'mapped' => false, // pour dire qu'elle n'est pas directement lié à l'entité Lieu
+                'required' => false,
+                'label' => false,
             ])
         ;
     }

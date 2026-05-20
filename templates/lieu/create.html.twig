@@ -6,8 +6,37 @@
     <h1>Créer un nouveau lieu</h1>
 
     {{ form_start(lieuForm) }}
-    {{ form_widget(lieuForm) }}
+    {{ form_row(lieuForm.nom) }}
+    {{ form_row(lieuForm.rue) }}
+    {{ form_row(lieuForm.latitude) }}
+    {{ form_row(lieuForm.longitude) }}
+
+    {{ form_row(lieuForm.ville) }}
+
+    <div id="nouvelle-ville" style="display:none; border-left: 3px solid #ccc; padding-left: 1rem; margin-top: 1rem;">
+        <p><strong>Nouvelle ville</strong></p>
+        {{ form_row(lieuForm.nouvelleVille.nom) }}
+        {{ form_row(lieuForm.nouvelleVille.codePostal) }}
+    </div>
+
     <button type="submit">Enregistrer</button>
     {{ form_end(lieuForm) }}
+
+    <script>
+        const villeSelect = document.querySelector('#lieu_form_ville');
+        const nouvelleVilleDiv = document.getElementById('nouvelle-ville');
+
+        function toggleNouvelleVille() {
+            // Affiche le sous-formulaire si aucune ville sélectionnée
+            if (villeSelect.value === '') {
+                nouvelleVilleDiv.style.display = 'block';
+            } else {
+                nouvelleVilleDiv.style.display = 'none';
+            }
+        }
+
+        villeSelect.addEventListener('change', toggleNouvelleVille);
+        toggleNouvelleVille(); // état initial
+    </script>
 
 {% endblock %}

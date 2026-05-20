@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Lieu;
 use App\Form\LieuFormType;
 use App\Repository\LieuRepository;
+use App\Repository\VilleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,6 +29,7 @@ final class LieuController extends AbstractController
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
     public function create(
         Request                $request,
+        VilleRepository        $villeRepository,
         EntityManagerInterface $entityManager,
     ): Response
     {
@@ -37,6 +39,26 @@ final class LieuController extends AbstractController
         $lieuForm->handleRequest($request);
 
         if ($lieuForm->isSubmitted() && $lieuForm->isValid()) {
+            $lieu = $lieuForm->getData();
+
+            // Si aucune ville existante choisie -> créer une nouvelle ville
+            if ($lieu->getVille() === null) {
+                $villeData = $lieuForm->get('nouvelleVille')->getData();
+
+                // Vérif si doublon
+                $villeExistante = $villeRepository->findOneBy([
+                    'nom' => $villeData->getNom(),
+                    'codePostal' => $villeData->getCodePostal(),
+                ]);
+
+                if ($villeExistante) {
+                    $lieu->setVille($villeExistante);
+                } else {
+                    $entityManager->persist($villeData);
+                    $lieu->setVille($villeData);
+                }
+            }
+
             $entityManager->persist($lieu);
             $entityManager->flush();
 
@@ -80,6 +102,7 @@ final class LieuController extends AbstractController
     #[Route('/{id}/update', name: 'update', methods: ['GET', 'POST'])]
     public function update(int                    $id,
                            LieuRepository         $lieuRepository,
+                           VilleRepository        $villeRepository,
                            Request                $request,
                            EntityManagerInterface $entityManager,
     ): Response
@@ -90,10 +113,31 @@ final class LieuController extends AbstractController
         $lieuForm->handleRequest($request);
 
         if ($lieuForm->isSubmitted() && $lieuForm->isValid()) {
+            $lieu = $lieuForm->getData();
+
+            // Si aucune ville existante choisie -> créer une nouvelle ville
+            if ($lieu->getVille() === null) {
+                $villeData = $lieuForm->get('nouvelleVille')->getData();
+
+                // Vérif si doublon
+                $villeExistante = $villeRepository->findOneBy([
+                    'nom' => $villeData->getNom(),
+                    'codePostal' => $villeData->getCodePostal(),
+                ]);
+
+                if ($villeExistante) {
+                    $lieu->setVille($villeExistante);
+                } else {
+                    $entityManager->persist($villeData);
+                    $lieu->setVille($villeData);
+                }
+            }
 
             $entityManager->persist($lieu);
             $entityManager->flush();
+
             $this->addFlash('success', $lieu->getNom() . ' updated !');
+
             return $this->redirectToRoute('lieu_detail', ['id' => $lieu->getId()]);
         }
 
