@@ -138,9 +138,15 @@ button:hover, .btn:hover {
 button:active, .btn:active {
     background-color: var(--color-accent);
 }
-button#burger-btn{
+
+button#burger-btn {
     width: auto;
     padding: 0;
+}
+
+/* ==================== ERRORS ================== */
+.form-error {
+    @apply text-red-600 text-sm font-medium mt-1 leading-snug;
 }
 
 /* =================== NAV-BAR ================== */
@@ -148,6 +154,7 @@ button#burger-btn{
 .burger-line {
     transition: transform 300ms ease;
 }
+
 [data-open] .burger-line {
     transform: translateY(1.5rem);
 }
@@ -168,9 +175,11 @@ button#burger-btn{
 .burger-cross-line-2 {
     transition: transform 500ms ease 300ms;
 }
+
 [data-open] .burger-cross-line-1 {
     transform: rotate(45deg);
 }
+
 [data-open] .burger-cross-line-2 {
     transform: rotate(-45deg);
 }
