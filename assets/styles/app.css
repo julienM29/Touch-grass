@@ -82,7 +82,7 @@ p {
     font-family: "DM Sans", sans-serif;
     font-size: 1em;
     font-weight: 400;
-    line-height: 1.8;
+    line-height: 1.6;
     color: var(--color-text);
     margin-bottom: 1.2em;
 }
@@ -92,8 +92,15 @@ p {
 article {
     @apply bg-white rounded-xl p-4 shadow-sm text-center;
 }
+
 section {
-    @apply grid grid-cols-1 lg:grid-cols-2 gap-6
+    @apply grid gap-x-5;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+hr {
+    @apply border-t-1 h-[3vh] mt-[1vh];
+    color: var(--color-secondary);
 }
 /* ==================== FORM =================== */
 label {
