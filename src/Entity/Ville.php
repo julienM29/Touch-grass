@@ -21,11 +21,11 @@ class Ville
     #[Assert\NotBlank]
     private ?string $nom = null;
 
-    #[ORM\Column(type: Types::INTEGER)]
+    #[ORM\Column(type: Types::STRING, length: 5)]
     #[Assert\NotBlank]
     #[Assert\Length(exactly: 5, exactMessage: 'Le code postal doit contenir 5 chiffres')]
     #[Assert\Regex(pattern: '/^[0-9]{5}$/', message: 'Le code postal doit contenir uniquement des chiffres')]
-    private ?int $codePostal = null;
+    private ?string $codePostal = null;
 
     /**
      * @var Collection<int, Lieu>
@@ -55,12 +55,12 @@ class Ville
         return $this;
     }
 
-    public function getCodePostal(): ?int
+    public function getCodePostal(): ?string
     {
         return $this->codePostal;
     }
 
-    public function setCodePostal(int $codePostal): static
+    public function setCodePostal(string $codePostal): static
     {
         $this->codePostal = $codePostal;
 

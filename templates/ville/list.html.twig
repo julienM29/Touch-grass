@@ -5,7 +5,9 @@
 {% block main %}
     <h1>Liste des villes</h1>
     {% for ville in villes %}
-        <p><a href="{{ path('ville_detail', {'id': ville.id}) }}">{{ ville.id }} - {{ ville.nom }} ({{ ville.codePostal }})</a></p>
+        <div>
+            <p><a href="{{ path('ville_detail', {'id': ville.id}) }}">{{ ville.id }} - {{ ville.nom }} ({{ ville.codePostal }})</a></p>
+        </div>
     {% endfor %}
 
 {% endblock %}

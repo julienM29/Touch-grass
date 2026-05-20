@@ -48,7 +48,7 @@ final class VilleController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'detail.html.twig', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[Route('/{id}', name: 'detail', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function detail(int $id, VilleRepository $villeRepository): Response
     {
         $ville = $villeRepository->findVilleById($id);
@@ -56,7 +56,7 @@ final class VilleController extends AbstractController
         if (!$ville) {
             throw $this->createNotFoundException('Ooops ! Ville not found !');
         }
-        return $this->render('ville/detail.html.twig.html.twig', [
+        return $this->render('ville/detail.html.twig', [
             'ville' => $ville,
         ]);
     }
@@ -75,5 +75,30 @@ final class VilleController extends AbstractController
         }
 
         return $this->redirectToRoute('ville_list');
+    }
+
+    #[Route('/{id}/update', name: 'update', methods: ['GET', 'POST'])]
+    public function update(int                                        $id,
+                           VilleRepository                            $villeRepository,
+                           Request                                    $request,
+                           EntityManagerInterface                     $entityManager,
+    ): Response
+    {
+        $ville = $villeRepository->findVilleById($id);
+        $villeForm = $this->createForm(VilleFormType::class, $ville);
+
+        $villeForm->handleRequest($request);
+
+        if ($villeForm->isSubmitted() && $villeForm->isValid()) {
+
+            $entityManager->persist($ville);
+            $entityManager->flush();
+            $this->addFlash('success', $ville->getNom() . ' updated !');
+            return $this->redirectToRoute('ville_detail', ['id' => $ville->getId()]);
+        }
+
+        return $this->render('ville/update.html.twig', [
+            'villeForm' => $villeForm,
+        ]);
     }
 }
