@@ -97,15 +97,10 @@ label {
 }
 
 input, textarea, select {
-    width: 100%;
-    padding: 0.625rem 0.75rem;
-    border-radius: 0.5rem;
-    transition: all 200ms ease;
-    font-family: "DM Sans", sans-serif;
-    font-size: 1em;
+    @apply w-full px-3 py-2.5 rounded-lg transition-all duration-200 ease-in-out
+    font-sans text-base outline-none bg-white mb-4;
     color: var(--color-text);
-    background-color: white;
-    outline: none;
+    font-family: "DM Sans", sans-serif;
 }
 
 input:focus, textarea:focus, select:focus {
