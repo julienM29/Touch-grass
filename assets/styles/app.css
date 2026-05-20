@@ -118,7 +118,7 @@ input[type="radio"] {
     width: auto;
 }
 
-button {
+button, .btn {
     font-family: "DM Sans", sans-serif;
     font-weight: 600;
     font-size: 0.95em;
@@ -131,18 +131,17 @@ button {
     cursor: pointer;
 }
 
-button:hover {
+button:hover, .btn:hover {
     background-color: var(--color-secondary);
 }
 
-button:active {
+button:active, .btn:active {
     background-color: var(--color-accent);
 }
-button#burger-btn {
+button#burger-btn{
     width: auto;
     padding: 0;
 }
-
 
 /* =================== NAV-BAR ================== */
 /* Burger animation */

@@ -1,0 +1,33 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block title %}Touch Grass – Sors de chez toi.{% endblock %}
+
+{% block main %}
+    <div class="text-center">
+        <h1>Bienvenue sur Touch Grass</h1>
+
+        <p>
+            Tu vas bientôt être papa et tu angoisses à l'idée de rentrer voir ta femme ?<br>
+            Ton boss vient de t'envoyer un email à 17h58 un vendredi ?<br>
+            Ta belle-mère squatte le canapé depuis trois semaines ?
+        </p>
+
+        <p>
+            <strong>Respire. Sors. Marche. Touche de l'herbe.</strong>
+        </p>
+
+        <p>
+            Touch Grass, c'est l'application qui te donne toutes les bonnes raisons
+            de mettre un pied dehors et de les assumer complètement.
+            Parce que "j'avais besoin d'air frais" est une excuse valable.
+        </p>
+
+        <p>
+            <strong>Alors, on sort ?</strong>
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            <a href="{{ path('app_register') }}" class="btn">S'enregistrer</a>
+            <a href="{{ path('app_login') }}" class="btn">Se connecter</a>
+        </div>
+    </div>
+{% endblock %}

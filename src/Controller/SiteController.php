@@ -29,7 +29,7 @@ final class SiteController extends AbstractController
             return $this->redirectToRoute('app_home');
         }
 
-        return $this->render('site/index.html.twig', [
+        return $this->render('site/list.html.twig', [
             'siteForm' => $form->createView(),
         ]);
     }
