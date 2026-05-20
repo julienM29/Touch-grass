@@ -5,10 +5,9 @@
 {% block main %}
     <h1>Liste des lieux</h1>
     {% for lieu in lieux %}
-        <p>{{ lieu.nom }}</p>
-        <p>{{ lieu.rue }}</p>
-        <p>{{ lieu.longitude }}</p>
-        <p>{{ lieu.latitude }}</p>
+        <div>
+            <p><a href="{{ path('lieu_detail', {'id': lieu.id}) }}">{{ lieu.id }} - {{ lieu.nom }}</a></p>
+        </div>
     {% endfor %}
 
 {% endblock %}
