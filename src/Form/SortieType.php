@@ -2,19 +2,19 @@
 
 namespace App\Form;
 
-use App\Entity\Etat;
 use App\Entity\Lieu;
-use App\Entity\Participant;
 use App\Entity\Site;
 use App\Entity\Sortie;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateIntervalType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 class SortieType extends AbstractType
 {
@@ -56,22 +56,28 @@ class SortieType extends AbstractType
             ->add('dateLimiteInscription')
             ->add('nbInscriptionsMax')
             ->add('dateOuvertureInscription')
-            ->add('image')
-            ->add('dateModification')
+            ->add('image', FileType::class, [
+                'label'    => 'Illustration de la sortie',
+                'mapped'   => false,
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize'          => '2M',
+                        'mimeTypes'        => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/webp',
+                        ],
+                        'mimeTypesMessage' => 'Veuillez uploader une image valide',
+                    ])
+                ],
+            ])
             ->add('siteOrganisateur', EntityType::class, [
                 'class' => Site::class,
                 'choice_label' => 'id',
             ])
             ->add('lieu', EntityType::class, [
                 'class' => Lieu::class,
-                'choice_label' => 'id',
-            ])
-            ->add('etat', EntityType::class, [
-                'class' => Etat::class,
-                'choice_label' => 'id',
-            ])
-            ->add('organisateur', EntityType::class, [
-                'class' => Participant::class,
                 'choice_label' => 'id',
             ]);
     }

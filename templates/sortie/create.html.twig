@@ -11,58 +11,99 @@
     <h1>Créer une nouvelle sortie</h1>
 
     {{ form_start(sortieForm) }}
-
-    <!-- Nom de la sortie -->
-    {{ form_label(sortieForm.nom) }}
-    {{ form_widget(sortieForm.nom) }}
-    {{ form_errors(sortieForm.nom) }}
-
-    <!-- Description de la sortie -->
-    {{ form_label(sortieForm.description) }}
-    {{ form_widget(sortieForm.description) }}
-    {{ form_errors(sortieForm.description) }}
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+    <section>
         <div>
-            <div>
-                <!-- Date et heure de la sortie -->
-                {{ form_label(sortieForm.dateHeureDebut) }}
-                {{ form_widget(sortieForm.dateHeureDebut) }}
-                {{ form_errors(sortieForm.dateHeureDebut) }}
-            </div>
+            <!-- Nom de la sortie -->
+            {{ form_label(sortieForm.nom) }}
+            {{ form_widget(sortieForm.nom) }}
+            {{ form_errors(sortieForm.nom) }}
+
+            <!-- Description de la sortie -->
+            {{ form_label(sortieForm.description) }}
+            {{ form_widget(sortieForm.description) }}
+            {{ form_errors(sortieForm.description) }}
+        </div>
+        <div>
+            {{ form_label(sortieForm.image) }}
+            <img id="preview"
+                 src="{{ asset('img/default-image.png') }}"
+                 class="w-full h-full object-cover max-h-[20vh] rounded-lg" alt="prévisualisation">
+            {{ form_widget(sortieForm.image, {
+                'attr': {
+                    'class': 'hidden',
+                    'onchange': 'previewImage(event)'
+                }
+            }) }}
+
+            {{ form_errors(sortieForm.image) }}
+        </div>
+    </section>
+    <hr>
+    <!-- Section de l'heure et de la durée -->
+    <section>
+        <div>
+            <!-- Date et heure de la sortie -->
+            {{ form_label(sortieForm.dateHeureDebut) }}
+            {{ form_widget(sortieForm.dateHeureDebut) }}
+            {{ form_errors(sortieForm.dateHeureDebut) }}
+        </div>
+        <div>
             <div>
                 <!-- Durée de la sortie -->
                 {{ form_label(sortieForm.duree) }}
                 <div class="flex gap-2">
                     <div class="flex flex-col flex-1">
+                        {{ form_widget(sortieForm.duree.days, { 'attr': { 'class': '!mb-0' } }) }}
                         {{ form_label(sortieForm.duree.days) }}
-                        {{ form_widget(sortieForm.duree.days) }}
                     </div>
                     <div class="flex flex-col flex-1">
+                        {{ form_widget(sortieForm.duree.hours, { 'attr': { 'class': '!mb-0' } }) }}
                         {{ form_label(sortieForm.duree.hours) }}
-                        {{ form_widget(sortieForm.duree.hours) }}
                     </div>
                     <div class="flex flex-col flex-1">
+                        {{ form_widget(sortieForm.duree.minutes, { 'attr': { 'class': '!mb-0' } }) }}
                         {{ form_label(sortieForm.duree.minutes) }}
-                        {{ form_widget(sortieForm.duree.minutes) }}
                     </div>
                 </div>
                 {{ form_errors(sortieForm.duree) }}
             </div>
         </div>
-        <div class="flex flex-col justify-between">
-            <div>
-                {{ form_label(sortieForm.dateLimiteInscription) }}
-                {{ form_widget(sortieForm.dateLimiteInscription) }}
-                {{ form_errors(sortieForm.dateLimiteInscription) }}
-            </div>
-            <div>
-                {{ form_label(sortieForm.nbInscriptionsMax) }}
-                {{ form_widget(sortieForm.nbInscriptionsMax) }}
-                {{ form_errors(sortieForm.nbInscriptionsMax) }}
-            </div>
+    </section>
+    <hr>
+    <section>
+        <div>
+            {{ form_label(sortieForm.nbInscriptionsMax) }}
+            {{ form_widget(sortieForm.nbInscriptionsMax) }}
+            {{ form_errors(sortieForm.nbInscriptionsMax) }}
         </div>
-    </div>
+        <div>
+            <!-- Date ouverture inscription -->
+            {{ form_label(sortieForm.dateOuvertureInscription) }}
+            {{ form_widget(sortieForm.dateOuvertureInscription) }}
+            {{ form_errors(sortieForm.dateOuvertureInscription) }}
+        </div>
+        <div>
+            <!-- Date fermeture inscription -->
+            {{ form_label(sortieForm.dateLimiteInscription) }}
+            {{ form_widget(sortieForm.dateLimiteInscription) }}
+            {{ form_errors(sortieForm.dateLimiteInscription) }}
+        </div>
+    </section>
+    <hr>
+    <section>
+        <div>
+            <!-- Date ouverture inscription -->
+            {{ form_label(sortieForm.siteOrganisateur) }}
+            {{ form_widget(sortieForm.siteOrganisateur) }}
+            {{ form_errors(sortieForm.siteOrganisateur) }}
+        </div>
+        <div>
+            <!-- Date fermeture inscription -->
+            {{ form_label(sortieForm.lieu) }}
+            {{ form_widget(sortieForm.lieu) }}
+            {{ form_errors(sortieForm.lieu) }}
+        </div>
+    </section>
     {{ form_widget(sortieForm) }}
     <button type="submit">Enregistrer</button>
     {{ form_end(sortieForm) }}
