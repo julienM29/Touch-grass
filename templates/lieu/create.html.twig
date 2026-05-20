@@ -2,6 +2,11 @@
 
 {% block title %}Insert new Lieu{% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+    {{ importmap('formLieu') }}
+{% endblock %}
+
 {% block main %}
     <h1>Créer un nouveau lieu</h1>
 
@@ -21,22 +26,4 @@
 
     <button type="submit">Enregistrer</button>
     {{ form_end(lieuForm) }}
-
-    <script>
-        const villeSelect = document.querySelector('#lieu_form_ville');
-        const nouvelleVilleDiv = document.getElementById('nouvelle-ville');
-
-        function toggleNouvelleVille() {
-            // Affiche le sous-formulaire si aucune ville sélectionnée
-            if (villeSelect.value === '') {
-                nouvelleVilleDiv.style.display = 'block';
-            } else {
-                nouvelleVilleDiv.style.display = 'none';
-            }
-        }
-
-        villeSelect.addEventListener('change', toggleNouvelleVille);
-        toggleNouvelleVille(); // état initial
-    </script>
-
 {% endblock %}

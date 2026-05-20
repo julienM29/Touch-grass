@@ -17,6 +17,11 @@
     {{ form_widget(sortieForm.nom) }}
     {{ form_errors(sortieForm.nom) }}
 
+    <!-- Description de la sortie -->
+    {{ form_label(sortieForm.description) }}
+    {{ form_widget(sortieForm.description) }}
+    {{ form_errors(sortieForm.description) }}
+
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
         <div>
             <div>
@@ -43,6 +48,18 @@
                     </div>
                 </div>
                 {{ form_errors(sortieForm.duree) }}
+            </div>
+        </div>
+        <div class="flex flex-col justify-between">
+            <div>
+                {{ form_label(sortieForm.dateLimiteInscription) }}
+                {{ form_widget(sortieForm.dateLimiteInscription) }}
+                {{ form_errors(sortieForm.dateLimiteInscription) }}
+            </div>
+            <div>
+                {{ form_label(sortieForm.nbInscriptionsMax) }}
+                {{ form_widget(sortieForm.nbInscriptionsMax) }}
+                {{ form_errors(sortieForm.nbInscriptionsMax) }}
             </div>
         </div>
     </div>

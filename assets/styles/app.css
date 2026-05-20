@@ -87,12 +87,15 @@ p {
     margin-bottom: 1.2em;
 }
 
+
+/* ==================== BODY =================== */
+article {
+    @apply bg-white rounded-xl p-4 shadow-sm text-center;
+}
+
 /* ==================== FORM =================== */
 label {
-    font-size: 0.75em;
-    font-weight: 700;
-    margin-bottom: 0.4em;
-    display: block;
+    @apply text-xs font-bold mb-1.5 block uppercase;
     color: var(--color-primary);
 }
 

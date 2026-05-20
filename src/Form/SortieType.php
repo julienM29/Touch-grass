@@ -11,6 +11,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateIntervalType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -27,9 +28,15 @@ class SortieType extends AbstractType
                         'placeholder' => 'Renseignez ici le nom de votre sortie',
                     ],
                 ])
+            ->add('description', TextAreaType::class, [
+                'label' => 'Description de la sortie',
+                'attr' => [
+                    'placeholder' => 'Renseignez ici la description de la sortie',
+                ]
+            ])
             ->add('dateHeureDebut', DateTimeType::class, [
                 'label'  => 'Date et heure de la sortie',
-                'widget' => 'single_text',
+                'widget' => 'single_text'
             ])
             ->add('duree', DateIntervalType::class, [
                 'label'        => 'Durée de la sortie',
@@ -48,10 +55,8 @@ class SortieType extends AbstractType
             ])
             ->add('dateLimiteInscription')
             ->add('nbInscriptionsMax')
-            ->add('description')
             ->add('dateOuvertureInscription')
             ->add('image')
-            ->add('motifAnnulation')
             ->add('dateModification')
             ->add('siteOrganisateur', EntityType::class, [
                 'class' => Site::class,
