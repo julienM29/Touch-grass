@@ -51,14 +51,14 @@ final class ParticipantController extends AbstractController
 
     #[Route('/profil/modify', name: 'participant_profil_modify')]
     #[IsGranted('ROLE_USER')]
-    public function modifyProfil( Request $request,  EntityManagerInterface $entityManager ): Response {
+    public function modifyProfil( Request $request,EntityManagerInterface $entityManager ): Response {
         $user = $this->getUser();
 
         $form = $this->createForm(ProfilFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // 🖼️ image upload
+            // image upload
             $imageFile = $form->get('image')->getData();
             if ($filename = $this->participantService->uploadImage($imageFile)) {
                 $user->setImage($filename);

@@ -22,8 +22,8 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Assert\NotBlank]
-    #[Assert\Email]
+    #[Assert\NotBlank(message: "L'email est obligatoire.")]
+    #[Assert\Email(message: "Email invalide.")]
     #[ORM\Column(length: 180)]
     private ?string $email = null;
 

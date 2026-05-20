@@ -5,50 +5,47 @@
 {% block main %}
 
     <div class="w-full space-y-8">
-            <div>
-                <div class="flex justify-end">
 
-                </div>
-                <div class="flex items-center gap-5">
-
-                    <div
-                        class="w-28 h-28 shrink-0 rounded-full border-4 border-[#EEF3EE] overflow-hidden shadow-xl bg-white">
-                        {% if user.image %}
-                            <img
-                                src="{{ asset('uploads/' ~ user.image) }}"
-                                alt="{{ user.pseudo }}"
-                                class="w-full h-full object-cover"
-                            >
-                        {% else %}
-                            <img
-                                src="https://ui-avatars.com/api/?name={{ user.pseudo }}&background=5C7D5C&color=fff"
-                                alt="{{ user.pseudo }}"
-                                class="w-full h-full object-cover"
-                            >
-                        {% endif %}
-                    </div>
-                    <div class="flex flex-col text-left">
-                        <h1 class="">
-                            {{ user.prenom }} {{ user.nom }}
-                        </h1>
-
-                        <div class="flex gap-2">
-                        <h5>
-                            @{{ user.pseudo }}
-                        </h5>
-
-                        {% if user.administrateur %}
-                            <span
-                                class="inline-flex w-fit px-3 py-1 rounded-full bg-red-100 text-red-600 text-xs font-semibold">
+        <div class="flex  gap-5">
+                 {% if user.image %}
+                    <img
+                        src="{{ asset('uploads/' ~ user.image) }}"
+                        alt="{{ user.pseudo }}"
+                        class="img-profil"
+                    >
+                {% else %}
+                    <img
+                        src="https://ui-avatars.com/api/?name={{ user.pseudo }}&background=5C7D5C&color=fff"
+                        alt="{{ user.pseudo }}"
+                        class="img-profil"
+                    >
+                {% endif %}
+             <div class=" ">
+                <h1 class="!text-left">
+                    {{ user.prenom }} {{ user.nom }}
+                </h1>
+                <div class="flex items-center gap-2">
+                    <h5>
+                        @{{ user.pseudo }}
+                    </h5>
+                    {% if user.administrateur %}
+                        <h5
+                            class="px-3 py-1 rounded-full bg-red-200 text-red-600">
                                 Administrateur
-                            </span>
-                        {% endif %}
-                        </div>
-                    </div>
+                            </h5>
+                    {% endif %}
                 </div>
-
             </div>
-        <section class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        </div>
+        <div class="flex gap-2">
+            <a href="{{ path('participant_profil_modify') }}" class="btn">
+                modifier le profil
+            </a>
+            <a href="{{ path('participant_profil_modify') }}" class="btn">
+                modifier le mot de passe
+            </a>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <article>
                 <div class="text-4xl font-black text-[#5C7D5C]">
                     {{ eventsCreated }}
@@ -73,8 +70,8 @@
                     Évènements à venir
                 </p>
             </article>
-        </section>
-        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        </div>
+        <section >
             <article>
                 <h2>
                     Informations
@@ -111,8 +108,6 @@
                 <div class="">
                 </div>
             </article>
-        </section>
-        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
             <article class="bg-white rounded-2xl p-4 border border-green-100 shadow-sm">
                 <h2>
                     Mes événements

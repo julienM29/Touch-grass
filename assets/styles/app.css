@@ -183,3 +183,8 @@ button#burger-btn {
 [data-open] .burger-cross-line-2 {
     transform: rotate(-45deg);
 }
+/* =================== Images ================== */
+
+.img-profil{
+    @apply w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden flex items-center justify-center shadow-inner
+}
