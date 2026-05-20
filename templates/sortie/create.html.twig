@@ -2,10 +2,50 @@
 
 {% block title %}Créer une sortie{% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/dureeNormalizer.js') }}" defer></script>
+{% endblock %}
+
 {% block main %}
     <h1>Créer une nouvelle sortie</h1>
 
     {{ form_start(sortieForm) }}
+
+    <!-- Nom de la sortie -->
+    {{ form_label(sortieForm.nom) }}
+    {{ form_widget(sortieForm.nom) }}
+    {{ form_errors(sortieForm.nom) }}
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+        <div>
+            <div>
+                <!-- Date et heure de la sortie -->
+                {{ form_label(sortieForm.dateHeureDebut) }}
+                {{ form_widget(sortieForm.dateHeureDebut) }}
+                {{ form_errors(sortieForm.dateHeureDebut) }}
+            </div>
+            <div>
+                <!-- Durée de la sortie -->
+                {{ form_label(sortieForm.duree) }}
+                <div class="flex gap-2">
+                    <div class="flex flex-col flex-1">
+                        {{ form_label(sortieForm.duree.days) }}
+                        {{ form_widget(sortieForm.duree.days) }}
+                    </div>
+                    <div class="flex flex-col flex-1">
+                        {{ form_label(sortieForm.duree.hours) }}
+                        {{ form_widget(sortieForm.duree.hours) }}
+                    </div>
+                    <div class="flex flex-col flex-1">
+                        {{ form_label(sortieForm.duree.minutes) }}
+                        {{ form_widget(sortieForm.duree.minutes) }}
+                    </div>
+                </div>
+                {{ form_errors(sortieForm.duree) }}
+            </div>
+        </div>
+    </div>
     {{ form_widget(sortieForm) }}
     <button type="submit">Enregistrer</button>
     {{ form_end(sortieForm) }}

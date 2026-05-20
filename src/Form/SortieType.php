@@ -9,6 +9,9 @@ use App\Entity\Site;
 use App\Entity\Sortie;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateIntervalType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -17,9 +20,32 @@ class SortieType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nom')
-            ->add('dateHeureDebut')
-            ->add('duree')
+            ->add('nom',
+                TextType::class, [
+                    'label' => 'Nom de la sortie',
+                    'attr' => [
+                        'placeholder' => 'Renseignez ici le nom de votre sortie',
+                    ],
+                ])
+            ->add('dateHeureDebut', DateTimeType::class, [
+                'label'  => 'Date et heure de la sortie',
+                'widget' => 'single_text',
+            ])
+            ->add('duree', DateIntervalType::class, [
+                'label'        => 'Durée de la sortie',
+                'with_years'   => false,
+                'with_months'  => false,
+                'with_days'    => true,
+                'with_hours'   => true,
+                'with_minutes' => true,
+                'with_seconds' => false,
+                'widget'       => 'integer',
+                'labels'       => [
+                    'days'    => 'Jours',
+                    'hours'   => 'Heures',
+                    'minutes' => 'Minutes',
+                ],
+            ])
             ->add('dateLimiteInscription')
             ->add('nbInscriptionsMax')
             ->add('description')
@@ -39,16 +65,10 @@ class SortieType extends AbstractType
                 'class' => Etat::class,
                 'choice_label' => 'id',
             ])
-            ->add('participants', EntityType::class, [
-                'class' => Participant::class,
-                'choice_label' => 'id',
-                'multiple' => true,
-            ])
             ->add('organisateur', EntityType::class, [
                 'class' => Participant::class,
                 'choice_label' => 'id',
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
