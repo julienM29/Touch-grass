@@ -92,7 +92,9 @@ p {
 article {
     @apply bg-white rounded-xl p-4 shadow-sm text-center;
 }
-
+section {
+    @apply grid grid-cols-1 lg:grid-cols-2 gap-6
+}
 /* ==================== FORM =================== */
 label {
     @apply text-xs font-bold mb-1.5 block uppercase;
