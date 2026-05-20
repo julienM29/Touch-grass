@@ -1,0 +1,101 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block title %}Mon profil{% endblock %}
+
+{% block main %}
+
+    <h1 class="text-2xl font-bold mb-6">
+        Modifier mon profil
+    </h1>
+
+    {{ form_errors(form) }}
+
+    {{ form_start(form, {'attr': {'class': 'space-y-4 sm:space-y-5'}}) }}
+
+    <!-- Avatar -->
+    <div class="flex flex-col items-center mb-4 sm:mb-6">
+
+        <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden flex items-center justify-center shadow-inner">
+            <img id="preview"
+                 src="{{ asset('img/default-profile.png') }}"
+                 class="w-full h-full object-cover">
+        </div>
+
+        <label class="mt-3 cursor-pointer text-sm text-green-700 font-medium hover:underline text-center">
+            Changer la photo
+            {{ form_widget(form.image, {
+                'attr': {
+                    'class': 'hidden',
+                    'onchange': 'previewImage(event)'
+                }
+            }) }}
+        </label>
+
+        {{ form_errors(form.image) }}
+
+    </div>
+
+    <!-- Email -->
+    <div>
+        {{ form_label(form.email) }}
+        {{ form_widget(form.email) }}
+        {{ form_errors(form.email) }}
+    </div>
+
+    <!-- Pseudo -->
+    <div>
+        {{ form_label(form.pseudo) }}
+        {{ form_widget(form.pseudo) }}
+        {{ form_errors(form.pseudo) }}
+    </div>
+
+    <!-- Prénom + Nom -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+
+        <div>
+            {{ form_label(form.prenom) }}
+            {{ form_widget(form.prenom) }}
+            {{ form_errors(form.prenom) }}
+        </div>
+
+        <div>
+            {{ form_label(form.nom) }}
+            {{ form_widget(form.nom) }}
+            {{ form_errors(form.nom) }}
+        </div>
+
+    </div>
+
+    <!-- Téléphone -->
+    <div>
+        {{ form_label(form.telephone) }}
+        {{ form_widget(form.telephone) }}
+        {{ form_errors(form.telephone) }}
+    </div>
+
+    <!-- Site -->
+    <div>
+        {{ form_label(form.site) }}
+        {{ form_widget(form.site) }}
+        {{ form_errors(form.site) }}
+    </div>
+
+    <!-- Submit -->
+    <button type="submit"
+            class="w-full bg-green-600 hover:bg-green-700 active:scale-[0.99] text-white font-semibold py-3 rounded-xl transition shadow-md">
+        Enregistrer
+    </button>
+
+    {{ form_end(form) }}
+
+    <script>
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function () {
+                document.getElementById('preview').src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
+
+{% endblock %}

@@ -131,52 +131,52 @@
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-10">
-                    <!-- MES EVENEMENTS -->
-                         <div class="bg-white border border-green-100 rounded-2xl p-6">
-
-                        <h2 class="text-xl font-bold text-green-700 mb-5">
-                             Mes événements
-                        </h2>
-
-                        {% if userEvents|length > 0 %}
-
-                            <div class="space-y-4">
-
-                                {% for event in userEvents %}
-
-                                    <div class="border border-green-100 rounded-xl p-4 hover:shadow-sm transition">
-
-                                        <h3 class="font-bold text-gray-800">
-                                            {{ event.nom }}
-                                        </h3>
-
-                                        <p class="text-sm text-gray-500">
-                                            {{ event.siteOrganisateur.nom ?? 'N/A' }}
-                                        </p>
-
-                                        <p class="text-xs text-gray-400 mt-1">
-                                            {{ event.date|date('d/m/Y H:i') }}
-                                        </p>
-
-                                    </div>
-
-                                {% endfor %}
-
-                            </div>
-
-                        {% else %}
-
-                            <p class="text-gray-500 text-sm">
-                                Aucun événement créé.
-                            </p>
-
-                        {% endif %}
-
-                    </div>
+                        <!-- MES EVENEMENTS -->
                         <div class="bg-white border border-green-100 rounded-2xl p-6">
 
                             <h2 class="text-xl font-bold text-green-700 mb-5">
-                                 Événements à venir
+                                Mes événements
+                            </h2>
+
+                            {% if userEvents|length > 0 %}
+
+                                <div class="space-y-4">
+
+                                    {% for event in userEvents %}
+
+                                        <div class="border border-green-100 rounded-xl p-4 hover:shadow-sm transition">
+
+                                            <h3 class="font-bold text-gray-800">
+                                                {{ event.nom }}
+                                            </h3>
+
+                                            <p class="text-sm text-gray-500">
+                                                {{ event.siteOrganisateur.nom ?? 'N/A' }}
+                                            </p>
+
+                                            <p class="text-xs text-gray-400 mt-1">
+                                                {{ event.date|date('d/m/Y H:i') }}
+                                            </p>
+
+                                        </div>
+
+                                    {% endfor %}
+
+                                </div>
+
+                            {% else %}
+
+                                <p class="text-gray-500 text-sm">
+                                    Aucun événement créé.
+                                </p>
+
+                            {% endif %}
+
+                        </div>
+                        <div class="bg-white border border-green-100 rounded-2xl p-6">
+
+                            <h2 class="text-xl font-bold text-green-700 mb-5">
+                                Événements à venir
                             </h2>
 
                             {% if upcomingEventsList is defined and upcomingEventsList|length > 0 %}
