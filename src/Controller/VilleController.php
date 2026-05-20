@@ -48,7 +48,7 @@ final class VilleController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'detail', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[Route('/{id}', name: 'detail.html.twig', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function detail(int $id, VilleRepository $villeRepository): Response
     {
         $ville = $villeRepository->findVilleById($id);
@@ -56,7 +56,7 @@ final class VilleController extends AbstractController
         if (!$ville) {
             throw $this->createNotFoundException('Ooops ! Ville not found !');
         }
-        return $this->render('ville/detail.html.twig', [
+        return $this->render('ville/detail.html.twig.html.twig', [
             'ville' => $ville,
         ]);
     }

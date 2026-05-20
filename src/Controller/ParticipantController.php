@@ -14,7 +14,7 @@ final class ParticipantController extends AbstractController
     #[Route('/participant', name: 'app_participant')]
     public function index(): Response
     {
-        return $this->render('participant/index.html.twig', [
+        return $this->render('participant/list.html.twig', [
             'controller_name' => 'ParticipantController',
         ]);
     }
@@ -33,7 +33,7 @@ final class ParticipantController extends AbstractController
         $userEvents = 0;
         $eventsCreated = 0;
         $participations = 0;
-        return $this->render('participant/index.html.twig', [
+        return $this->render('participant/list.html.twig', [
             'user' => $user,
             'eventsCreated' => $eventsCreated,
             'participations' => $participations,
