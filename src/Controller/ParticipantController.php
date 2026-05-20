@@ -67,7 +67,7 @@ final class ParticipantController extends AbstractController
             return $this->redirectToRoute('participant_profil');
         }
 
-        return $this->render('participant/detail.html.twig', [
+        return $this->render('participant/edit.html.twig', [
             'form' => $form->createView(),
         ]);
     }
