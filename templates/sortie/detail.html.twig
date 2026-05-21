@@ -3,6 +3,35 @@
 {% block title %}{{ sortie.nom }}{% endblock %}
 
 {% block main %}
-    <h1>Détail de la sortie</h1>
 
+    <h1>
+        {{ sortie.nom }}
+    </h1>
+    {% if sortie.image %}
+        <img
+            src="{{ asset('uploads/' ~ sortie.image) }}"
+            alt="{{ sortie.nom }}"
+        >
+    {% else %}
+        <img
+            src="{{ asset('img/default-image.png') }}"
+            alt="image par défaut"
+        >
+    {% endif %}
+    <label>Description</label>
+    <p>{{ sortie.description }}</p>
+    <label>Horaires</label>
+    <p>{{ sortie.dateHeureDebut | date('d/m/Y') }} à {{ sortie.dateHeureDebut | date('H:i') }}</p>
+    <label>Lieu</label>
+    <p>{{ sortie.lieu.nom }} - {{ sortie.lieu.rue }} - {{ sortie.lieu.ville.codePostal }} {{ sortie.lieu.ville.nom }}</p>
+    <label>Durée</label>
+    <p>{{ sortie.duree.h }}h{{ '%02d'|format(sortie.duree.i) }}min</p>
+    <label>Date limite d'inscription</label>
+    <p>{{ sortie.dateLimiteInscription | date('d/m/Y H:i') }}</p>
+    <label>Site organisateur</label>
+    <p>{{ sortie.siteOrganisateur.nom }}</p>
+    <section>
+        <button>Modifier</button>
+        <button>Supprimer</button>
+    </section>
 {% endblock %}

@@ -103,8 +103,8 @@ hr {
     color: var(--color-secondary);
 }
 
-img{
-    @apply w-full h-full object-cover max-h-[20vh] rounded-lg
+main img{
+    @apply w-full h-full object-cover max-h-[20vh] rounded-lg mb-3
 }
 
 

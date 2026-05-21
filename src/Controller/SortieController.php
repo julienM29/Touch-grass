@@ -58,9 +58,15 @@ final class SortieController extends AbstractController
     }
 
     #[Route('/{id}', name: '_show', methods: ['GET'])]
-    public function show(Sortie $sortie): Response
+    public function show(
+        int $id,
+        EntityManagerInterface $em,
+    ): Response
     {
-        return $this->render('sortie/show.html.twig', []);
+        $sortie = $em->getRepository(Sortie::class)->find($id);
+        return $this->render('sortie/detail.html.twig', [
+            'sortie' => $sortie,
+        ]);
     }
 
     #[Route('/{id}/edit', name: '_edit', methods: ['GET', 'POST'])]
