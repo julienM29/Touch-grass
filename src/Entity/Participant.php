@@ -50,8 +50,8 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $prenom = null;
 
     #[Assert\NotBlank]
-    #[Assert\Length(min: 2, max: 255)]
-    #[ORM\Column(length: 255, unique: true)]
+    #[Assert\Length(min: 2, max: 20)]
+    #[ORM\Column(length: 20, unique: true)]
     private ?string $pseudo = null;
 
     #[ORM\Column]

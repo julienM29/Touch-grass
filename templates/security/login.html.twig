@@ -59,7 +59,12 @@
         <input type="hidden"
                name="_csrf_token"
                value="{{ csrf_token('authenticate') }}">
-
+        <div class="flex items-start ml-2">
+            <label>
+                <input type="checkbox" name="_remember_me">
+                Se souvenir de moi
+            </label>
+        </div>
         <!-- Submit -->
         <button type="submit">
             Connexion
