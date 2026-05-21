@@ -5,12 +5,31 @@
 {% block main %}
     <h1>Liste des sorties</h1>
     <a class="btn" href="{{ path('sortie_create') }}">Proposer une sortie</a>
+    <hr>
     {% if sorties is empty %}
         <br>
         <p>Il n'y actuellement aucune sorties programmées.</p>
     {% else %}
-        {% for sortie in sorties %}
-            <p>coucou</p>
-        {% endfor %}
+        <section>
+            <table>
+                <thead>
+                <tr>
+                    <th>Img</th>
+                    <th>Titre</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for sortie in sorties %}
+                    <tr>
+                        <td>
+                            <img src="/uploads/{{ sortie.image }}" alt="Image-sortie">
+                        </td>
+                        <td><p>{{ sortie.nom }}</p></td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </section>
     {% endif %}
 {% endblock %}

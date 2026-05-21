@@ -5,31 +5,36 @@
 
         {# Logo #}
         <a href="{{ path('app_home') }}">
-            <img class="h-10 md:h-13 w-auto object-contain hover:scale-110 transition-transform duration-200"
-                 src="{{ asset('img/logo.png') }}" alt="Logo">
+            <img src="{{ asset('img/logo.png') }}" alt="Logo">
         </a>
 
-        {# Burger #}
-        <button id="burger-btn" class="relative group">
-            <div class="relative flex overflow-hidden items-center justify-center
+        <div class="flex items-center gap-2">
+            {% if app.user %}
+                <p class="!mb-0">Bienvenue {{ app.user.pseudo }}</p>
+            {% endif %}
+
+            {# Burger #}
+            <button id="burger-btn" class="relative group">
+                <div class="relative flex overflow-hidden items-center justify-center
                 w-[40px] h-[40px] md:w-[40px] md:h-[40px]
                 transform transition-all ring-0 ring-gray-300">
-                <div class="flex flex-col justify-between
+                    <div class="flex flex-col justify-between
                     w-[16px] h-[16px] md:w-[18px] md:h-[16px]
                     origin-center overflow-hidden">
 
-                    <div class="burger-line bg-white h-[2px] w-[18px] md:w-[18px] origin-left delay-100"></div>
-                    <div class="burger-line bg-white h-[2px] w-[18px] md:w-[18px] delay-75"></div>
-                    <div class="burger-line bg-white h-[2px] w-[18px] md:w-[18px] origin-left"></div>
+                        <div class="burger-line bg-white h-[2px] w-[18px] md:w-[18px] origin-left delay-100"></div>
+                        <div class="burger-line bg-white h-[2px] w-[18px] md:w-[18px] delay-75"></div>
+                        <div class="burger-line bg-white h-[2px] w-[18px] md:w-[18px] origin-left"></div>
 
-                    <div class="burger-cross absolute flex">
-                        <div class="burger-cross-line-1 absolute bg-white h-[2px] w-[17px] md:w-[18px]"></div>
-                        <div class="burger-cross-line-2 absolute bg-white h-[2px] w-[17px] md:w-[18px]"></div>
+                        <div class="burger-cross absolute flex">
+                            <div class="burger-cross-line-1 absolute bg-white h-[2px] w-[17px] md:w-[18px]"></div>
+                            <div class="burger-cross-line-2 absolute bg-white h-[2px] w-[17px] md:w-[18px]"></div>
+                        </div>
+
                     </div>
-
                 </div>
-            </div>
-        </button>
+            </button>
+        </div>
     </div>
 
     {# Dropdown #}
@@ -37,7 +42,8 @@
 
         <ul>
             <li>
-                <a href="{{ path('sortie_list') }}" class="block text-primary text-lg font-semibold py-2 hover:text-gray-400">
+                <a href="{{ path('sortie') }}"
+                   class="block text-primary text-lg font-semibold py-2 hover:text-gray-400">
                     Trouver une sortie !
                 </a>
             </li>
@@ -52,7 +58,7 @@
 
         <ul>
             <li>
-                <a href="{{ path('app_login')}}" class="block text-primary py-2 hover:text-gray-400">Connexion</a>
+                <a href="{{ path('app_login') }}" class="block text-primary py-2 hover:text-gray-400">Connexion</a>
             </li>
             <li>
                 <a href="{{ path('app_register') }}" class="block text-primary py-2 hover:text-gray-400">S'inscrire</a>

@@ -102,6 +102,44 @@ hr {
     @apply border-t-1 h-[3vh] mt-[1vh];
     color: var(--color-secondary);
 }
+
+img{
+    @apply w-full h-full object-cover max-h-[20vh] rounded-lg
+}
+
+nav img{
+    @apply h-10 md:h-13 w-auto object-contain hover:scale-110 transition-transform duration-200
+}
+
+table img {
+    @apply object-cover h-[50px] w-[50px] rounded-lg
+}
+
+/* ==================== TABLE =================== */
+table {
+
+}
+
+tr{
+    @apply h-[55px]
+}
+
+tbody tr:nth-child(odd) {
+    @apply bg-white
+}
+tbody tr:nth-child(even) {
+    @apply bg-surface
+}
+
+tbody tr p {
+    @apply mb-0
+}
+
+table td {
+    @apply align-middle text-center
+}
+
+
 /* ==================== FORM =================== */
 label {
     @apply text-xs font-bold mb-1.5 block uppercase;
