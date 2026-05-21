@@ -107,9 +107,6 @@ img{
     @apply w-full h-full object-cover max-h-[20vh] rounded-lg
 }
 
-nav img{
-    @apply h-10 md:h-13 w-auto object-contain hover:scale-110 transition-transform duration-200
-}
 
 table img {
     @apply object-cover h-[50px] w-[50px] rounded-lg
@@ -228,6 +225,11 @@ button#burger-btn {
 [data-open] .burger-cross-line-2 {
     transform: rotate(-45deg);
 }
+
+nav img{
+    @apply h-10 md:h-13 w-auto object-contain hover:scale-110 transition-transform duration-200
+}
+
 /* =================== Images ================== */
 
 .img-profil{
