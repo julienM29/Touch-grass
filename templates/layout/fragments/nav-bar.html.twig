@@ -5,12 +5,23 @@
 
         {# Logo #}
         <a href="{{ path('app_home') }}">
-            <img src="{{ asset('img/logo.png') }}" alt="Logo">
+            <img src="{{ asset('img/logo.png') }}" class="logo" alt="Logo">
         </a>
 
         <div class="flex items-center gap-2">
             {% if app.user %}
-                <p class="!mb-0">Bienvenue {{ app.user.pseudo }}</p>
+                <a href="{{ path('participant_profil') }}" title="Voir mon profil" class="user-badge">
+                    <div class="user-avatar">
+                        <img
+                            src="{{ asset('uploads/' ~ app.user.image) }}"
+                            alt="Photo de profil"
+                            class="user-avatar-img"
+                        >
+                    </div>
+                    <span class="user-name">
+                        {{ app.user.pseudo }}
+                    </span>
+                </a>
             {% endif %}
 
             {# Burger #}
@@ -47,22 +58,58 @@
                     Trouver une sortie !
                 </a>
             </li>
+
             <li>
                 <a href="#" class="block text-primary text-lg font-semibold py-2 hover:text-gray-400">
                     Contact
                 </a>
             </li>
+
+            {% if is_granted('ROLE_ADMIN') %}
+                <li>
+                    <a href="#" class="block text-primary text-lg font-semibold py-2 hover:text-gray-400">
+                        Admin
+                    </a>
+                </li>
+            {% endif %}
         </ul>
 
         <hr class="my-4">
 
         <ul>
-            <li>
-                <a href="{{ path('app_login') }}" class="block text-primary py-2 hover:text-gray-400">Connexion</a>
-            </li>
-            <li>
-                <a href="{{ path('app_register') }}" class="block text-primary py-2 hover:text-gray-400">S'inscrire</a>
-            </li>
+            {% if app.user %}
+
+                <li>
+                    <a href="{{ path('participant_profil') }}"
+                       class="block text-primary py-2 hover:text-gray-400">
+                        Mon profil
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ path('app_logout') }}"
+                       class="block text-red-600 py-2 hover:text-gray-400">
+                        Déconnexion
+                    </a>
+                </li>
+
+            {% else %}
+
+                <li>
+                    <a href="{{ path('app_login') }}"
+                       class="block text-primary py-2 hover:text-gray-400">
+                        Connexion
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ path('app_register') }}"
+                       class="block text-primary py-2 hover:text-gray-400">
+                        S'inscrire
+                    </a>
+                </li>
+
+            {% endif %}
         </ul>
 
     </div>

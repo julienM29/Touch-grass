@@ -226,8 +226,25 @@ button#burger-btn {
     transform: rotate(-45deg);
 }
 
-nav img{
+.logo{
     @apply h-10 md:h-13 w-auto object-contain hover:scale-110 transition-transform duration-200
+}
+.user-badge {
+    @apply flex items-center gap-2 px-3 rounded-lg h-[40px] transition cursor-pointer;
+    background-color: var(--color-background);
+}
+
+.user-badge:hover {
+    background-color: color-mix(in srgb, var(--color-background) 85%, black);
+}
+.user-avatar {
+    @apply w-7 h-7 rounded-full overflow-hidden shadow;
+}
+.user-avatar-img {
+    @apply w-full h-full object-cover;
+}
+.user-name {
+    @apply text-white font-semibold text-sm leading-none;
 }
 
 /* =================== Images ================== */
