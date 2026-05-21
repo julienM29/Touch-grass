@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Sortie;
 use App\Form\SortieType;
+use App\Services\SortieService;
+use App\Utils\ImageLoader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,6 +15,9 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/sortie', name: 'sortie')]
 final class SortieController extends AbstractController
 {
+
+
+
     #[Route('/list', name: '_list', methods: ['GET'])]
     public function list(
         EntityManagerInterface $em,
@@ -25,20 +30,29 @@ final class SortieController extends AbstractController
     }
 
     #[Route('/create', name: '_create', methods: ['GET', 'POST'])]
-    public function create(EntityManagerInterface $em, Request $request): Response
+    public function create(
+        Request $request,
+        EntityManagerInterface $em,
+        ImageLoader $imageLoader
+    ): Response
     {
+        $organisateur = $this->getUser();
         $sortie = new Sortie();
         $sortieForm = $this->createForm(SortieType::class, $sortie);
         $sortieForm->handleRequest($request);
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
+            $imageFile = $sortieForm->get('image')->getData();
+
+            if ($filename = $imageLoader->uploadImage($imageFile)) {
+                $sortie->setImage($filename);
+            }
+            $sortie->setOrganisateur($organisateur);
+
             $em->persist($sortie);
             $em->flush();
 
-            return $this->redirectToRoute('sortie_show', [
-                'id' => $sortie->getId(),
-                'sortieForm' => $sortieForm,
-            ]);
+            return $this->redirectToRoute('sortie_show', ['id' => $sortie->getId()]);
         }
 
         return $this->render('sortie/create.html.twig', [
