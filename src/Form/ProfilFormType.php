@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Dto\ProfilDTO;
 use App\Entity\Participant;
 use App\Entity\Site;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -18,7 +19,6 @@ class ProfilFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email')
             ->add('pseudo')
             ->add('prenom')
             ->add('nom')

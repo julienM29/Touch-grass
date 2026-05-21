@@ -13,8 +13,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ParticipantRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
-#[UniqueEntity(fields: ['email'], message: 'Il existe déjà un compte associé à cet email.')]
-#[UniqueEntity(fields: ['pseudo'], message: 'Le pseudo existe déjà.')]
+#[UniqueEntity(fields: ['email'], message: 'Il existe déjà un compte associé à cet email.', entityClass: Participant::class, identifierFieldNames: ['id'])]
+#[UniqueEntity(fields: ['pseudo'], message: 'Le pseudo existe déjà.', entityClass: Participant::class, identifierFieldNames: ['id'])]
 class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
