@@ -12,7 +12,7 @@
             {% if app.user %}
                 <a href="{{ path('participant_profil') }}" title="Voir mon profil" class="user-badge">
                     <div class="user-avatar">
-                        {% if user.image %}
+                        {% if app.user.image %}
                             <img
                                 src="{{ asset('uploads/' ~ app.user.image) }}"
                                 alt="Photo de profil"
@@ -20,8 +20,8 @@
                             >
                         {% else %}
                             <img
-                                src="https://ui-avatars.com/api/?name={{ user.pseudo }}&background=2B3B2B&color=fff"
-                                alt="{{ user.pseudo }}"
+                                src="https://ui-avatars.com/api/?name={{ app.user.pseudo }}&background=2B3B2B&color=fff"
+                                alt="{{ app.user.pseudo }}"
                                 class="user-avatar-img"
                             >
                         {% endif %}
