@@ -5,6 +5,7 @@
 {% block main %}
     <h1>Détail de {{ lieu.nom }}</h1>
     <p>Nom du lieu : {{ lieu.nom }}</p>
+    <p>Localisation : {{ lieu.rue }} {{ lieu.ville.nom }} ({{ lieu.ville.codePostal }})</p>
     <p>Coordonnées GPS : {{ lieu.latitude }}, {{ lieu.longitude }}</p>
     <div>
         <a class="btn" href="{{ path('lieu_delete', {'id': lieu.id}) }}"

@@ -10,18 +10,30 @@
 {% block main %}
     <h1>Créer un nouveau lieu</h1>
 
+    {#  Test API  #}
+    <input type="text" id="recherche-ville" placeholder="Tapez une ville...">
+    <ul id="liste-suggestions"></ul>
+
+    <input type="hidden" id="ville-nom">
+    <input type="hidden" id="ville-cp">
+    {#  /Test API  #}
+
     {{ form_start(lieuForm) }}
     {{ form_row(lieuForm.nom) }}
     {{ form_row(lieuForm.rue) }}
-    {{ form_row(lieuForm.latitude) }}
-    {{ form_row(lieuForm.longitude) }}
+    <section>
+            {{ form_row(lieuForm.latitude) }}
+            {{ form_row(lieuForm.longitude) }}
+    </section>
 
     {{ form_row(lieuForm.ville) }}
 
     <div id="nouvelle-ville" style="display:none; border-left: 3px solid #ccc; padding-left: 1rem; margin-top: 1rem;">
         <p><strong>Nouvelle ville</strong></p>
-        {{ form_row(lieuForm.nouvelleVille.nom) }}
-        {{ form_row(lieuForm.nouvelleVille.codePostal) }}
+        <section>
+            {{ form_row(lieuForm.nouvelleVille.nom) }}
+            {{ form_row(lieuForm.nouvelleVille.codePostal) }}
+        </section>
     </div>
 
     <button type="submit">Enregistrer</button>

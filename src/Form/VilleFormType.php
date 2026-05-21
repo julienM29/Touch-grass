@@ -15,9 +15,11 @@ class VilleFormType extends AbstractType
         $builder
             ->add('nom', TextType::class, [
                 'label' => 'Nom de la ville',
+                'required' => false,
             ])
             ->add('codePostal', TextType::class, [
                 'label' => 'Code postal',
+                'required' => false,
             ])
         ;
     }

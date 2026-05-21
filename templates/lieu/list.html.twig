@@ -1,13 +1,41 @@
 {% extends 'layout/base.html.twig' %}
 
-{% block title %}Lieux{% endblock %}
+{% block title %}Gestion des Lieux{% endblock %}
 
 {% block main %}
     <h1>Liste des lieux</h1>
-    {% for lieu in lieux %}
-        <div>
-            <p><a href="{{ path('lieu_detail', {'id': lieu.id}) }}">{{ lieu.id }} - {{ lieu.nom }}</a></p>
-        </div>
-    {% endfor %}
+    <a class="btn" href="{{ path('lieu_create') }}">Proposer un lieu</a>
+    <hr>
+    {% if lieux is empty %}
+        <br>
+        <p>Il n'y actuellement aucuns lieux disponibles.</p>
+    {% else %}
 
+        <section>
+            <table>
+                <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Ville</th>
+                    <th>Maj</th>
+                    <th>Supprimer</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for lieu in lieux %}
+                    <tr>
+                        <td>
+                            <p><a href="{{ path('lieu_detail', {'id': lieu.id}) }}">{{ lieu.nom }}</a></p>
+                        </td>
+                        <td><p><a href="{{ path('ville_detail', {'id': lieu.ville.id}) }}">{{ lieu.ville.nom }}</a></p></td>
+                        <td><a class="btn" href="{{ path('lieu_update', {'id': lieu.id}) }}">Update</a></td>
+                        <td><a class="btn" href="{{ path('lieu_delete', {'id': lieu.id}) }}"
+                               onclick="return confirm('Delete {{ lieu.nom }} ?')">Delete</a></td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </section>
+    {% endif %}
 {% endblock %}

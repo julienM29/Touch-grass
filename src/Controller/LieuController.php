@@ -38,12 +38,27 @@ final class LieuController extends AbstractController
 
         $lieuForm->handleRequest($request);
 
+        // Test
+//        dump($lieuForm->isSubmitted());
+//        dump($lieuForm->isValid());
+//        dump($lieuForm->getErrors(true, false));
+//        die();
+
         if ($lieuForm->isSubmitted() && $lieuForm->isValid()) {
             $lieu = $lieuForm->getData();
 
-            // Si aucune ville existante choisie -> créer une nouvelle ville
+            // Cas 1 : aucune ville existante choisie -> créer une nouvelle ville
             if ($lieu->getVille() === null) {
                 $villeData = $lieuForm->get('nouvelleVille')->getData();
+
+                // Vérif que des données ont bien été saisies
+                if ($villeData === null || $villeData->getNom() === null) {
+                    // Aucune ville sélectionnée ET aucune nouvelle ville saisie
+                    $this->addFlash('error', 'Veuillez choisir ou créer une ville.');
+                    return $this->render('lieu/create.html.twig', [
+                        'lieuForm' => $lieuForm,
+                    ]);
+                }
 
                 // Vérif si doublon
                 $villeExistante = $villeRepository->findOneBy([
@@ -59,6 +74,7 @@ final class LieuController extends AbstractController
                 }
             }
 
+            // Cas 2 : ville existante sélectionnée -> on persist + flush
             $entityManager->persist($lieu);
             $entityManager->flush();
 

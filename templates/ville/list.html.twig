@@ -1,13 +1,39 @@
 {% extends 'layout/base.html.twig' %}
 
-{% block title %}Villes{% endblock %}
+{% block title %}Gestion des Villes{% endblock %}
 
 {% block main %}
     <h1>Liste des villes</h1>
-    {% for ville in villes %}
-        <div>
-            <p><a href="{{ path('ville_detail', {'id': ville.id}) }}">{{ ville.id }} - {{ ville.nom }} ({{ ville.codePostal }})</a></p>
-        </div>
-    {% endfor %}
+    <a class="btn" href="{{ path('ville_create') }}">Proposer une ville</a>
+    <hr>
+    {% if villes is empty %}
+        <br>
+        <p>Il n'y actuellement aucune ville disponible.</p>
+    {% else %}
 
+        <section>
+            <table>
+                <thead>
+                <tr>
+                    <th>Ville</th>
+                    <th>Code Postale</th>
+                    <th>Maj</th>
+                    <th>Supprimer</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for ville in villes %}
+                    <tr>
+                        <td><p><a href="{{ path('ville_detail', {'id': ville.id}) }}">{{ ville.nom }}</a></p></td>
+                        <td><p>{{ ville.codePostal }}</p></td>
+                        <td><a class="btn" href="{{ path('ville_update', {'id': ville.id}) }}">Update</a></td>
+                        <td><a class="btn" href="{{ path('ville_delete', {'id': ville.id}) }}"
+                               onclick="return confirm('Delete {{ ville.nom }} ?')">Delete</a></td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </section>
+    {% endif %}
 {% endblock %}
