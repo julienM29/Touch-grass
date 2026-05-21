@@ -5,8 +5,7 @@
 
         {# Logo #}
         <a href="{{ path('app_home') }}">
-            <img class="h-10 md:h-13 w-auto object-contain hover:scale-110 transition-transform duration-200"
-                 src="{{ asset('img/logo.png') }}" alt="Logo">
+            <img src="{{ asset('img/logo.png') }}" alt="Logo">
         </a>
 
         <div class="flex items-center gap-2">
@@ -43,7 +42,7 @@
 
         <ul>
             <li>
-                <a href="{{ path('sortie_list') }}"
+                <a href="{{ path('sortie') }}"
                    class="block text-primary text-lg font-semibold py-2 hover:text-gray-400">
                     Trouver une sortie !
                 </a>

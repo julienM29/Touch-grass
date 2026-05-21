@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Sortie;
 use App\Form\SortieType;
-use App\Services\SortieService;
 use App\Utils\ImageLoader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,9 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class SortieController extends AbstractController
 {
 
-
-
-    #[Route('/list', name: '_list', methods: ['GET'])]
+    #[Route('/', name: '', methods: ['GET'])]
     public function list(
         EntityManagerInterface $em,
     ): Response
