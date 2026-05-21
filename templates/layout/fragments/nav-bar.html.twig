@@ -12,11 +12,20 @@
             {% if app.user %}
                 <a href="{{ path('participant_profil') }}" title="Voir mon profil" class="user-badge">
                     <div class="user-avatar">
-                        <img
-                            src="{{ asset('uploads/' ~ app.user.image) }}"
-                            alt="Photo de profil"
-                            class="user-avatar-img"
-                        >
+                        {% if user.image %}
+                            <img
+                                src="{{ asset('uploads/' ~ app.user.image) }}"
+                                alt="Photo de profil"
+                                class="user-avatar-img"
+                            >
+                        {% else %}
+                            <img
+                                src="https://ui-avatars.com/api/?name={{ user.pseudo }}&background=2B3B2B&color=fff"
+                                alt="{{ user.pseudo }}"
+                                class="user-avatar-img"
+                            >
+                        {% endif %}
+
                     </div>
                     <span class="user-name">
                         {{ app.user.pseudo }}
