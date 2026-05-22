@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Sortie;
 use App\Form\SortieType;
+use App\Services\InitializerService;
 use App\Utils\ImageLoader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -74,6 +75,25 @@ final class SortieController extends AbstractController
         return $this->render('sortie/create.html.twig', [
             'sortieForm' => $sortieForm,
         ]);
+    }
+
+    #[Route('/initialize', name: '_initialize', methods: ['POST'])]
+    public function initialize(
+        Request $request,
+        InitializerService $initializerService,
+    ): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        if (!$this->isCsrfTokenValid('initialize_sorties', $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Token CSRF invalide.');
+        }
+
+        $initializerService->initializeSorties();
+
+        $this->addFlash('success', 'Les sorties de test ont été initialisées.');
+
+        return $this->redirectToRoute('sortie');
     }
 
     #[Route('/{id}', name: '_show', methods: ['GET'])]

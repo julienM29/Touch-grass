@@ -1,0 +1,123 @@
+<div
+    id="modal-{{ event.id }}"
+    onclick="closeModal('modal-{{ event.id }}')"
+    class="hidden fixed inset-0 z-50 grid place-items-center bg-black/60 backdrop-blur-sm p-4 cursor-pointer"
+>
+
+    <div
+        onclick="event.stopPropagation()"
+        class="conteneur-modal space-y-5"
+    >
+
+        {# CLOSE #}
+        <button
+            onclick="closeModal('modal-{{ event.id }}')"
+            class="btn-close-modal"
+        >
+            ✕
+        </button>
+
+        {# TITRE #}
+        <h2 class="text-xl font-bold uppercase text-[var(--color-primary)] leading-tight">
+            {{ event.nom }}
+        </h2>
+
+        {# ORGANISATEUR (comme ta page détail) #}
+        <p class="text-sm text-gray-600">
+            Organisé par le
+            <b>{{ event.siteOrganisateur.nom }}</b>
+        </p>
+
+        {# IMAGE #}
+        <div class="overflow-hidden rounded-xl bg-gray-100">
+            {% if event.image %}
+                <img
+                    src="{{ asset('uploads/' ~ event.image) }}"
+                    alt="{{ event.nom }}"
+                    class="w-full h-52 object-cover"
+                >
+            {% else %}
+                <img
+                    src="{{ asset('img/default-image.png') }}"
+                    alt="image par défaut"
+                    class="w-full h-52 object-cover"
+                >
+            {% endif %}
+        </div>
+
+        {# DESCRIPTION #}
+        <div class="space-y-1">
+            <label class="font-semibold text-[var(--color-primary)]">Description</label>
+            <p class="text-sm leading-relaxed text-gray-700">
+                {{ event.description }}
+            </p>
+        </div>
+
+        {# HORAIRES (comme ta page détail) #}
+        {% set dateFin = event.dateHeureDebut|date_modify('+' ~ event.duree.h ~ ' hours +' ~ event.duree.i ~ ' minutes') %}
+
+        <div class="space-y-1">
+            <label class="font-semibold text-[var(--color-primary)]">Horaires</label>
+            <p class="text-sm text-gray-700">
+                le {{ event.dateHeureDebut|date('d/m/Y') }}
+                de {{ event.dateHeureDebut|date('H') }}H{{ event.dateHeureDebut|date('i') }}
+                à
+                {% if event.dateHeureDebut|date('d/m/Y') != dateFin|date('d/m/Y') %}
+                    le {{ dateFin|date('d/m/Y') }}
+                {% endif %}
+                {{ dateFin|date('H') }}H{{ dateFin|date('i') }}
+            </p>
+        </div>
+
+        {# LIEU (exact page détail) #}
+        <div class="space-y-1">
+            <label class="font-semibold text-[var(--color-primary)]">Lieu</label>
+            <p class="text-sm text-gray-700">
+                {{ event.lieu.nom }} -
+                {{ event.lieu.rue }} -
+                {{ event.lieu.ville.codePostal }}
+                {{ event.lieu.ville.nom }}
+            </p>
+        </div>
+
+        {# DATE LIMITE INSCRIPTION (page détail) #}
+        <div class="space-y-1">
+            <label class="font-semibold text-[var(--color-primary)]">Date limite d'inscription</label>
+            <p class="text-sm text-gray-700">
+                {{ event.dateLimiteInscription|date('d/m/Y H:i') }}
+            </p>
+        </div>
+
+        {# INFOS PARTICIPANTS #}
+        <div class="grid grid-cols-2 gap-4 text-sm pt-2 border-t border-gray-100">
+
+            <div class="space-y-1">
+                <span class="font-semibold text-[var(--color-primary)]">Organisateur</span>
+                <p class="text-gray-700">
+                    {{ event.organisateur ? event.organisateur.pseudo : 'Non défini' }}
+                </p>
+            </div>
+
+            <div class="space-y-1">
+                <span class="font-semibold text-[var(--color-primary)]">Participants</span>
+                <p class="text-gray-700">
+                    {{ event.participants|length }} / {{ event.nbInscriptionsMax }}
+                </p>
+            </div>
+
+        </div>
+
+        {# OUVERTURE INSCRIPTIONS (condition NOW) #}
+        {% if event.dateOuvertureInscription and event.dateOuvertureInscription > date() %}
+            <div class="space-y-1 pt-2 border-t border-gray-100">
+                <span class="font-semibold text-[var(--color-primary)]">
+                    Ouverture des inscriptions
+                </span>
+                <p class="text-gray-700">
+                    {{ event.dateOuvertureInscription|date('d/m/Y H:i') }}
+                </p>
+            </div>
+        {% endif %}
+
+    </div>
+</div>
