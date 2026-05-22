@@ -10,20 +10,16 @@
 {% block main %}
     <h1>Créer un nouveau lieu</h1>
 
-    {#  Test API  #}
-    <input type="text" id="recherche-ville" placeholder="Tapez une ville...">
-    <ul id="liste-suggestions"></ul>
-
-    <input type="hidden" id="ville-nom">
-    <input type="hidden" id="ville-cp">
-    {#  /Test API  #}
+    {# Champ de recherche global #}
+    <input type="text" id="recherche-globale" placeholder="Rechercher un lieu (ex: ENI Rennes)..." autocomplete="off">
+    <ul id="liste-suggestions-globale"></ul>
 
     {{ form_start(lieuForm) }}
     {{ form_row(lieuForm.nom) }}
     {{ form_row(lieuForm.rue) }}
     <section>
-            {{ form_row(lieuForm.latitude) }}
-            {{ form_row(lieuForm.longitude) }}
+        {{ form_row(lieuForm.latitude) }}
+        {{ form_row(lieuForm.longitude) }}
     </section>
 
     {{ form_row(lieuForm.ville) }}
