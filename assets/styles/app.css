@@ -195,7 +195,7 @@ button, .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: auto;
+    width: 100%;
     background-color: var(--color-primary);
     color: var(--color-surface);
     border-radius: 0.5rem;
