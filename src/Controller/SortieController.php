@@ -17,12 +17,31 @@ final class SortieController extends AbstractController
 
     #[Route('/', name: '', methods: ['GET'])]
     public function list(
+        Request $request,
         EntityManagerInterface $em,
     ): Response
     {
-        $sorties = $em->getRepository(Sortie::class)->findAll();
+        $siteId = $request->query->get('site');
+
+        if ($siteId === null && $this->getUser()?->getSite() !== null) {
+            $siteId = $this->getUser()->getSite()->getId();
+        }
+
+        $sites = $em->getRepository(\App\Entity\Site::class)->findBy([],
+        ['nom' => 'ASC']);
+
+        if ($siteId) {
+            $sorties = $em->getRepository(Sortie::class)->findBy([
+                'siteOrganisateur' => $siteId,
+            ]);
+        } else {
+            $sorties = $em->getRepository(Sortie::class)->findAll();
+        }
+
         return $this->render('sortie/list.html.twig',[
             'sorties' => $sorties,
+            'sites' => $sites,
+            'selectedSiteId' => $siteId
         ]);
     }
 
