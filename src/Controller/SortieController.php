@@ -72,7 +72,6 @@ final class SortieController extends AbstractController
     #[Route('/{id}/edit', name: '_edit', methods: ['GET', 'POST'])]
     public function edit(Sortie $sortie, Request $request, EntityManagerInterface $em): Response
     {
-        $sortie = $em->getRepository(Sortie::class)->find($sortie->getId());
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
 
@@ -85,17 +84,27 @@ final class SortieController extends AbstractController
             ]);
         }
         return $this->render('sortie/edit.html.twig', [
-            'form' => $form,
+            'sortieForm' => $form,
+            'sortie' => $sortie,
         ]);
     }
 
-    #[Route('/{id}', name: '_delete', methods: ['DELETE'])]
-    public function delete(Sortie $sortie, EntityManagerInterface $em): Response
+    #[Route('/{id}', name: '_delete', methods: ['POST'])]
+    public function delete(Request $request, Sortie $sortie, EntityManagerInterface $em): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        if ($sortie->getOrganisateur() !== $this->getUser()) {
+            throw $this->createAccessDeniedException('Vous ne pouvez pas supprimer cette sortie.');
+        }
+
+        if (!$this->isCsrfTokenValid('delete_sortie_' . $sortie->getId(), $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Token CSRF invalide.');
+        }
+
         $em->remove($sortie);
         $em->flush();
-        return $this->redirectToRoute('sortie_list');
+
+        return $this->redirectToRoute('sortie');
     }
-
-
 }

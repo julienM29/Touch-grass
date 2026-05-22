@@ -7,6 +7,7 @@
     <h1>
         {{ sortie.nom }}
     </h1>
+    <p>Organisé par le <b>{{ sortie.siteOrganisateur.nom }}</b></p>
     {% if sortie.image %}
         <img
             src="{{ asset('uploads/' ~ sortie.image) }}"
@@ -20,18 +21,36 @@
     {% endif %}
     <label>Description</label>
     <p>{{ sortie.description }}</p>
+
+    {% set dateFin = sortie.dateHeureDebut | date_modify('+' ~ sortie.duree.h ~ ' hours +' ~ sortie.duree.i ~ ' minutes') %}
+
     <label>Horaires</label>
-    <p>{{ sortie.dateHeureDebut | date('d/m/Y') }} à {{ sortie.dateHeureDebut | date('H:i') }}</p>
+    <p>
+        le {{ sortie.dateHeureDebut | date('d/m/Y') }}
+        de {{ sortie.dateHeureDebut | date('H') }}H{{ sortie.dateHeureDebut | date('i') }}
+        à
+        {% if sortie.dateHeureDebut | date('d/m/Y') != dateFin | date('d/m/Y') %}
+            le {{ dateFin | date('d/m/Y') }}
+        {% endif %}
+        {{ dateFin | date('H') }}H{{ dateFin | date('i') }}
+    </p>
+
     <label>Lieu</label>
     <p>{{ sortie.lieu.nom }} - {{ sortie.lieu.rue }} - {{ sortie.lieu.ville.codePostal }} {{ sortie.lieu.ville.nom }}</p>
-    <label>Durée</label>
-    <p>{{ sortie.duree.h }}h{{ '%02d'|format(sortie.duree.i) }}min</p>
+
     <label>Date limite d'inscription</label>
     <p>{{ sortie.dateLimiteInscription | date('d/m/Y H:i') }}</p>
-    <label>Site organisateur</label>
-    <p>{{ sortie.siteOrganisateur.nom }}</p>
+
     <section>
-        <button>Modifier</button>
-        <button>Supprimer</button>
+        <a href="{{ path('sortie_edit', { id: sortie.id }) }}" class="btn">Modifier</a>
+
+        <form method="post" action="{{ path('sortie_delete', {'id': sortie.id}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer cette sortie ?');">
+            <input type="hidden" name="_method" value="DELETE">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete_sortie_' ~ sortie.id) }}">
+
+            <button type="submit" class="btn">
+                Supprimer
+            </button>
+        </form>
     </section>
 {% endblock %}

@@ -22,9 +22,14 @@
                 {% for sortie in sorties %}
                     <tr>
                         <td>
-                            <img src="/uploads/{{ sortie.image }}" alt="Image-sortie">
+                            <img src="{{ asset('uploads/' ~ sortie.image) }}" alt="Image-sortie">
                         </td>
-                        <td><p>{{ sortie.nom }}</p></td>
+                        <td>{{ sortie.nom }}</td>
+                        <td>
+                            <a href="{{ path('sortie_show', {'id': sortie.id}) }}" class="btn btn-primary">
+                                Voir
+                            </a>
+                        </td>
                     </tr>
                 {% endfor %}
 
