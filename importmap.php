@@ -33,4 +33,8 @@ return [
         'path' => './assets/js/formLieu.js',
         'entrypoint' => true,
     ],
+    'flashMessageDismiss' => [
+        'path' => './assets/js/flashMessageDismiss.js',
+        'entrypoint' => true,
+    ],
 ];

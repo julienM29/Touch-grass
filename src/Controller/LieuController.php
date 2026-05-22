@@ -30,6 +30,7 @@ final class LieuController extends AbstractController
     public function create(
         Request                $request,
         VilleRepository        $villeRepository,
+        LieuRepository         $lieuRepository,
         EntityManagerInterface $entityManager,
     ): Response
     {
@@ -37,12 +38,6 @@ final class LieuController extends AbstractController
         $lieuForm = $this->createForm(LieuFormType::class, $lieu);
 
         $lieuForm->handleRequest($request);
-
-        // Test
-//        dump($lieuForm->isSubmitted());
-//        dump($lieuForm->isValid());
-//        dump($lieuForm->getErrors(true, false));
-//        die();
 
         if ($lieuForm->isSubmitted() && $lieuForm->isValid()) {
             $lieu = $lieuForm->getData();
@@ -60,7 +55,7 @@ final class LieuController extends AbstractController
                     ]);
                 }
 
-                // Vérif si doublon
+                // Vérif si doublon de ville
                 $villeExistante = $villeRepository->findOneBy([
                     'nom' => $villeData->getNom(),
                     'codePostal' => $villeData->getCodePostal(),
@@ -74,11 +69,28 @@ final class LieuController extends AbstractController
                 }
             }
 
-            // Cas 2 : ville existante sélectionnée -> on persist + flush
-            $entityManager->persist($lieu);
-            $entityManager->flush();
+            // Vérif si boublon de lieu
+            $lieuExistant = $lieuRepository->findOneBy([
+                'rue' => $lieu->getRue(),
+                'ville' => $lieu->getVille(),
+            ]);
 
-            return $this->redirectToRoute('lieu_list');
+            if ($lieuExistant) {
+                $this->addFlash('warning', 'Ce lieu existe déjà en base de donnée.');
+                return $this->render('lieu/create.html.twig', [
+                    'lieuForm' => $lieuForm,
+                ]);
+            }
+
+            // Cas 2 : ville existante sélectionnée -> on persist + flush
+            try {
+                $entityManager->persist($lieu);
+                $entityManager->flush();
+                $this->addFlash('success', 'Le lieu a bien été créé.');
+                return $this->redirectToRoute('lieu_list');
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Une erreur est survenue lors de l\'enregistrement.');
+            }
         }
 
         return $this->render('lieu/create.html.twig', [
