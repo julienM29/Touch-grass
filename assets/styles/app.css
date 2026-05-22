@@ -297,6 +297,7 @@ button#burger-btn {
     @apply w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden flex items-center justify-center shadow-inner
 }
 
+
 .filter-form {
     display: grid;
     gap: 0.75rem;
@@ -311,3 +312,25 @@ button#burger-btn {
 .filter-form .btn-group {
     justify-content: flex-start;
 }
+
+/* =================== Modale ================== */
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.btn-close-modal{
+    @apply absolute top-4 right-4 w-[20px] text-gray-400 hover:text-black transition;
+}
+.conteneur-modal {
+    @apply relative w-full max-w-2xl rounded-2xl bg-white shadow-xl p-6 cursor-default;
+
+    animation: modalFadeIn 0.18s ease-out;
+}
+/* =================== Profil ================== */

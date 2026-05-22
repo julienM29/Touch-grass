@@ -47,16 +47,14 @@ final class ParticipantController extends AbstractController
         //        $upcomingEvents = $eventRepository->countUpcomingByUser($user);
         //        $userEvents = $eventRepository->findByOrganizer($user);
         $upcomingEvents = 0;
-        $userEvents = 0;
-        $eventsCreated = 0;
+         $eventsCreated = 0;
         $participations = 0;
         return $this->render('participant/detail.html.twig', [
             'user' => $user,
             'eventsCreated' => $eventsCreated,
             'participations' => $participations,
             'upcomingEvents' => $upcomingEvents,
-            'userEvents' => $userEvents,
-        ]);
+         ]);
     }
 
     #[Route('/profil/modify', name: 'participant_profil_modify')]

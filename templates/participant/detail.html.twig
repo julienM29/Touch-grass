@@ -7,20 +7,20 @@
     <div class="w-full space-y-8">
 
         <div class="flex  gap-5">
-                 {% if user.image %}
-                    <img
-                        src="{{ asset('uploads/' ~ user.image) }}"
-                        alt="{{ user.pseudo }}"
-                        class="img-profil"
-                    >
-                {% else %}
-                    <img
-                        src="https://ui-avatars.com/api/?name={{ user.pseudo }}&background=5C7D5C&color=fff"
-                        alt="{{ user.pseudo }}"
-                        class="img-profil"
-                    >
-                {% endif %}
-             <div class=" ">
+            {% if user.image %}
+                <img
+                    src="{{ asset('uploads/' ~ user.image) }}"
+                    alt="{{ user.pseudo }}"
+                    class="img-profil"
+                >
+            {% else %}
+                <img
+                    src="https://ui-avatars.com/api/?name={{ user.pseudo }}&background=5C7D5C&color=fff"
+                    alt="{{ user.pseudo }}"
+                    class="img-profil"
+                >
+            {% endif %}
+            <div class=" ">
                 <h1 class="!text-left">
                     {{ user.prenom }} {{ user.nom }}
                 </h1>
@@ -31,8 +31,8 @@
                     {% if user.administrateur %}
                         <h5
                             class="px-3 py-1 rounded-full bg-red-200 text-red-600">
-                                Administrateur
-                            </h5>
+                            Administrateur
+                        </h5>
                     {% endif %}
                 </div>
             </div>
@@ -110,20 +110,62 @@
             </article>
         </section>
         <section>
-            <article >
+            <article>
                 <h2>
                     Mes événements
                 </h2>
                 <div class=" h-50 ">
+                    {% for event in user.sorties %}
+                    <p>Test
+                    <p>
+                        {% endfor %}
                 </div>
             </article>
             <article>
                 <h2>
                     Événements à venir
                 </h2>
-                <div class="">
-                </div>
+                {% for event in user.sorties %}
+
+                    <div
+                        onclick="openModal('modal-{{ event.id }}')"
+                        class="group flex items-center justify-between py-2 px-3 rounded-lg cursor-pointer hover:bg-[#F4F6F1] transition"
+                    >
+
+                        <div class=" text-left">
+                            <h6 class="text-xs font-bold uppercase text-[var(--color-primary)] truncate">
+                                {{ event.nom|length > 26 ? event.nom|slice(0, 24) ~ '…' : event.nom }}
+                            </h6>
+                            <label class="">
+                                {{ event.dateHeureDebut|date('d/m/Y') }}
+                            </label>
+                        </div>
+
+                        <span class="opacity-0 group-hover:opacity-100 transition text-gray-400">
+                            →
+                        </span>
+
+                    </div>
+
+                    {% include 'layout/fragments/modals/profil-event-modal.html.twig' with {
+                        event: event
+                    } %}
+
+                {% endfor %}
             </article>
         </section>
     </div>
+    <script>
+
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+    </script>
 {% endblock %}

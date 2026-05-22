@@ -129,17 +129,19 @@ class ResetPasswordController extends AbstractController
 
     private function processSendingPasswordResetEmail(string $emailFormData, MailerInterface $mailer): RedirectResponse
     {
+        dump('je passe dans le processSendingPasswordResetEmail');
         $user = $this->entityManager->getRepository(Participant::class)->findOneBy([
             'email' => $emailFormData,
         ]);
-
         // Do not reveal whether a user account was found or not.
         if (!$user) {
             return $this->redirectToRoute('app_check_email');
         }
 
         try {
+//            dump('le user existe : ', $user);
             $resetToken = $this->resetPasswordHelper->generateResetToken($user);
+//            dump('le resetToken : ', $resetToken);
         } catch (ResetPasswordExceptionInterface $e) {
             // If you want to tell the user why a reset email was not sent, uncomment
             // the lines below and change the redirect to 'app_forgot_password_request'.
@@ -165,7 +167,7 @@ class ResetPasswordController extends AbstractController
         ;
 
         $mailer->send($email);
-
+        dump('mail sent');
         // Store the token object in session for retrieval in check-email route.
         $this->setTokenObjectInSession($resetToken);
 
