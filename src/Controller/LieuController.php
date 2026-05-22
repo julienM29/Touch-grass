@@ -42,54 +42,42 @@ final class LieuController extends AbstractController
         if ($lieuForm->isSubmitted() && $lieuForm->isValid()) {
             $lieu = $lieuForm->getData();
 
-            // Cas 1 : aucune ville existante choisie -> créer une nouvelle ville
-            if ($lieu->getVille() === null) {
-                $villeData = $lieuForm->get('nouvelleVille')->getData();
+            $villeNom = $lieuForm->get('villeNom')->getData();
+            $villeCP  = $lieuForm->get('villeCodePostal')->getData();
 
-                // Vérif que des données ont bien été saisies
-                if ($villeData === null || $villeData->getNom() === null) {
-                    // Aucune ville sélectionnée ET aucune nouvelle ville saisie
-                    $this->addFlash('error', 'Veuillez choisir ou créer une ville.');
-                    return $this->render('lieu/create.html.twig', [
-                        'lieuForm' => $lieuForm,
-                    ]);
-                }
+            // Vérif doublon ville
+            $ville = $villeRepository->findOneBy([
+                'nom'        => $villeNom,
+                'codePostal' => $villeCP,
+            ]);
 
-                // Vérif si doublon de ville
-                $villeExistante = $villeRepository->findOneBy([
-                    'nom' => $villeData->getNom(),
-                    'codePostal' => $villeData->getCodePostal(),
-                ]);
-
-                if ($villeExistante) {
-                    $lieu->setVille($villeExistante);
-                } else {
-                    $entityManager->persist($villeData);
-                    $lieu->setVille($villeData);
-                }
+            if (!$ville) {
+                $ville = new Ville();
+                $ville->setNom($villeNom);
+                $ville->setCodePostal($villeCP);
+                $entityManager->persist($ville);
             }
 
-            // Vérif si boublon de lieu
+            $lieu->setVille($ville);
+
+            // Vérif doublon lieu
             $lieuExistant = $lieuRepository->findOneBy([
-                'rue' => $lieu->getRue(),
-                'ville' => $lieu->getVille(),
+                'rue'   => $lieu->getRue(),
+                'ville' => $ville,
             ]);
 
             if ($lieuExistant) {
-                $this->addFlash('warning', 'Ce lieu existe déjà en base de donnée.');
-                return $this->render('lieu/create.html.twig', [
-                    'lieuForm' => $lieuForm,
-                ]);
+                $this->addFlash('warning', 'Ce lieu existe déjà.');
+                return $this->render('lieu/create.html.twig', ['lieuForm' => $lieuForm]);
             }
 
-            // Cas 2 : ville existante sélectionnée -> on persist + flush
             try {
                 $entityManager->persist($lieu);
                 $entityManager->flush();
-                $this->addFlash('success', 'Le lieu a bien été créé.');
+                $this->addFlash('success', 'Lieu créé avec succès.');
                 return $this->redirectToRoute('lieu_list');
             } catch (\Exception $e) {
-                $this->addFlash('error', 'Une erreur est survenue lors de l\'enregistrement.');
+                $this->addFlash('error', 'Une erreur est survenue.');
             }
         }
 

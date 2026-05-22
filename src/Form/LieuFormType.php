@@ -32,20 +32,15 @@ class LieuFormType extends AbstractType
                 'scale' => 6,
                 'html5' => true,
             ])
-            ->add('ville', EntityType::class, [
-                'class'        => Ville::class,
-                'choice_label' => 'nom',
-                'label'        => 'Ville existante',
-                'placeholder'  => '-- Choisir une ville existante --',
-                'required'     => false,
-                'attr'         => [
-                    'class' => 'tom-select',
-                ],
-            ])
-            ->add('nouvelleVille', VilleFormType::class, [
-                'mapped' => false, // pour dire qu'elle n'est pas directement lié à l'entité Lieu
+            ->add('villeNom', TextType::class, [
+                'mapped' => false,
+                'label' => 'Ville',
                 'required' => false,
-                'label' => false,
+            ])
+            ->add('villeCodePostal', TextType::class, [
+                'mapped' => false,
+                'label' => 'Code postal',
+                'required' => false,
             ])
         ;
     }

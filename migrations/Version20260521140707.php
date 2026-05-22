@@ -32,3 +32,4 @@ final class Version20260521140707 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_3C3FD3F2D5E86FF ON sortie (etat_id)');
     }
 }
+

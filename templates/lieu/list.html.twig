@@ -17,20 +17,15 @@
                 <tr>
                     <th>Nom</th>
                     <th>Ville</th>
-                    <th>Maj</th>
-                    <th>Supprimer</th>
+                    <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for lieu in lieux %}
                     <tr>
-                        <td>
-                            <p><a href="{{ path('lieu_detail', {'id': lieu.id}) }}">{{ lieu.nom }}</a></p>
-                        </td>
-                        <td><p><a href="{{ path('ville_detail', {'id': lieu.ville.id}) }}">{{ lieu.ville.nom }}</a></p></td>
-                        <td><a class="btn" href="{{ path('lieu_update', {'id': lieu.id}) }}">Update</a></td>
-                        <td><a class="btn" href="{{ path('lieu_delete', {'id': lieu.id}) }}"
-                               onclick="return confirm('Delete {{ lieu.nom }} ?')">Delete</a></td>
+                        <td><p>{{ lieu.nom }}</p></td>
+                        <td><p>{{ lieu.ville.nom }}</p></td>
+                        <td><a class="btn" href="{{ path('lieu_detail', {'id': lieu.id}) }}">Détail</a></td>
                     </tr>
                 {% endfor %}
 

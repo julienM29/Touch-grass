@@ -1,6 +1,11 @@
 {% extends 'layout/base.html.twig' %}
 
-{% block title %}Insert new Lieu{% endblock %}
+{% block title %}Créer un lieu{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+{% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
@@ -10,7 +15,6 @@
 {% block main %}
     <h1>Créer un nouveau lieu</h1>
 
-    {# Champ de recherche global #}
     <input type="text" id="recherche-globale" placeholder="Rechercher un lieu (ex: ENI Rennes)..." autocomplete="off">
     <ul id="liste-suggestions-globale"></ul>
 
@@ -18,19 +22,18 @@
     {{ form_row(lieuForm.nom) }}
     {{ form_row(lieuForm.rue) }}
     <section>
-        {{ form_row(lieuForm.latitude) }}
-        {{ form_row(lieuForm.longitude) }}
+        {{ form_row(lieuForm.villeNom) }}
+        {{ form_row(lieuForm.villeCodePostal) }}
     </section>
 
-    {{ form_row(lieuForm.ville) }}
-
-    <div id="nouvelle-ville" style="display:none; border-left: 3px solid #ccc; padding-left: 1rem; margin-top: 1rem;">
-        <p><strong>Nouvelle ville</strong></p>
-        <section>
-            {{ form_row(lieuForm.nouvelleVille.nom) }}
-            {{ form_row(lieuForm.nouvelleVille.codePostal) }}
-        </section>
+    {# Lat/lng masquées #}
+    <div style="display:none;">
+        {{ form_widget(lieuForm.latitude) }}
+        {{ form_widget(lieuForm.longitude) }}
     </div>
+
+    {#  Carte interactive  #}
+    <div id="carte" style="height: 400px; width: 100%; margin-top: 1rem;"></div>
 
     <button type="submit">Enregistrer</button>
     {{ form_end(lieuForm) }}

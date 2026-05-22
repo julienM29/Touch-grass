@@ -1,48 +1,10 @@
-import TomSelect from 'tom-select';
-import 'tom-select/dist/css/tom-select.default.min.css';
-
-// -------------------------------------------------------------------
-// Tom Select
-// -------------------------------------------------------------------
-const ts = new TomSelect('#lieu_form_ville', {
-    placeholder: '-- Choisir une ville existante --',
-});
-
-const nouvelleVilleDiv = document.getElementById('nouvelle-ville');
-
-function toggleNouvelleVille() {
-    nouvelleVilleDiv.style.display = ts.getValue() === '' ? 'block' : 'none';
-}
-
-ts.on('change', toggleNouvelleVille);
-toggleNouvelleVille();
-
-// -------------------------------------------------------------------
-// Fonction réutilisable : chercher et sélectionner une ville
-// -------------------------------------------------------------------
-function gererVille(villeNom, cp) {
-    const selectElement = document.getElementById('lieu_form_ville');
-    const tomSelectInstance = selectElement.tomselect;
-    const options = [...selectElement.options];
-    const optionExistante = options.find(function(option) {
-        return option.text.toLowerCase() === villeNom.toLowerCase();
-    });
-
-    if (optionExistante) {
-        tomSelectInstance.setValue(optionExistante.value);
-        document.getElementById('lieu_form_nouvelleVille_nom').value        = '';
-        document.getElementById('lieu_form_nouvelleVille_codePostal').value = '';
-    } else {
-        tomSelectInstance.clear();
-        document.getElementById('lieu_form_nouvelleVille_nom').value        = villeNom;
-        document.getElementById('lieu_form_nouvelleVille_codePostal').value = cp;
-    }
-}
+import L from 'leaflet';
+// import 'leaflet/dist/leaflet.css';
 
 // -------------------------------------------------------------------
 // Recherche globale via Nominatim
 // -------------------------------------------------------------------
-const rechercheInput = document.getElementById('recherche-globale');
+const rechercheInput  = document.getElementById('recherche-globale');
 const suggestionsListe = document.getElementById('liste-suggestions-globale');
 let debounceTimer = null;
 
@@ -68,7 +30,6 @@ rechercheInput.addEventListener('input', function() {
             .then(data => {
                 suggestionsListe.innerHTML = '';
 
-                // Aucun résultat
                 if (data.length === 0) {
                     const li = document.createElement('li');
                     li.textContent = 'Aucun résultat trouvé, vous pouvez compléter les champs manuellement.';
@@ -85,18 +46,17 @@ rechercheInput.addEventListener('input', function() {
                     li.addEventListener('click', function() {
                         const addr = result.address;
 
-                        // Préremplir les champs du formulaire
-                        document.getElementById('lieu_form_nom').value       = result.name;
-                        document.getElementById('lieu_form_rue').value       = addr.road ?? '';
-                        document.getElementById('lieu_form_latitude').value  = parseFloat(result.lat).toFixed(6);
-                        document.getElementById('lieu_form_longitude').value = parseFloat(result.lon).toFixed(6);
+                        // Préremplir les champs
+                        document.getElementById('lieu_form_nom').value            = result.name;
+                        document.getElementById('lieu_form_rue').value            = addr.road ?? '';
+                        document.getElementById('lieu_form_villeNom').value       = addr.city ?? addr.town ?? addr.village ?? addr.hamlet ?? '';
+                        document.getElementById('lieu_form_villeCodePostal').value = addr.postcode ?? '';
+                        const lat = parseFloat(result.lat).toFixed(6);
+                        const lng = parseFloat(result.lon).toFixed(6);
+                        document.getElementById('lieu_form_latitude').value  = lat;
+                        document.getElementById('lieu_form_longitude').value = lng;
+                        initialiserCarte(parseFloat(lat), parseFloat(lng));
 
-                        // Ville
-                        const villeNom = addr.city ?? addr.town ?? addr.village ?? addr.hamlet ?? '';
-                        const cp       = addr.postcode ?? '';
-                        gererVille(villeNom, cp);
-
-                        // Vider la liste et le champ de recherche
                         suggestionsListe.innerHTML = '';
                         rechercheInput.value = '';
                     });
@@ -104,23 +64,21 @@ rechercheInput.addEventListener('input', function() {
                     suggestionsListe.appendChild(li);
                 });
             });
-    }, 1000);
+    }, 1500);
 });
 
 // -------------------------------------------------------------------
-// Géocodage automatique
+// Géocodage automatique quand rue ou ville change manuellement
 // -------------------------------------------------------------------
 async function geocoder() {
     const rue   = document.getElementById('lieu_form_rue').value.trim();
-    const ville = document.getElementById('lieu_form_nouvelleVille_nom').value.trim()
-        || document.getElementById('lieu_form_ville').options[document.getElementById('lieu_form_ville').selectedIndex]?.text.trim();
+    const ville = document.getElementById('lieu_form_villeNom').value.trim();
 
     if (!rue || !ville) return;
 
-    const latInput = document.getElementById('lieu_form_latitude');
-    const lngInput = document.getElementById('lieu_form_longitude');
-
-    if (latInput.value && lngInput.value) return;
+    // Réinitialiser pour forcer un nouveau géocodage
+    document.getElementById('lieu_form_latitude').value  = '';
+    document.getElementById('lieu_form_longitude').value = '';
 
     const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(rue + ' ' + ville)}&format=json&limit=1&countrycodes=fr`;
 
@@ -134,21 +92,77 @@ async function geocoder() {
         const data = await response.json();
 
         if (data.length > 0) {
-            latInput.value = parseFloat(data[0].lat).toFixed(6);
-            lngInput.value = parseFloat(data[0].lon).toFixed(6);
+            const lat = parseFloat(data[0].lat).toFixed(6);
+            const lng = parseFloat(data[0].lon).toFixed(6);
+            document.getElementById('lieu_form_latitude').value  = lat;
+            document.getElementById('lieu_form_longitude').value = lng;
+            initialiserCarte(parseFloat(lat), parseFloat(lng));
         }
     } catch(e) {
         console.error('Erreur géocodage :', e);
     }
 }
 
-// Déclencher quand la rue perd le focus
 document.getElementById('lieu_form_rue').addEventListener('blur', geocoder);
+document.getElementById('lieu_form_villeNom').addEventListener('blur', geocoder);
 
-// Déclencher quand la ville change
-ts.on('change', function() {
-    toggleNouvelleVille();
-    geocoder();
-});
 
-document.getElementById('lieu_form_nouvelleVille_nom').addEventListener('blur', geocoder);
+// -------------------------------------------------------------------
+// Carte Leaflet
+// -------------------------------------------------------------------
+let carte = null;
+let marqueur = null;
+
+function initialiserCarte(lat, lng) {
+    // Si la carte existe déjà on la supprime
+    if (carte) {
+        carte.remove();
+    }
+
+    carte = L.map('carte').setView([lat, lng], 16);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(carte);
+
+    // Marqueur déplaçable
+    marqueur = L.marker([lat, lng], { draggable: true }).addTo(carte);
+
+    // Mettre à jour lat/lng quand le marqueur est déplacé
+    marqueur.on('dragend', async function() {
+        const position = marqueur.getLatLng();
+        const lat = position.lat.toFixed(6);
+        const lng = position.lng.toFixed(6);
+
+        // Mettre à jour les coordonnées
+        document.getElementById('lieu_form_latitude').value  = lat;
+        document.getElementById('lieu_form_longitude').value = lng;
+
+        // Reverse geocoding
+        const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&addressdetails=1`;
+
+        try {
+            const response = await fetch(url, {
+                headers: {
+                    'Accept-Language': 'fr',
+                    'User-Agent': 'TouchGrass/1.0'
+                }
+            });
+            const data = await response.json();
+
+            if (data && data.address) {
+                const addr = data.address;
+
+                document.getElementById('lieu_form_nom').value             = data.name ?? '';
+                document.getElementById('lieu_form_rue').value             = addr.road ?? '';
+                document.getElementById('lieu_form_villeNom').value        = addr.city ?? addr.town ?? addr.village ?? addr.hamlet ?? '';
+                document.getElementById('lieu_form_villeCodePostal').value = addr.postcode ?? '';
+            }
+        } catch(e) {
+            console.error('Erreur reverse geocoding :', e);
+        }
+    });
+}
+
+// Carte affichée par défaut sur Rennes
+initialiserCarte(48.1173, -1.6778);
