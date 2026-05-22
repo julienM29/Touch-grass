@@ -19,9 +19,7 @@ final class Version20260521140707 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        // safer version
-        $this->addSql('ALTER TABLE sortie DROP COLUMN etat_id');
-        $this->addSql('DROP TABLE etat');
+        $this->addSql('DROP TABLE IF EXISTS etat');
     }
 
     public function down(Schema $schema): void

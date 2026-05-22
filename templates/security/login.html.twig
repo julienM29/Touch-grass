@@ -59,11 +59,16 @@
         <input type="hidden"
                name="_csrf_token"
                value="{{ csrf_token('authenticate') }}">
-        <div class="flex items-start ml-2">
-            <label>
+        <div class="flex items-start justify-between">
+            <label class="flex items-center gap-2 text-xs font-bold uppercase text-primary">
                 <input type="checkbox" name="_remember_me">
                 Se souvenir de moi
             </label>
+
+            <a href="{{ path('app_forgot_password_request') }}"
+               class="text-xs font-bold uppercase text-primary hover:underline">
+                Mot de passe oublié
+            </a>
         </div>
         <!-- Submit -->
         <button type="submit">
