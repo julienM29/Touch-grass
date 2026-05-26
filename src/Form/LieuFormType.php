@@ -36,11 +36,13 @@ class LieuFormType extends AbstractType
                 'mapped' => false,
                 'label' => 'Ville',
                 'required' => false,
+                'data' => $options['ville_nom'],
             ])
             ->add('villeCodePostal', TextType::class, [
                 'mapped' => false,
                 'label' => 'Code postal',
                 'required' => false,
+                'data' => $options['ville_code_postal'],
             ])
         ;
     }
@@ -49,6 +51,8 @@ class LieuFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Lieu::class,
+            'ville_nom'         => null,
+            'ville_code_postal' => null,
         ]);
     }
 }

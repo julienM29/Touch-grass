@@ -164,5 +164,12 @@ function initialiserCarte(lat, lng) {
     });
 }
 
-// Carte affichée par défaut sur Rennes
-initialiserCarte(48.1173, -1.6778);
+// On récupère les coordonnées depuis les data attributes si elles existent, sinon carte affichée par défaut sur Rennes
+const carteDiv = document.getElementById('carte');
+console.log('data-lat:', carteDiv.dataset.lat);
+console.log('data-lng:', carteDiv.dataset.lng);
+const latInit = parseFloat(carteDiv.dataset.lat) || 48.1173;
+const lngInit = parseFloat(carteDiv.dataset.lng) || -1.6778;
+console.log('latInit:', latInit);
+console.log('lngInit:', lngInit);
+initialiserCarte(latInit, lngInit);

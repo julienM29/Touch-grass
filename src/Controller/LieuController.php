@@ -116,49 +116,59 @@ final class LieuController extends AbstractController
     }
 
     #[Route('/{id}/update', name: 'update', methods: ['GET', 'POST'])]
-    public function update(int                    $id,
-                           LieuRepository         $lieuRepository,
-                           VilleRepository        $villeRepository,
-                           Request                $request,
-                           EntityManagerInterface $entityManager,
+    public function update(
+        int                    $id,
+        LieuRepository         $lieuRepository,
+        VilleRepository        $villeRepository,
+        Request                $request,
+        EntityManagerInterface $entityManager,
     ): Response
     {
         $lieu = $lieuRepository->findLieuById($id);
-        $lieuForm = $this->createForm(LieuFormType::class, $lieu);
+
+        if (!$lieu) {
+            throw $this->createNotFoundException('Lieu introuvable.');
+        }
+
+        // Préremplir les champs ville non mappés
+        $lieuForm = $this->createForm(LieuFormType::class, $lieu, [
+            'ville_nom'        => $lieu->getVille()?->getNom(),
+            'ville_code_postal' => $lieu->getVille()?->getCodePostal(),
+        ]);
 
         $lieuForm->handleRequest($request);
 
         if ($lieuForm->isSubmitted() && $lieuForm->isValid()) {
-            $lieu = $lieuForm->getData();
+            $villeNom = $lieuForm->get('villeNom')->getData();
+            $villeCP  = $lieuForm->get('villeCodePostal')->getData();
 
-            // Si aucune ville existante choisie -> créer une nouvelle ville
-            if ($lieu->getVille() === null) {
-                $villeData = $lieuForm->get('nouvelleVille')->getData();
+            // Vérif doublon ville
+            $ville = $villeRepository->findOneBy([
+                'nom'        => $villeNom,
+                'codePostal' => $villeCP,
+            ]);
 
-                // Vérif si doublon
-                $villeExistante = $villeRepository->findOneBy([
-                    'nom' => $villeData->getNom(),
-                    'codePostal' => $villeData->getCodePostal(),
-                ]);
-
-                if ($villeExistante) {
-                    $lieu->setVille($villeExistante);
-                } else {
-                    $entityManager->persist($villeData);
-                    $lieu->setVille($villeData);
-                }
+            if (!$ville) {
+                $ville = new Ville();
+                $ville->setNom($villeNom);
+                $ville->setCodePostal($villeCP);
+                $entityManager->persist($ville);
             }
 
-            $entityManager->persist($lieu);
-            $entityManager->flush();
+            $lieu->setVille($ville);
 
-            $this->addFlash('success', $lieu->getNom() . ' updated !');
-
-            return $this->redirectToRoute('lieu_detail', ['id' => $lieu->getId()]);
+            try {
+                $entityManager->flush();
+                $this->addFlash('success', $lieu->getNom() . ' mis à jour avec succès.');
+                return $this->redirectToRoute('lieu_detail', ['id' => $lieu->getId()]);
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Une erreur est survenue lors de la mise à jour.');
+            }
         }
 
         return $this->render('lieu/update.html.twig', [
             'lieuForm' => $lieuForm,
+            'lieu' => $lieu,
         ]);
     }
 }

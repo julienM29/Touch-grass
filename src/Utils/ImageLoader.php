@@ -34,4 +34,26 @@ class ImageLoader
         return $newFilename;
     }
 
+    /**
+     * Remplace une image existante par une nouvelle
+     * Supprime l'ancien fichier s'il existe
+     */
+    public function replaceImage(?UploadedFile $newImageFile, ?string $oldFilename): ?string
+    {
+        if (!$newImageFile) {
+            return $oldFilename; // pas de nouvelle image -> on garde l'ancienne
+        }
+
+        // Supprimer l'ancien fichier s'il existe
+        if ($oldFilename) {
+            $oldFilePath = $this->uploadsDirectory . '/' . $oldFilename;
+            if (file_exists($oldFilePath)) {
+                unlink($oldFilePath);
+            }
+        }
+
+        // Uploader la nouvelle image
+        return $this->uploadImage($newImageFile);
+    }
+
 }

@@ -44,4 +44,8 @@ return [
         'version' => '1.9.4',
         'type' => 'css',
     ],
+    'mapLieu' => [
+        'path' => './assets/js/mapLieu.js',
+        'entrypoint' => true,
+    ],
 ];

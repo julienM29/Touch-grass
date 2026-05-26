@@ -2,15 +2,30 @@
 
 {% block title %}{{ lieu.nom }}{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ importmap('mapLieu') }}
+{% endblock %}
+
 {% block main %}
     <h1>Détail de {{ lieu.nom }}</h1>
     <p>Nom du lieu : {{ lieu.nom }}</p>
     <p>Localisation : {{ lieu.rue }} {{ lieu.ville.nom }} ({{ lieu.ville.codePostal }})</p>
     <p>Coordonnées GPS : {{ lieu.latitude }}, {{ lieu.longitude }}</p>
-    <div>
+    <div id="carte"
+         data-lat="{{ lieu.latitude }}"
+         data-lng="{{ lieu.longitude }}"
+         style="height: 400px; width: 100%;">
+    </div>
+    <section>
         <a class="btn" href="{{ path('lieu_delete', {'id': lieu.id}) }}"
            onclick="return confirm('Delete {{ lieu.nom }} ?')">Delete</a>
         <a class="btn" href="{{ path('lieu_update', {'id': lieu.id}) }}">Update</a>
-    </div>
+    </section>
 
 {% endblock %}

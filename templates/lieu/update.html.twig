@@ -1,13 +1,42 @@
 {% extends 'layout/base.html.twig' %}
 
-{% block title %}Update Lieu{% endblock %}
+{% block title %}Modifier un lieu{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ importmap('formLieu') }}
+{% endblock %}
 
 {% block main %}
-    <h1>Mettre à jour un lieu</h1>
+    <h1>Modifier un lieu</h1>
+
+    <input type="text" id="recherche-globale" placeholder="Rechercher un lieu (ex: ENI Rennes)..." autocomplete="off">
+    <ul id="liste-suggestions-globale"></ul>
 
     {{ form_start(lieuForm) }}
-    {{ form_widget(lieuForm) }}
+    {{ form_row(lieuForm.nom) }}
+    {{ form_row(lieuForm.rue) }}
+    <section>
+        {{ form_row(lieuForm.villeNom) }}
+        {{ form_row(lieuForm.villeCodePostal) }}
+    </section>
+
+    <section>
+        {{ form_widget(lieuForm.latitude) }}
+        {{ form_widget(lieuForm.longitude) }}
+    </section>
+
+    <div id="carte"
+         data-lat="{{ lieu.latitude ?? 48.1173 }}"
+         data-lng="{{ lieu.longitude ?? -1.6778 }}"
+         style="height: 400px; width: 100%; margin-top: 1rem;">
+    </div>
+
     <button type="submit">Enregistrer</button>
     {{ form_end(lieuForm) }}
-
 {% endblock %}

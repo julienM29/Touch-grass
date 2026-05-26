@@ -17,18 +17,15 @@
                 <tr>
                     <th>Ville</th>
                     <th>Code Postale</th>
-                    <th>Maj</th>
-                    <th>Supprimer</th>
+                    <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for ville in villes %}
                     <tr>
-                        <td><p><a href="{{ path('ville_detail', {'id': ville.id}) }}">{{ ville.nom }}</a></p></td>
+                        <td><p>{{ ville.nom }}</p></td>
                         <td><p>{{ ville.codePostal }}</p></td>
-                        <td><a class="btn" href="{{ path('ville_update', {'id': ville.id}) }}">Update</a></td>
-                        <td><a class="btn" href="{{ path('ville_delete', {'id': ville.id}) }}"
-                               onclick="return confirm('Delete {{ ville.nom }} ?')">Delete</a></td>
+                        <td><a class="btn" href="{{ path('ville_detail', {'id': ville.id}) }}">Detail</a></td>
                     </tr>
                 {% endfor %}
 

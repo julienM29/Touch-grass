@@ -5,8 +5,11 @@
 {% block main %}
     <h1>Mettre à jour une ville</h1>
 
-    {{ form_start(villeForm) }}
-    {{ form_widget(villeForm) }}
+    <section>
+        {{ form_start(villeForm) }}
+        {{ form_widget(villeForm) }}
+    </section>
+
     <button type="submit">Enregistrer</button>
     {{ form_end(villeForm) }}
 

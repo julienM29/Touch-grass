@@ -6,10 +6,10 @@
     <h1>Détail de la ville de {{ ville.nom }}</h1>
     <p>Nom de la ville : {{ ville.nom }}</p>
     <p>Code postal : {{ ville.codePostal }}</p>
-    <div>
-        <a class="btn" href="{{ path('ville_delete', {'id': ville.id}) }}"
-           onclick="return confirm('Delete {{ ville.nom }} ?')">Delete</a>
+    <section>
         <a class="btn" href="{{ path('ville_update', {'id': ville.id}) }}">Update</a>
-    </div>
+        <a class="btn" href="{{ path('ville_delete', {'id': ville.id}) }}"
+        onclick="return confirm('Delete {{ ville.nom }} ?')">Delete</a>
+    </section>
 
 {% endblock %}
