@@ -68,7 +68,7 @@ final class SortieController extends AbstractController
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
             $imageFile = $sortieForm->get('image')->getData();
 
-            if ($filename = $imageLoader->uploadImage($imageFile)) {
+            if ($filename = $imageLoader->replaceImage($imageFile, $sortie->getImage())) {
                 $sortie->setImage($filename);
             }
             $sortie->setOrganisateur($organisateur);
@@ -117,12 +117,18 @@ final class SortieController extends AbstractController
 
 
     #[Route('/{id}/edit', name: '_edit', methods: ['GET', 'POST'])]
-    public function edit(Sortie $sortie, Request $request, EntityManagerInterface $em): Response
+    public function edit(Sortie $sortie, Request $request, EntityManagerInterface $em, ImageLoader $imageLoader): Response
     {
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('image')->getData();
+
+            if ($filename = $imageLoader->replaceImage($imageFile, $sortie->getImage())) {
+                $sortie->setImage($filename);
+            }
+
             $em->persist($sortie);
             $em->flush();
 

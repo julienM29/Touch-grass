@@ -72,7 +72,7 @@ final class ParticipantController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $imageFile = $form->get('image')->getData();
             if ($imageFile instanceof UploadedFile) {
-                $filename = $this->participantService->uploadImage($imageFile);
+                $filename = $this->participantService->replaceImage($imageFile, $user->getImage());
                 if ($filename) {
                     $user->setImage($filename);
                 }
