@@ -76,4 +76,6 @@ class ParticipantService
 
         return null;
     }
+
+//    public function changeAnnuler
 }

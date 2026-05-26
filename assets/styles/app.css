@@ -329,7 +329,7 @@ button#burger-btn {
     @apply absolute top-4 right-4 w-[20px] text-gray-400 hover:text-black transition;
 }
 .conteneur-modal {
-    @apply relative w-full max-w-2xl rounded-2xl bg-white shadow-xl p-6 cursor-default;
+    @apply relative w-full max-w-2xl rounded-2xl  shadow-xl p-6 cursor-default;
 
     animation: modalFadeIn 0.18s ease-out;
 }

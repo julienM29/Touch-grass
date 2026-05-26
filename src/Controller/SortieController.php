@@ -19,7 +19,7 @@ final class SortieController extends AbstractController
     #[Route('/', name: '', methods: ['GET'])]
     public function list(
         Request $request,
-        EntityManagerInterface $em,
+        EntityManagerInterface $em
     ): Response
     {
         $siteId = $request->query->get('site');

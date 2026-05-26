@@ -3,7 +3,19 @@
 {% block title %}Mon profil{% endblock %}
 
 {% block main %}
+    <style>
+        .link-danger {
+            color: #dc2626;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
 
+        .link-danger:hover {
+            color: #b91c1c;
+            text-decoration: underline;
+        }
+    </style>
     <div class="w-full space-y-8">
 
         <div class="flex  gap-5">
@@ -155,17 +167,29 @@
             </article>
         </section>
     </div>
+    <a href="{{ path('participant_delete_account') }}"
+       class="mt-4 text-red-600 hover:text-red-800 hover:underline"
+       onclick="openDeleteModal(event)">
+        Supprimer mon compte
+    </a>
+    {% include 'layout/fragments/modals/profil-delete-account.html.twig' %}
     <script>
-
         function openModal(id) {
             document.getElementById(id).classList.remove('hidden');
             document.body.classList.add('overflow-hidden');
         }
-
         function closeModal(id) {
             document.getElementById(id).classList.add('hidden');
             document.body.classList.remove('overflow-hidden');
         }
-
+        function openDeleteModal(event) {
+            event.preventDefault();
+            document.getElementById('delete-account-modal').classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+        function closeDeleteModal() {
+            document.getElementById('delete-account-modal').classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
     </script>
 {% endblock %}

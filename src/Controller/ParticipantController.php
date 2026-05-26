@@ -12,6 +12,7 @@ use App\Services\MotDePasseService;
 use App\Services\ParticipantService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -111,5 +112,38 @@ final class ParticipantController extends AbstractController
         return $this->render('password/edit.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+    #[Route('/participant/delete', name: 'participant_delete_account')]
+    public function deleteAccount(ParticipantRepository$participantRepository, EntityManagerInterface $entityManager, Security $security): Response
+    {
+        $user =  $this->getUser();
+        if (!$user) {
+            throw $this->createAccessDeniedException();
+        }
+        // anonymisation email deleted_11 par exemple et en user name deleted_user_11
+        $user->setEmail('deleted_'.$user->getId().'@deleted.local');
+        $user->setPrenom('Anonymous');
+        $user->setNom('Anonymous');
+        $user->setPseudo('deleted_user_'.$user->getId());
+        $user->setActif(false);
+
+        $now = new \DateTimeImmutable();
+        foreach ($user->getSorties() as $event) {
+
+            if ($event->getStartDate() > $now) {
+
+                $event->setCancellationReason(
+                    'Événement annulé suite à la suppression du compte organisateur'
+                );
+
+                $event->setUpdatedAt($now);
+
+                $event->setStatus('cancelled');
+            }
+        }
+        $entityManager->flush();
+        $security->logout(false);
+
+        return $this->redirectToRoute('app_login');
     }
 }
