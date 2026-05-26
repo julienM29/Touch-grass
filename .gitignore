@@ -15,3 +15,8 @@
 /assets/vendor/
 ###< symfony/asset-mapper ###
 /config/reference.php
+
+###> phpunit/phpunit ###
+/phpunit.xml
+/.phpunit.cache/
+###< phpunit/phpunit ###
