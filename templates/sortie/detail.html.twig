@@ -36,21 +36,57 @@
     </p>
 
     <label>Lieu</label>
-    <p>{{ sortie.lieu.nom }} - {{ sortie.lieu.rue }} - {{ sortie.lieu.ville.codePostal }} {{ sortie.lieu.ville.nom }}</p>
+    <p>{{ sortie.lieu.nom }} - {{ sortie.lieu.rue }}
+        - {{ sortie.lieu.ville.codePostal }} {{ sortie.lieu.ville.nom }}</p>
 
     <label>Date limite d'inscription</label>
     <p>{{ sortie.dateLimiteInscription | date('d/m/Y H:i') }}</p>
 
-    <section>
-        <a href="{{ path('sortie_edit', { id: sortie.id }) }}" class="btn">Modifier</a>
+    <label>Inscriptions</label>
+    <p>
+        {{ sortie.nbParticipantsInscrits }} / {{ sortie.nbInscriptionsMax }} participant(s)
+    </p>
 
-        <form method="post" action="{{ path('sortie_delete', {'id': sortie.id}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer cette sortie ?');">
-            <input type="hidden" name="_method" value="DELETE">
-            <input type="hidden" name="_token" value="{{ csrf_token('delete_sortie_' ~ sortie.id) }}">
+    {% if app.user %}
+        {% if sortie.hasParticipant(app.user) %}
+            <form method="post" action="{{ path('sortie_unregister', {'id': sortie.id}) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('unregister_sortie_' ~ sortie.id) }}">
+                <button type="submit" class="btn">
+                    Se désinscrire
+                </button>
+            </form>
+        {% elseif sortie.areInscriptionsOpen and not sortie.complete %}
+            <form method="post" action="{{ path('sortie_register', {'id': sortie.id}) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('register_sortie_' ~ sortie.id) }}">
+                <button type="submit" class="btn">
+                    S'inscrire
+                </button>
+            </form>
+        {% elseif sortie.complete %}
+            <p>Cette sortie est complète.</p>
+        {% else %}
+            <p>Les inscriptions ne sont pas ouvertes.</p>
+        {% endif %}
+        {% if app.user.administrateur %}
+            <hr>
+            <section>
 
-            <button type="submit" class="btn">
-                Supprimer
-            </button>
-        </form>
-    </section>
+                <a href="{{ path('sortie_edit', { id: sortie.id }) }}" class="btn">Modifier</a>
+
+                <form method="post" action="{{ path('sortie_delete', {'id': sortie.id}) }}"
+                      onsubmit="return confirm('Voulez-vous vraiment supprimer cette event_registration ?');">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete_sortie_' ~ sortie.id) }}">
+
+                    <button type="submit" class="btn">
+                        Supprimer
+                    </button>
+                </form>
+            </section>
+        {% endif %}
+    {% else %}
+        <p>Connectez-vous pour vous inscrire.</p>
+
+
+    {% endif %}
 {% endblock %}

@@ -43,7 +43,7 @@ security:
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/register, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: PUBLIC_ACCESS }
-        - { path: ^/list-sortie, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/list-event_registration, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
     security:

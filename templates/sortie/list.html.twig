@@ -3,7 +3,9 @@
 {% block title %}Sorties{% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
     <script src="{{ asset('js/sortieFilter.js') }}" defer></script>
+    <script src="{{ asset('js/openModal.js') }}" defer></script>
 {% endblock %}
 
 {% block main %}
@@ -13,10 +15,10 @@
         <a class="btn" href="{{ path('sortie_create') }}">Proposer une sortie</a>
 
         {% if is_granted('ROLE_ADMIN') %}
-            <form method="post" action="{{ path('sortie_initialize') }}" onsubmit="return confirm('Réinitialiser les sorties de test ?');">
-                <input type="hidden" name="_token" value="{{ csrf_token('initialize_sorties') }}">
+            <form method="post" action="{{ path('sortie_reset') }}" onsubmit="return confirm('Attention : toutes les données vont être supprimées. Continuer ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('reset_data') }}">
                 <button type="submit" class="btn">
-                    Initialiser les sorties
+                    Réinitialiser toutes les données
                 </button>
             </form>
         {% endif %}
@@ -63,11 +65,15 @@
                         </td>
                         <td>{{ sortie.nom }}</td>
                         <td>
-                            <a href="{{ path('sortie_show', {'id': sortie.id}) }}" class="btn btn-primary">
+                            <a onclick="openModal('modal-{{ sortie.id }}')"
+                               class="btn btn-primary">
                                 Voir
                             </a>
                         </td>
                     </tr>
+                    {% include 'layout/fragments/modals/profil-event-modal.html.twig' with {
+                        event: sortie
+                    } %}
                 {% endfor %}
 
                 </tbody>

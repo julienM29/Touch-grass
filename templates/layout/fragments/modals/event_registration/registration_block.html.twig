@@ -1,0 +1,41 @@
+<div
+    data-sortie-event_registration-block="{{ sortie.id }}"
+    data-register-url="{{ path('api_sortie_register', {'id': sortie.id}) }}"
+    data-unregister-url="{{ path('api_sortie_unregister', {'id': sortie.id}) }}"
+    data-register-token="{{ csrf_token('register_sortie_' ~ sortie.id) }}"
+    data-unregister-token="{{ csrf_token('unregister_sortie_' ~ sortie.id) }}"
+>
+    <label>Inscriptions</label>
+
+    <p data-sortie-event_registration-counter>
+        {{ sortie.nbParticipantsInscrits }} / {{ sortie.nbInscriptionsMax }} participant(s)
+    </p>
+
+    <p data-sortie-event_registration-message class="hidden"></p>
+
+    {% if app.user %}
+        <div data-sortie-event_registration-action>
+            {% if sortie.hasParticipant(app.user) %}
+                <form method="post"
+                      action="{{ path('api_sortie_unregister', {'id': sortie.id}) }}"
+                      class="js-sortie-event_registration-form">
+                    <input type="hidden" name="_token" value="{{ csrf_token('unregister_sortie_' ~ sortie.id) }}">
+                    <button type="submit" class="btn">Se désinscrire</button>
+                </form>
+            {% elseif sortie.areInscriptionsOpen and not sortie.complete %}
+                <form method="post"
+                      action="{{ path('api_sortie_register', {'id': sortie.id}) }}"
+                      class="js-sortie-event_registration-form">
+                    <input type="hidden" name="_token" value="{{ csrf_token('register_sortie_' ~ sortie.id) }}">
+                    <button type="submit" class="btn">S'inscrire</button>
+                </form>
+            {% elseif sortie.complete %}
+                <p>Cette sortie est complète.</p>
+            {% else %}
+                <p>Les inscriptions ne sont pas ouvertes.</p>
+            {% endif %}
+        </div>
+    {% else %}
+        <p>Connectez-vous pour vous inscrire.</p>
+    {% endif %}
+</div>

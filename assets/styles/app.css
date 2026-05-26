@@ -144,7 +144,7 @@ tbody tr p {
 }
 
 table td {
-    @apply align-middle text-center
+    @apply align-middle text-center p-2
 }
 
 table td:first-child {
@@ -326,7 +326,7 @@ button#burger-btn {
 }
 
 .btn-close-modal{
-    @apply absolute top-4 right-4 w-[20px] text-gray-400 hover:text-black transition;
+    @apply absolute top-4 right-4 w-[20px] transition;
 }
 .conteneur-modal {
     @apply relative w-full max-w-2xl rounded-2xl  shadow-xl p-6 cursor-default;
@@ -334,3 +334,14 @@ button#burger-btn {
     animation: modalFadeIn 0.18s ease-out;
 }
 /* =================== Profil ================== */
+.link-danger {
+    color: #dc2626;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.link-danger:hover {
+    color: #b91c1c;
+    text-decoration: underline;
+}

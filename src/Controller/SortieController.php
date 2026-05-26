@@ -2,12 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Form\SortieType;
 use App\Services\InitializerService;
 use App\Utils\ImageLoader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -54,6 +56,11 @@ final class SortieController extends AbstractController
     ): Response
     {
         $organisateur = $this->getUser();
+
+        if (!$organisateur instanceof Participant) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour créer une event_registration.');
+        }
+
         $sortie = new Sortie();
         $sortieForm = $this->createForm(SortieType::class, $sortie);
         $sortieForm->handleRequest($request);
@@ -77,23 +84,23 @@ final class SortieController extends AbstractController
         ]);
     }
 
-    #[Route('/initialize', name: '_initialize', methods: ['POST'])]
-    public function initialize(
+    #[Route('/reset', name: '_reset', methods: ['POST'])]
+    public function resetData(
         Request $request,
         InitializerService $initializerService,
     ): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        if (!$this->isCsrfTokenValid('initialize_sorties', $request->request->get('_token'))) {
+        if (!$this->isCsrfTokenValid('reset_data', $request->request->get('_token'))) {
             throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
 
-        $initializerService->initializeSorties();
+        $initializerService->resetAllData();
 
-        $this->addFlash('success', 'Les sorties de test ont été initialisées.');
+        $request->getSession()->invalidate();
 
-        return $this->redirectToRoute('sortie');
+        return $this->redirectToRoute('app_home');
     }
 
     #[Route('/{id}', name: '_show', methods: ['GET'])]
@@ -104,9 +111,10 @@ final class SortieController extends AbstractController
     {
         $sortie = $em->getRepository(Sortie::class)->find($id);
         return $this->render('sortie/detail.html.twig', [
-            'sortie' => $sortie,
+            'event_registration' => $sortie,
         ]);
     }
+
 
     #[Route('/{id}/edit', name: '_edit', methods: ['GET', 'POST'])]
     public function edit(Sortie $sortie, Request $request, EntityManagerInterface $em): Response
@@ -124,7 +132,7 @@ final class SortieController extends AbstractController
         }
         return $this->render('sortie/edit.html.twig', [
             'sortieForm' => $form,
-            'sortie' => $sortie,
+            'event_registration' => $sortie,
         ]);
     }
 
@@ -134,7 +142,7 @@ final class SortieController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         if ($sortie->getOrganisateur() !== $this->getUser()) {
-            throw $this->createAccessDeniedException('Vous ne pouvez pas supprimer cette sortie.');
+            throw $this->createAccessDeniedException('Vous ne pouvez pas supprimer cette event_registration.');
         }
 
         if (!$this->isCsrfTokenValid('delete_sortie_' . $sortie->getId(), $request->request->get('_token'))) {

@@ -28,32 +28,32 @@ class SortieType extends AbstractType
         $builder
             ->add('nom',
                 TextType::class, [
-                    'label' => 'Nom de la sortie',
+                    'label' => 'Nom de la event_registration',
                     'required' => true,
                     'attr' => [
-                        'placeholder' => 'Renseignez ici le nom de votre sortie',
+                        'placeholder' => 'Renseignez ici le nom de votre event_registration',
                         'maxlength' => 255,
                         'minlength' => 5,
                     ],
                     'constraints' => [
                         new NotBlank([
-                            'message' => 'Le nom de la sortie est obligatoire.',
+                            'message' => 'Le nom de la event_registration est obligatoire.',
                         ]),
                         new Length([
                             'max' => 255,
-                            'maxMessage' => 'Le nom de la sortie ne peut pas dépasser {{ limit }} caractères.',
+                            'maxMessage' => 'Le nom de la event_registration ne peut pas dépasser {{ limit }} caractères.',
                         ]),
                     ],
                 ])
             ->add('description', TextAreaType::class, [
-                'label' => 'Description de la sortie',
+                'label' => 'Description de la event_registration',
                 'required' => false,
                 'attr' => [
-                    'placeholder' => 'Renseignez ici la description de la sortie',
+                    'placeholder' => 'Renseignez ici la description de la event_registration',
                 ],
             ])
             ->add('dateHeureDebut', DateTimeType::class, [
-                'label' => 'Date et heure de la sortie',
+                'label' => 'Date et heure de la event_registration',
                 'widget' => 'single_text',
                 'required' => true,
                 'constraints' => [
@@ -63,7 +63,7 @@ class SortieType extends AbstractType
                 ],
             ])
             ->add('duree', DateIntervalType::class, [
-                'label' => 'Durée de la sortie',
+                'label' => 'Durée de la event_registration',
                 'required' => true,
                 'with_years' => false,
                 'with_months' => false,
@@ -79,7 +79,7 @@ class SortieType extends AbstractType
                 ],
                 'constraints' => [
                     new NotNull([
-                        'message' => 'La durée de la sortie est obligatoire.',
+                        'message' => 'La durée de la event_registration est obligatoire.',
                     ]),
                 ],
             ])
@@ -116,7 +116,7 @@ class SortieType extends AbstractType
                 ],
             ])
             ->add('image', FileType::class, [
-                'label' => 'Illustration de la sortie',
+                'label' => 'Illustration de la event_registration',
                 'mapped' => false,
                 'required' => false,
                 'constraints' => [

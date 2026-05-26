@@ -12,9 +12,11 @@
     {% endblock %}
 
     {% block javascripts %}
+        <script src="{{ asset('app.js') }}" defer></script>
         <script src="{{ asset('js/navbar.js') }}" defer></script>
-        {% block importmap %}{{ importmap('app') }}{% endblock %}
+        <script src="{{ asset('js/sortieRegistration.js') }}" defer></script>
         {{ importmap('flashMessageDismiss') }}
+        {% block importmap %}{% endblock %}
     {% endblock %}
 
 </head>

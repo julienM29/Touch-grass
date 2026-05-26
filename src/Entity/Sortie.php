@@ -247,10 +247,37 @@ class Sortie
         return $this->organisateur;
     }
 
+
     public function setOrganisateur(?Participant $organisateur): static
     {
         $this->organisateur = $organisateur;
 
         return $this;
     }
+
+    public function hasParticipant(Participant $participant): bool
+    {
+        return $this->participants->contains($participant);
+    }
+
+    public function getNbParticipantsInscrits(): int
+    {
+        return $this->participants->count();
+    }
+
+    public function isComplete(): bool
+    {
+        return $this->getNbParticipantsInscrits() >= $this->nbInscriptionsMax;
+    }
+
+    public function areInscriptionsOpen(): bool
+    {
+        $now = new \DateTime();
+
+        return $this->dateOuvertureInscription <= $now
+            && $this->dateLimiteInscription >= $now
+            && $this->dateHeureDebut > $now;
+    }
+
+
 }

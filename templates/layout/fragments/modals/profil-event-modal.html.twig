@@ -88,25 +88,6 @@
             </p>
         </div>
 
-        {# INFOS PARTICIPANTS #}
-        <div class="grid grid-cols-2 gap-4 text-sm pt-2 border-t border-gray-400">
-
-            <div class="space-y-1">
-                <span class="font-semibold text-[var(--color-primary)]">Organisateur</span>
-                <p class=" ">
-                    {{ event.organisateur ? event.organisateur.pseudo : 'Non défini' }}
-                </p>
-            </div>
-
-            <div class="space-y-1">
-                <span class="font-semibold text-[var(--color-primary)]">Participants</span>
-                <p class=" ">
-                    {{ event.participants|length }} / {{ event.nbInscriptionsMax }}
-                </p>
-            </div>
-
-        </div>
-
         {# OUVERTURE INSCRIPTIONS (condition NOW) #}
         {% if event.dateOuvertureInscription and event.dateOuvertureInscription > date() %}
             <div class="space-y-1 pt-2 border-t border-gray-100">
@@ -119,5 +100,26 @@
             </div>
         {% endif %}
 
-    </div>
-</div>
+        {% include 'layout/fragments/modals/event_registration/registration_block.html.twig' with {
+    sortie: event
+} %}
+
+{% if app.user and app.user.administrateur %}
+    <hr>
+    <section>
+
+        <a href="{{ path('sortie_edit', { id: event.id }) }}" class="btn">Modifier</a>
+
+        <form method="post" action="{{ path('sortie_delete', {'id': event.id}) }}"
+              onsubmit="return confirm('Voulez-vous vraiment supprimer cette sortie ?');">
+            <input type="hidden" name="_method" value="DELETE">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete_sortie_' ~ event.id) }}">
+
+            <button type="submit" class="btn">
+                Supprimer
+            </button>
+        </form>
+    </section>
+{% endif %}
+
+        <div data-sortie-message="{{ event.id }}"></div>
