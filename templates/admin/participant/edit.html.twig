@@ -3,25 +3,10 @@
 {% block title %}Modification participant{% endblock %}
 
 {% block main %}
-<div
-    id="modal-{{ utilisateur.id }}"
-    onclick="closeModal('modal-{{ utilisateur.id }}')"
-    class="hidden fixed inset-0 z-50 grid place-items-center bg-black/60 backdrop-blur-sm p-4 cursor-pointer"
->
-
-    <div
-        onclick="event.stopPropagation()"
-        class="conteneur-modal bg-surface space-y-5"
-    >
-
-        {# CLOSE #}
-        <button
-            onclick="closeModal('modal-{{ utilisateur.id }}')"
-            class="btn-close-modal"
-        >
-            ✕
-        </button>
-
+    <a href="{{ path('admin_participant') }}"
+       class="self-start block text-primary text-sm font-semibold py-2 hover:text-gray-400">
+        ← Retour à la liste
+    </a>
         {# TITRE #}
         <h2 class="text-xl font-bold uppercase text-[var(--color-primary)] leading-tight">
             Modifier utilisateur
@@ -76,7 +61,4 @@
         </div>
 
         {{ form_end(form) }}
-
-    </div>
-</div>
 {% endblock %}
