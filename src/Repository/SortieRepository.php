@@ -40,4 +40,41 @@ class SortieRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+    public function findFuturSortiesByOrganisateur($organisateurId): array
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.organisateur = :org')
+            ->andWhere('s.dateHeureDebut > :now')
+            ->setParameter('org', $organisateurId)
+            ->setParameter('now', new \DateTimeImmutable())
+            ->orderBy('s.dateHeureDebut', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+    public function countFuturSorties(): int
+    {
+        return $this->createQueryBuilder('s')
+            ->select('COUNT(s.id)')
+            ->andWhere('s.dateHeureDebut > :now')
+            ->setParameter('now', new \DateTimeImmutable())
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+    public function countPastSorties(): int
+    {
+        return $this->createQueryBuilder('s')
+            ->select('COUNT(s.id)')
+            ->andWhere('s.dateHeureDebut < :now')
+            ->setParameter('now', new \DateTimeImmutable())
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+    public function countCancelledSorties(): int
+    {
+        return $this->createQueryBuilder('s')
+            ->select('COUNT(s.id)')
+            ->andWhere('s.motifAnnulation IS NOT NULL')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

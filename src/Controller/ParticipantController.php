@@ -7,6 +7,7 @@ use App\Form\MotDePasseFormType;
 use App\Form\ProfilFormType;
 use App\Mapper\ProfilMapper;
 use App\Repository\ParticipantRepository;
+use App\Repository\SortieRepository;
 use App\Repository\TodoRepository;
 use App\Services\MotDePasseService;
 use App\Services\ParticipantService;
@@ -114,7 +115,7 @@ final class ParticipantController extends AbstractController
         ]);
     }
     #[Route('/participant/delete', name: 'participant_delete_account')]
-    public function deleteAccount(ParticipantRepository$participantRepository, EntityManagerInterface $entityManager, Security $security): Response
+    public function deleteAccount(SortieRepository $sortieRepository, EntityManagerInterface $entityManager, Security $security): Response
     {
         $user =  $this->getUser();
         if (!$user) {
@@ -126,21 +127,15 @@ final class ParticipantController extends AbstractController
         $user->setNom('Anonymous');
         $user->setPseudo('deleted_user_'.$user->getId());
         $user->setActif(false);
-
-        $now = new \DateTimeImmutable();
-        foreach ($user->getSorties() as $event) {
-
-            if ($event->getStartDate() > $now) {
-
-                $event->setCancellationReason(
+        $now = new \DateTime();
+        $sorties = $sortieRepository->findFuturSortiesByOrganisateur($user->getId());
+        foreach ($sorties as $sortie) {
+            $sortie->setMotifAnnulation(
                     'Événement annulé suite à la suppression du compte organisateur'
                 );
-
-                $event->setUpdatedAt($now);
-
-                $event->setStatus('cancelled');
-            }
+            $sortie->setDateModification($now);
         }
+
         $entityManager->flush();
         $security->logout(false);
 

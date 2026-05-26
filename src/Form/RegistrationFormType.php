@@ -16,6 +16,8 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+
 class RegistrationFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -25,7 +27,13 @@ class RegistrationFormType extends AbstractType
             ->add('pseudo')
             ->add('prenom')
             ->add('nom')
-            ->add('telephone')
+            ->add('telephone', TextType::class, [
+                'attr' => [
+                    'pattern' => '[0-9]{10}',
+                    'inputmode' => 'numeric',
+                    'maxlength' => 10,
+                ],
+            ])
             ->add('site', EntityType::class, [
                 'class' => Site::class,
                 'choice_label' => 'nom', // adapte selon ton entity Site
