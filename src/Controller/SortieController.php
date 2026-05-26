@@ -111,7 +111,7 @@ final class SortieController extends AbstractController
     {
         $sortie = $em->getRepository(Sortie::class)->find($id);
         return $this->render('sortie/detail.html.twig', [
-            'event_registration' => $sortie,
+            'sortie' => $sortie,
         ]);
     }
 

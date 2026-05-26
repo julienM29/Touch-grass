@@ -49,14 +49,14 @@
 
     {% if app.user %}
         {% if sortie.hasParticipant(app.user) %}
-            <form method="post" action="{{ path('sortie_unregister', {'id': sortie.id}) }}">
+            <form method="post" action="{{ path('api_sortie_unregister', {'id': sortie.id}) }}">
                 <input type="hidden" name="_token" value="{{ csrf_token('unregister_sortie_' ~ sortie.id) }}">
                 <button type="submit" class="btn">
                     Se désinscrire
                 </button>
             </form>
         {% elseif sortie.areInscriptionsOpen and not sortie.complete %}
-            <form method="post" action="{{ path('sortie_register', {'id': sortie.id}) }}">
+            <form method="post" action="{{ path('api_sortie_register', {'id': sortie.id}) }}">
                 <input type="hidden" name="_token" value="{{ csrf_token('register_sortie_' ~ sortie.id) }}">
                 <button type="submit" class="btn">
                     S'inscrire

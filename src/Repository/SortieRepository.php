@@ -16,30 +16,6 @@ class SortieRepository extends ServiceEntityRepository
         parent::__construct($registry, Sortie::class);
     }
 
-//    /**
-//     * @return Sortie[] Returns an array of Sortie objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Sortie
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
     public function findFuturSortiesByOrganisateur($organisateurId): array
     {
         return $this->createQueryBuilder('s')
@@ -51,6 +27,17 @@ class SortieRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function countByOrganisateur($organisateurId)
+    {
+        return $this->createQueryBuilder('s')
+            ->select('COUNT(s.id)')
+            ->andWhere('s.organisateur = :org')
+            ->setParameter('org', $organisateurId)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     public function countFuturSorties(): int
     {
         return $this->createQueryBuilder('s')
@@ -60,6 +47,7 @@ class SortieRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
     public function countPastSorties(): int
     {
         return $this->createQueryBuilder('s')
@@ -74,6 +62,32 @@ class SortieRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('s')
             ->select('COUNT(s.id)')
             ->andWhere('s.motifAnnulation IS NOT NULL')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function countPastByParticipant(int $userId): int
+    {
+        return (int) $this->createQueryBuilder('s')
+            ->select('COUNT(DISTINCT s.id)')
+            ->join('s.participants', 'p')
+            ->andWhere('p.id = :userId')
+            ->andWhere('s.dateHeureDebut < :now')
+            ->setParameter('userId', $userId)
+            ->setParameter('now', new \DateTime())
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function countUpcomingByUser(int $userId): int
+    {
+        return (int) $this->createQueryBuilder('s')
+            ->select('COUNT(DISTINCT s.id)')
+            ->leftJoin('s.participants', 'p')
+            ->andWhere('s.dateHeureDebut > :now')
+            ->andWhere('p.id = :userId OR IDENTITY(s.organisateur) = :userId')
+            ->setParameter('userId', $userId)
+            ->setParameter('now', new \DateTime())
             ->getQuery()
             ->getSingleScalarResult();
     }
