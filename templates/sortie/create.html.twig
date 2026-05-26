@@ -26,16 +26,22 @@
         </div>
         <div>
             {{ form_label(sortieForm.image) }}
-            <img id="preview"
-                 src="{{ asset('img/default-image.png') }}"
-                 alt="prévisualisation">
+            <label for="image-upload" class="relative group cursor-pointer">
+                <img id="preview"
+                     src="{{ asset('img/default-image.png') }}"
+                     alt="prévisualisation"
+                     class="transition duration-400 group-hover:blur-xs">
+                <div class="image-upload-overlay">
+                    Ajouter une image
+                </div>
+            </label>
             {{ form_widget(sortieForm.image, {
+                'id': 'image-upload',
                 'attr': {
                     'class': 'hidden',
                     'onchange': 'previewImage(event)'
                 }
             }) }}
-
             {{ form_errors(sortieForm.image) }}
         </div>
     </section>
