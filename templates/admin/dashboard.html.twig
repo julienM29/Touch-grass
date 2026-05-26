@@ -11,16 +11,13 @@
     {# SECTION ACTIONS #}
     <div class="mb-4">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-            {#                <a href="{{ path('admin_participants') }}"#}
-            <a href="#"
-               class="hadow hover:opacity-90 transition">
+            <a href="{{ path('admin_participant') }}"
+               class="btn">
                 Gérer les participants
             </a>
 
-            {#                <a href="{{ path('admin_sorties') }}"#}
-            <a href="#"
-               class="">
+            <a href="{{ path('admin_sorties') }}"
+               class="btn">
                 Gérer les événements
             </a>
 
@@ -30,51 +27,51 @@
         {# GRID DES STATS #}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {# Participants #}
-        <article class="bg-white rounded-2xl shadow-md p-6">
+        <article class=" ">
             <div class="text-4xl font-black text-[#5C7D5C]">
                 {{ nbUtilisateurs }}
             </div>
-            <p class="mt-2 text-sm text-gray-600">
+            <p class=" ">
                 Utilisateurs inscrits
             </p>
         </article>
 
         {# Total événements #}
-        <article class="bg-white rounded-2xl shadow-md p-6">
+        <article class=" ">
             <div class="text-4xl font-black text-[#5C7D5C]">
                 {{ nbSorties }}
              </div>
-            <p class="mt-2 text-sm text-gray-600">
+            <p class=" ">
                 Sorties créés
             </p>
         </article>
 
         {# À venir #}
-        <article class="bg-white rounded-2xl shadow-md p-6">
+        <article class=" ">
             <div class="text-4xl font-black text-[#5C7D5C]">
                 {{ sortiesAVenir }}
             </div>
-            <p class="mt-2 text-sm text-gray-600">
+            <p class=" ">
                 Sorties à venir
             </p>
         </article>
 
         {# Passés #}
-        <article class="bg-white rounded-2xl shadow-md p-6">
+        <article class=" ">
             <div class="text-4xl font-black text-gray-700">
                 {{ sortiesPassees }}
             </div>
-            <p class="mt-2 text-sm text-gray-600">
+            <p class=" ">
                 Sorties passés
             </p>
         </article>
 
         {# Annulés #}
-        <article class="bg-white rounded-2xl shadow-md p-6">
+        <article class=" ">
             <div class="text-4xl font-black text-red-500">
                 {{ sortiesAnnulees }}
             </div>
-            <p class="mt-2 text-sm text-gray-600">
+            <p class=" ">
                 Sorties annulés
             </p>
         </article>

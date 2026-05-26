@@ -1,0 +1,46 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block title %}Dashboard Admin{% endblock %}
+
+{% block main %}
+
+    <a href="{{ path('admin_dashboard') }}"
+       class="self-start block text-primary text-sm font-semibold py-2 hover:text-gray-400">
+        ← Retour au dashboard
+    </a>
+    <h1 class="text-2xl font-bold mb-8 text-[#5C7D5C]">
+        Gestion des utilisateurs
+    </h1>
+
+    <section>
+        <table>
+            <thead>
+            <tr>
+                <th>Email</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Téléphone</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for utilisateur in utilisateurs %}
+                <tr>
+                    <td><p>{{ utilisateur.email }}</p></td>
+                    <td><p>{{ utilisateur.nom }}</p></td>
+                    <td><p>{{ utilisateur.prenom }}</p></td>
+                    <td><p>{{ utilisateur.telephone }}</p></td>
+                    <td>
+                        <a href="{{ path('admin_participant_edit', {id: utilisateur.id}) }}">
+                            Edit
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </section>
+
+
+{% endblock %}

@@ -25,12 +25,14 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 final class ParticipantController extends AbstractController
 {
     private SortieRepository $sortieRepository;
-
+    private ParticipantService $participantService;
     public function __construct(
-        SortieRepository $sortieRepository
+        SortieRepository $sortieRepository,
+        ParticipantService $participantService
     )
     {
         $this->sortieRepository = $sortieRepository;
+        $this->participantService = $participantService;
     }
 
     #[Route('/participant', name: 'app_participant')]

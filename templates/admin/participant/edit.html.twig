@@ -1,0 +1,82 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block title %}Modification participant{% endblock %}
+
+{% block main %}
+<div
+    id="modal-{{ utilisateur.id }}"
+    onclick="closeModal('modal-{{ utilisateur.id }}')"
+    class="hidden fixed inset-0 z-50 grid place-items-center bg-black/60 backdrop-blur-sm p-4 cursor-pointer"
+>
+
+    <div
+        onclick="event.stopPropagation()"
+        class="conteneur-modal bg-surface space-y-5"
+    >
+
+        {# CLOSE #}
+        <button
+            onclick="closeModal('modal-{{ utilisateur.id }}')"
+            class="btn-close-modal"
+        >
+            ✕
+        </button>
+
+        {# TITRE #}
+        <h2 class="text-xl font-bold uppercase text-[var(--color-primary)] leading-tight">
+            Modifier utilisateur
+        </h2>
+
+        {# FORMULAIRE PROFIL #}
+        {{ form_start(form, {
+            attr: { enctype: 'multipart/form-data' }
+        }) }}
+
+        {# PSEUDO #}
+        <div class="space-y-1">
+            <label class="font-semibold text-[var(--color-primary)]">Pseudo</label>
+            {{ form_widget(form.pseudo) }}
+        </div>
+
+        {# PRENOM #}
+        <div class="space-y-1">
+            <label class="font-semibold text-[var(--color-primary)]">Prénom</label>
+            {{ form_widget(form.prenom) }}
+        </div>
+
+        {# NOM #}
+        <div class="space-y-1">
+            <label class="font-semibold text-[var(--color-primary)]">Nom</label>
+            {{ form_widget(form.nom) }}
+        </div>
+
+        {# TELEPHONE #}
+        <div class="space-y-1">
+            <label class="font-semibold text-[var(--color-primary)]">Téléphone</label>
+            {{ form_widget(form.telephone) }}
+        </div>
+
+        {# SITE #}
+        <div class="space-y-1">
+            <label class="font-semibold text-[var(--color-primary)]">Site</label>
+            {{ form_widget(form.site) }}
+        </div>
+
+        {# IMAGE #}
+        <div class="space-y-1">
+            <label class="font-semibold text-[var(--color-primary)]">Photo de profil</label>
+            {{ form_widget(form.image) }}
+        </div>
+
+        {# SUBMIT #}
+        <div class="pt-4">
+            <button type="submit" class="btn">
+                Enregistrer
+            </button>
+        </div>
+
+        {{ form_end(form) }}
+
+    </div>
+</div>
+{% endblock %}
