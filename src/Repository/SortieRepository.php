@@ -68,6 +68,7 @@ class SortieRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
     public function countCancelledSorties(): int
     {
         return $this->createQueryBuilder('s')
@@ -79,7 +80,7 @@ class SortieRepository extends ServiceEntityRepository
 
     public function countPastByParticipant(int $userId): int
     {
-        return (int) $this->createQueryBuilder('s')
+        return (int)$this->createQueryBuilder('s')
             ->select('COUNT(DISTINCT s.id)')
             ->join('s.participants', 'p')
             ->andWhere('p.id = :userId')
@@ -92,7 +93,7 @@ class SortieRepository extends ServiceEntityRepository
 
     public function countUpcomingByUser(int $userId): int
     {
-        return (int) $this->createQueryBuilder('s')
+        return (int)$this->createQueryBuilder('s')
             ->select('COUNT(DISTINCT s.id)')
             ->leftJoin('s.participants', 'p')
             ->andWhere('s.dateHeureDebut > :now')
@@ -102,6 +103,7 @@ class SortieRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
     public function findLastSorties(): array
     {
         return $this->createQueryBuilder('s')
@@ -110,6 +112,7 @@ class SortieRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
     public function findFilteredPaginated(array $filters, int $page, int $limit): array
     {
         $qb = $this->createQueryBuilder('s')
@@ -193,20 +196,70 @@ class SortieRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findFilteredSorties(FilterDto $filters): array
+    public function findFilteredSorties(FilterDto $filters, int $userId): array
     {
-        $queryBuilder = $this->createQueryBuilder('s');
+        /* Jointure des tables sortie, lieu et ville */
+        $queryBuilder = $this->createQueryBuilder('s')
+            ->leftJoin('s.lieu', 'l')
+            ->leftJoin('l.ville', 'v')
+            ->leftJoin('s.participants', 'p');
 
-        if ($filters->dateMin !== null) {
+        /* Recherche par mot-clef */
+        if ($filters->word !== null && trim($filters->word) !== '') {
+            $queryBuilder
+                ->andWhere('(s.nom LIKE :word OR v.nom LIKE :word)')
+                ->setParameter('word', '%' . trim($filters->word) . '%');
+        }
+
+        /* Recherche par date */
+        if ($filters->dateMin !== null && $filters->dateMax !== null) {
+            $queryBuilder
+                ->andWhere('s.dateHeureDebut BETWEEN :dateMin AND :dateMax')
+                ->setParameter('dateMin', $filters->dateMin)
+                ->setParameter('dateMax', $filters->dateMax);
+        } elseif ($filters->dateMin !== null) {
             $queryBuilder
                 ->andWhere('s.dateHeureDebut >= :dateMin')
                 ->setParameter('dateMin', $filters->dateMin);
-        }
-
-        if ($filters->dateMax !== null) {
+        } elseif ($filters->dateMax !== null) {
             $queryBuilder
                 ->andWhere('s.dateHeureDebut <= :dateMax')
                 ->setParameter('dateMax', $filters->dateMax);
+        }
+
+        /* Recherche par site organisateur */
+        if($filters->site !== null) {
+            $queryBuilder
+                ->andWhere('s.siteOrganisateur = :site')
+                ->setParameter('site', $filters->site);
+        }
+
+        /* Recherche par organisateur est l'utilisateur courant */
+        if($filters->organisateur) {
+            $queryBuilder
+                ->andWhere('s.organisateur = :organisateur')
+                ->setParameter('organisateur', $userId);
+        }
+
+        /* Recherche par participants contient l'utilisateur courant */
+        if ($filters->registered) {
+            $queryBuilder
+                ->andWhere('p.id = :participant')
+                ->setParameter('participant', $userId);
+        }
+
+        /* Recherche par participants ne contient pas l'utilisateur courant */
+        if ($filters->notRegistered) {
+            $queryBuilder
+                ->andWhere('p.id != :participant')
+                ->setParameter('participant', $userId);
+        }
+
+        /* Recherche par sortie terminée */
+        if ($filters->finished) {
+            $queryBuilder
+                ->andWhere('s.dateHeureDebut < :now')
+                ->setParameter('now', new \DateTime());
         }
 
         return $queryBuilder
