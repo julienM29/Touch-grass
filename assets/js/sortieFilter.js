@@ -37,7 +37,55 @@ async function sendFilterRequest() {
             body: JSON.stringify(filters),
         });
 
+
     const data = await response.json();
 
-    console.log(data);
+    updateSortiesList(data.sorties);
+}
+
+function updateSortiesList(sorties) {
+    const sortiesList = document.querySelector('#sorties-list');
+
+    if (!sortiesList) {
+        return;
+    }
+
+    sortiesList.innerHTML = '';
+
+    if (sorties.length === 0) {
+        const row = document.createElement('tr');
+
+        row.innerHTML = `
+            <td colspan="3">
+                Il n'y actuellement aucune sortie correspondant à votre recherche.
+            </td>
+        `;
+
+        sortiesList.appendChild(row);
+        return;
+    }
+
+    sorties.forEach((sortie) => {
+        const row = document.createElement('tr');
+
+        console.log(sortie);
+
+        const imageSrc = sortie.image
+            ? `/uploads/${sortie.image}`
+            : '/img/default-image.png';
+
+        row.innerHTML = `
+            <td>
+                <img src="${imageSrc}" alt="Image-sortie">
+            </td>
+            <td>${sortie.nom}</td>
+            <td>
+                <a href="/sortie/${sortie.id}" class="btn btn-primary">
+                    Voir
+                </a>
+            </td>
+        `;
+
+        sortiesList.appendChild(row);
+    });
 }
