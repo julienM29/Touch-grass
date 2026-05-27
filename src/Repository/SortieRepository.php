@@ -91,4 +91,12 @@ class SortieRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+    public function findLastSorties(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->orderBy('s.dateHeureDebut', 'DESC')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
+    }
 }

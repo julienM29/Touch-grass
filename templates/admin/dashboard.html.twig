@@ -1,4 +1,4 @@
-{% extends 'layout/base.html.twig' %}
+{% extends 'layout/admin_base.html.twig' %}
 
 {% block title %}Dashboard Admin{% endblock %}
 
@@ -6,26 +6,10 @@
 
 
         <h1 class="text-2xl font-bold mb-8 text-[#5C7D5C]">
-            Dashboard Administrateur
+            Dashboard
         </h1>
-    {# SECTION ACTIONS #}
-    <div class="mb-4">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <a href="{{ path('admin_participant') }}"
-               class="btn">
-                Gérer les participants
-            </a>
-
-            <a href="{{ path('admin_sorties') }}"
-               class="btn">
-                Gérer les événements
-            </a>
-
-        </div>
-
-    </div>
         {# GRID DES STATS #}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {# Participants #}
         <article class=" ">
             <div class="text-4xl font-black text-[#5C7D5C]">
@@ -75,10 +59,14 @@
                 Sorties annulés
             </p>
         </article>
-
     </div>
+    {# Dernières sorties #}
+    <section class="mt-10">
+        <h2>Dernières sorties</h2>
+    </section>
 
-
-
-
+    {# Derniers users #}
+    <section class="mt-10">
+        <h2>Derniers utilisateurs</h2>
+    </section>
 {% endblock %}
