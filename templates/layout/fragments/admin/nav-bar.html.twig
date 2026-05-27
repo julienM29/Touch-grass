@@ -1,0 +1,58 @@
+<div class="w-full md:w-64 shrink-0">
+    <nav class="bg-surface rounded-2xl shadow px-4 py-4 md:py-7
+            flex md:flex-col flex-row md:items-start items-center justify-center
+            gap-2 overflow-x-auto">
+        {% set route = app.request.attributes.get('_route') %}
+
+        {# Dashboard #}
+        <a href="{{ path('admin_dashboard') }}"
+           class="sidebar-link {{ route == 'admin_dashboard' ? 'active' : '' }}">
+            <span class="flex items-center gap-2">
+                <i class="fa-solid fa-house"></i>
+                <span class="hidden md:inline">Dashboard</span>
+            </span>
+            <span class="arrow hidden md:inline">→</span>
+        </a>
+
+        {# Participants #}
+        <a href="{{ path('admin_participant') }}"
+           class="sidebar-link {{ route starts with 'admin_participant' ? 'active' : '' }}">
+            <span class="flex items-center gap-2">
+                <i class="fa-solid fa-users"></i>
+                <span class="hidden md:inline">Participants</span>
+            </span>
+            <span class="arrow hidden md:inline">→</span>
+        </a>
+
+        {# Événements #}
+        <a href="{{ path('admin_sorties') }}"
+           class="sidebar-link {{ route starts with 'admin_sorties' ? 'active' : '' }}">
+            <span class="flex items-center gap-2">
+                <i class="fa-solid fa-calendar"></i>
+                <span class="hidden md:inline">Événements</span>
+            </span>
+            <span class="arrow hidden md:inline">→</span>
+        </a>
+
+        {# Site #}
+        <a href="{{ path('admin_site') }}"
+           class="sidebar-link {{ route starts with 'admin_site' ? 'active' : '' }}">
+            <span class="flex items-center gap-2">
+                <i class="fa-solid fa-landmark"></i>
+                <span class="hidden md:inline">Site</span>
+            </span>
+            <span class="arrow hidden md:inline">→</span>
+        </a>
+
+        {# Ville #}
+        <a href="{{ path('admin_ville') }}"
+           class="sidebar-link {{ route starts with 'admin_ville' ? 'active' : '' }}">
+            <span class="flex items-center gap-2">
+                <i class="fa-solid fa-city"></i>
+                <span class="hidden md:inline">Ville</span>
+            </span>
+            <span class="arrow hidden md:inline">→</span>
+        </a>
+
+    </nav>
+</div>

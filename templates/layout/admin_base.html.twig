@@ -8,7 +8,7 @@
 
     <link rel="icon"
           href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     {% block stylesheets %}
         <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
     {% endblock %}
@@ -28,28 +28,63 @@
 </header>
 <main class="bg-background min-h-[90vh] flex flex-col md:flex-row justify-center gap-4 py-24 px-4">
     <aside class="w-full md:w-64 shrink-0">
-        <nav class="bg-surface rounded-2xl shadow px-4 py-4 md:py-7 flex md:flex-col flex-row gap-2 overflow-x-auto">
+        <nav class="bg-surface rounded-2xl shadow px-4 py-4 md:py-7
+            flex md:flex-col flex-row md:items-start items-center justify-center
+            gap-2 overflow-x-auto">
             {% set route = app.request.attributes.get('_route') %}
+
+            {# Dashboard #}
             <a href="{{ path('admin_dashboard') }}"
                class="sidebar-link {{ route == 'admin_dashboard' ? 'active' : '' }}">
-                <span>Dashboard</span>
-                <span class="arrow">→</span>
+            <span class="flex items-center gap-2">
+                <i class="fa-solid fa-house"></i>
+                <span class="hidden md:inline">Dashboard</span>
+            </span>
+                <span class="arrow hidden md:inline">→</span>
             </a>
 
+            {# Participants #}
             <a href="{{ path('admin_participant') }}"
                class="sidebar-link {{ route starts with 'admin_participant' ? 'active' : '' }}">
-                <span>Participants</span>
-                <span class="arrow">→</span>
+            <span class="flex items-center gap-2">
+                <i class="fa-solid fa-users"></i>
+                <span class="hidden md:inline">Participants</span>
+            </span>
+                <span class="arrow hidden md:inline">→</span>
             </a>
 
+            {# Événements #}
             <a href="{{ path('admin_sorties') }}"
                class="sidebar-link {{ route starts with 'admin_sorties' ? 'active' : '' }}">
-                <span>Événements</span>
-                <span class="arrow">→</span>
+            <span class="flex items-center gap-2">
+                <i class="fa-solid fa-calendar"></i>
+                <span class="hidden md:inline">Événements</span>
+            </span>
+                <span class="arrow hidden md:inline">→</span>
             </a>
+
+            {# Site #}
+            <a href="{{ path('admin_site') }}"
+                class="sidebar-link {{ route starts with 'admin_site' ? 'active' : '' }}">
+            <span class="flex items-center gap-2">
+                <i class="fa-solid fa-landmark"></i>
+                <span class="hidden md:inline">Site</span>
+            </span>
+                <span class="arrow hidden md:inline">→</span>
+            </a>
+
+            {# Ville #}
+            <a href="{{ path('admin_ville') }}"
+                class="sidebar-link {{ route starts with 'admin_ville' ? 'active' : '' }}">
+            <span class="flex items-center gap-2">
+                <i class="fa-solid fa-city"></i>
+                <span class="hidden md:inline">Ville</span>
+            </span>
+                <span class="arrow hidden md:inline">→</span>
+            </a>
+
         </nav>
-    </aside>
-    <div
+    </aside>    <div
         class="w-full max-w-6xl bg-surface rounded-2xl shadow-xl px-4 py-6 md:px-8 md:py-8 flex flex-col text-center">
         {# Messages flash #}
         {% for message in app.flashes('success') %}

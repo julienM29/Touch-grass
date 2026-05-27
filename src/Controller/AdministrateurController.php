@@ -111,4 +111,12 @@ final class AdministrateurController extends AbstractController
             'hasMore' => $hasMore,
         ]);
     }
+    #[Route('/site', name: 'site')]
+    public function afficherSite(  ): Response {
+        return $this->render('admin/site/list.html.twig');
+    }
+    #[Route('/ville', name: 'ville')]
+    public function afficherVille(  ): Response {
+        return $this->render('admin/ville/list.html.twig');
+    }
 }
