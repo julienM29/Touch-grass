@@ -48,4 +48,8 @@ return [
         'path' => './assets/js/mapLieu.js',
         'entrypoint' => true,
     ],
+    'mapModals' => [
+        'path' => './assets/js/mapModals.js',
+        'entrypoint' => true,
+    ],
 ];

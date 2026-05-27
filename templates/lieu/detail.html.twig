@@ -22,10 +22,17 @@
          data-lng="{{ lieu.longitude }}"
          style="height: 400px; width: 100%;">
     </div>
-    <section>
-        <a class="btn" href="{{ path('lieu_delete', {'id': lieu.id}) }}"
-           onclick="return confirm('Delete {{ lieu.nom }} ?')">Delete</a>
-        <a class="btn" href="{{ path('lieu_update', {'id': lieu.id}) }}">Update</a>
-    </section>
+    {# ACTIONS ADMIN #}
+    {% if app.user and app.user.administrateur %}
+        <hr>
+        <section class="flex gap-3 justify-center">
+            <a href="{{ path('lieu_update', { id: lieu.id }) }}" class="btn">Modifier</a>
+            <form method="post" action="{{ path('lieu_delete', { id: lieu.id }) }}"
+                  onsubmit="return confirm('Voulez-vous vraiment supprimer ce lieu ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete_lieu_' ~ lieu.id) }}">
+                <button type="submit" class="btn">Supprimer</button>
+            </form>
+        </section>
+    {% endif %}
 
 {% endblock %}

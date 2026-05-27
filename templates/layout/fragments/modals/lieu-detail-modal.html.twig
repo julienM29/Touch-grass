@@ -1,0 +1,55 @@
+<div
+    id="modal-lieu-{{ lieu.id }}"
+    onclick="closeModal('modal-lieu-{{ lieu.id }}')"
+    class="hidden fixed inset-0 z-50 grid place-items-center bg-black/60 backdrop-blur-sm p-4 cursor-pointer"
+>
+    <div
+        onclick="event.stopPropagation()"
+        class="conteneur-modal bg-surface space-y-5"
+    >
+        {# CLOSE #}
+        <button
+            onclick="closeModal('modal-lieu-{{ lieu.id }}')"
+            class="btn-close-modal"
+        >
+            ✕
+        </button>
+
+        {# TITRE #}
+        <h2 class="text-xl font-bold uppercase text-[var(--color-primary)] leading-tight">
+            {{ lieu.nom }}
+        </h2>
+
+        {# ADRESSE #}
+        <div class="space-y-1">
+            <label class="font-semibold text-[var(--color-primary)]">Adresse</label>
+            <p>
+                {{ lieu.rue }}<br>
+                {{ lieu.ville.codePostal }} {{ lieu.ville.nom }}
+            </p>
+        </div>
+
+        {# CARTE #}
+        {% if lieu.latitude and lieu.longitude %}
+            <div
+                id="carte-modal-{{ lieu.id }}"
+                data-lat="{{ lieu.latitude }}"
+                data-lng="{{ lieu.longitude }}"
+                style="height: 300px; width: 100%; border-radius: 0.75rem; overflow: hidden;"
+            ></div>
+        {% endif %}
+
+        {# ACTIONS ADMIN #}
+        {% if app.user and app.user.administrateur %}
+            <hr>
+            <section class="flex gap-3 justify-center">
+                <a href="{{ path('lieu_update', { id: lieu.id }) }}" class="btn">Modifier</a>
+                <form method="post" action="{{ path('lieu_delete', { id: lieu.id }) }}"
+                      onsubmit="return confirm('Voulez-vous vraiment supprimer ce lieu ?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete_lieu_' ~ lieu.id) }}">
+                    <button type="submit" class="btn">Supprimer</button>
+                </form>
+            </section>
+        {% endif %}
+    </div>
+</div>

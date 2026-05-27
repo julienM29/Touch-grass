@@ -1,6 +1,11 @@
 function openModal(id) {
     document.getElementById(id).classList.remove('hidden');
     document.body.classList.add('overflow-hidden');
+
+    // Forcer Leaflet à recalculer la taille de la carte
+    setTimeout(function() {
+        window.dispatchEvent(new Event('resize'));
+    }, 100);
 }
 function closeModal(id) {
     document.getElementById(id).classList.add('hidden');

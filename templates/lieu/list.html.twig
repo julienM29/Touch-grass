@@ -2,6 +2,17 @@
 
 {% block title %}Gestion des Lieux{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ importmap('mapModals') }}
+    <script src="{{ asset('js/openModal.js') }}" defer></script>
+{% endblock %}
+
 {% block main %}
     <h1>Liste des lieux</h1>
     <a class="btn" href="{{ path('lieu_create') }}">Proposer un lieu</a>
@@ -25,12 +36,22 @@
                     <tr>
                         <td><p>{{ lieu.nom }}</p></td>
                         <td><p>{{ lieu.ville.nom }}</p></td>
-                        <td><a class="btn" href="{{ path('lieu_detail', {'id': lieu.id}) }}">Détail</a></td>
+                        <td>
+                            {# Bouton qui ouvre la modal #}
+                            <button onclick="openModal('modal-lieu-{{ lieu.id }}')">
+                                Détail
+                            </button>
+                        </td>
                     </tr>
                 {% endfor %}
-
                 </tbody>
             </table>
         </section>
+
+        {# Inclusion de la modal #}
+        {% for lieu in lieux %}
+            {% include 'layout/fragments/modals/lieu-detail-modal.html.twig' with { lieu: lieu } %}
+        {% endfor %}
+
     {% endif %}
 {% endblock %}

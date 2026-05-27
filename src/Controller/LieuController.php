@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Lieu;
+use App\Entity\Ville;
 use App\Form\LieuFormType;
 use App\Repository\LieuRepository;
 use App\Repository\VilleRepository;
@@ -11,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/lieu', name: 'lieu_')]
 final class LieuController extends AbstractController
@@ -27,6 +29,7 @@ final class LieuController extends AbstractController
     }
 
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function create(
         Request                $request,
         VilleRepository        $villeRepository,
@@ -100,6 +103,7 @@ final class LieuController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'delete', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(int                    $id,
                            LieuRepository         $lieuRepository,
                            EntityManagerInterface $entityManager): Response
@@ -116,6 +120,7 @@ final class LieuController extends AbstractController
     }
 
     #[Route('/{id}/update', name: 'update', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function update(
         int                    $id,
         LieuRepository         $lieuRepository,

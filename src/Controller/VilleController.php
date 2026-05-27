@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/ville', name: 'ville_')]
 final class VilleController extends AbstractController
@@ -26,6 +27,7 @@ final class VilleController extends AbstractController
     }
 
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function create(
         Request                $request,
         EntityManagerInterface $entityManager,
@@ -62,6 +64,7 @@ final class VilleController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'delete', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(int                    $id,
                            VilleRepository        $villeRepository,
                            EntityManagerInterface $entityManager): Response
@@ -78,6 +81,7 @@ final class VilleController extends AbstractController
     }
 
     #[Route('/{id}/update', name: 'update', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function update(int                                        $id,
                            VilleRepository                            $villeRepository,
                            Request                                    $request,
