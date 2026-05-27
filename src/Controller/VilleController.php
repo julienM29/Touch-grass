@@ -31,6 +31,7 @@ final class VilleController extends AbstractController
     public function create(
         Request                $request,
         EntityManagerInterface $entityManager,
+        VilleRepository        $villeRepository,
     ): Response
     {
         $ville = new Ville();
@@ -39,8 +40,21 @@ final class VilleController extends AbstractController
         $villeForm->handleRequest($request);
 
         if ($villeForm->isSubmitted() && $villeForm->isValid()) {
+
+            // Vérif doublon
+            $villeExistante = $villeRepository->findOneBy([
+                'nom' => $ville->getNom(),
+                'codePostal' => $ville->getCodePostal(),
+            ]);
+
+            if ($villeExistante) {
+                $this->addFlash('warning', 'Cette ville existe déjà.');
+                return $this->render('ville/create.html.twig', ['villeForm' => $villeForm]);
+            }
+
             $entityManager->persist($ville);
             $entityManager->flush();
+            $this->addFlash('success', $ville->getNom() . ' créée avec succès.');
 
             return $this->redirectToRoute('ville_list');
         }
@@ -63,15 +77,29 @@ final class VilleController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'delete', methods: ['GET'])]
+    #[Route('/{id}/delete', name: 'delete', methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function delete(int                    $id,
                            VilleRepository        $villeRepository,
-                           EntityManagerInterface $entityManager): Response
+                           EntityManagerInterface $entityManager,
+                           Request                $request
+    ): Response
     {
         $ville = $villeRepository->findVilleById($id);
 
+        if (!$this->isCsrfTokenValid('delete_ville_' . $id, $request->request->get('_token'))) {
+            $this->addFlash('error', 'Token invalide.');
+            return $this->redirectToRoute('ville_list');
+        }
+
         if ($ville) {
+
+            // Vérif si la ville a des lieux associés
+            if (!$ville->getLieus()->isEmpty()) {
+                $this->addFlash('error', 'Impossible de supprimer cette ville, elle a des lieux associés.');
+                return $this->redirectToRoute('ville_list');
+            }
+
             $entityManager->remove($ville);
             $entityManager->flush();
             $this->addFlash('success', $ville->getNom() . ' deleted !');
@@ -82,10 +110,10 @@ final class VilleController extends AbstractController
 
     #[Route('/{id}/update', name: 'update', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function update(int                                        $id,
-                           VilleRepository                            $villeRepository,
-                           Request                                    $request,
-                           EntityManagerInterface                     $entityManager,
+    public function update(int                    $id,
+                           VilleRepository        $villeRepository,
+                           Request                $request,
+                           EntityManagerInterface $entityManager,
     ): Response
     {
         $ville = $villeRepository->findVilleById($id);
@@ -95,7 +123,17 @@ final class VilleController extends AbstractController
 
         if ($villeForm->isSubmitted() && $villeForm->isValid()) {
 
-            $entityManager->persist($ville);
+            // Vérif doublon en excluant la ville actuelle
+            $villeExistante = $villeRepository->findOneBy([
+                'nom' => $ville->getNom(),
+                'codePostal' => $ville->getCodePostal(),
+            ]);
+
+            if ($villeExistante && $villeExistante->getId() !== $ville->getId()) {
+                $this->addFlash('warning', 'Une ville avec ce nom et ce code postal existe déjà.');
+                return $this->render('ville/update.html.twig', ['villeForm' => $villeForm]);
+            }
+
             $entityManager->flush();
             $this->addFlash('success', $ville->getNom() . ' updated !');
             return $this->redirectToRoute('ville_detail', ['id' => $ville->getId()]);

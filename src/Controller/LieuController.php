@@ -48,12 +48,24 @@ final class LieuController extends AbstractController
             $villeNom = $lieuForm->get('villeNom')->getData();
             $villeCP  = $lieuForm->get('villeCodePostal')->getData();
 
+            // Vérif doublon lieu AVANT de créer la ville
+            $lieuExistant = $lieuRepository->findOneBy([
+                'rue'  => $lieu->getRue(),
+                'nom'  => $lieu->getNom(),
+            ]);
+
+            if ($lieuExistant) {
+                $this->addFlash('warning', 'Ce lieu existe déjà.');
+                return $this->render('lieu/create.html.twig', ['lieuForm' => $lieuForm]);
+            }
+
             // Vérif doublon ville
             $ville = $villeRepository->findOneBy([
                 'nom'        => $villeNom,
                 'codePostal' => $villeCP,
             ]);
 
+            // Créer la ville seulement si elle n'existe pas
             if (!$ville) {
                 $ville = new Ville();
                 $ville->setNom($villeNom);
@@ -62,17 +74,6 @@ final class LieuController extends AbstractController
             }
 
             $lieu->setVille($ville);
-
-            // Vérif doublon lieu
-            $lieuExistant = $lieuRepository->findOneBy([
-                'rue'   => $lieu->getRue(),
-                'ville' => $ville,
-            ]);
-
-            if ($lieuExistant) {
-                $this->addFlash('warning', 'Ce lieu existe déjà.');
-                return $this->render('lieu/create.html.twig', ['lieuForm' => $lieuForm]);
-            }
 
             try {
                 $entityManager->persist($lieu);
@@ -146,6 +147,20 @@ final class LieuController extends AbstractController
         if ($lieuForm->isSubmitted() && $lieuForm->isValid()) {
             $villeNom = $lieuForm->get('villeNom')->getData();
             $villeCP  = $lieuForm->get('villeCodePostal')->getData();
+
+            // Vérif doublon lieu en excluant le lieu actuel
+            $lieuExistant = $lieuRepository->findOneBy([
+                'rue' => $lieu->getRue(),
+                'nom' => $lieu->getNom(),
+            ]);
+
+            if ($lieuExistant && $lieuExistant->getId() !== $lieu->getId()) {
+                $this->addFlash('warning', 'Un lieu avec ce nom et cette rue existe déjà.');
+                return $this->render('lieu/update.html.twig', [
+                    'lieuForm' => $lieuForm,
+                    'lieu'     => $lieu,
+                ]);
+            }
 
             // Vérif doublon ville
             $ville = $villeRepository->findOneBy([
