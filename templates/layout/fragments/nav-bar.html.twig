@@ -76,7 +76,7 @@
 
             {% if is_granted('ROLE_ADMIN') %}
                 <li>
-                    <a href="#" class="block text-primary text-lg font-semibold py-2 hover:text-gray-400">
+                    <a href="{{ path('admin_dashboard') }}" class="block text-primary text-lg font-semibold py-2 hover:text-gray-400">
                         Admin
                     </a>
                 </li>

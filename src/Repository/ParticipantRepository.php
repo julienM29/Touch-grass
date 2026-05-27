@@ -65,4 +65,53 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
             ->getQuery()
             ->getResult();
     }
+    public function findFilteredPaginated(array $filters, int $page, int $limit): array
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->orderBy('p.nom', 'ASC');
+
+        // EMAIL
+        if (!empty($filters['email'])) {
+            $qb->andWhere('p.email LIKE :email')
+                ->setParameter('email', '%' . $filters['email'] . '%');
+        }
+
+        // NOM
+        if (!empty($filters['nom'])) {
+            $qb->andWhere('p.nom LIKE :nom')
+                ->setParameter('nom', '%' . $filters['nom'] . '%');
+        }
+
+        // PRENOM
+        if (!empty($filters['prenom'])) {
+            $qb->andWhere('p.prenom LIKE :prenom')
+                ->setParameter('prenom', '%' . $filters['prenom'] . '%');
+        }
+
+        // TELEPHONE
+        if (!empty($filters['telephone'])) {
+            $qb->andWhere('p.telephone LIKE :telephone')
+                ->setParameter('telephone', '%' . $filters['telephone'] . '%');
+        }
+
+        // ACTIF
+        if ($filters['actif'] !== null && $filters['actif'] !== '') {
+
+            if ($filters['actif'] == '1') {
+                $qb->andWhere('p.actif = :actif')
+                    ->setParameter('actif', true);
+            }
+
+            if ($filters['actif'] == '0') {
+                $qb->andWhere('p.actif = :actif')
+                    ->setParameter('actif', false);
+            }
+        }
+
+        // PAGINATION
+        $qb->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit + 1);
+
+        return $qb->getQuery()->getResult();
+    }
 }

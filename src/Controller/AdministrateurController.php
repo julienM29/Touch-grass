@@ -44,11 +44,40 @@ final class AdministrateurController extends AbstractController
             'dernieresUtilisateurs' => $derniersUtilisateurs
         ]);
     }
-    #[Route('/participant', name: 'participant')]
-    public function afficherParticipants(ParticipantRepository $participantRepository ): Response {
-        $utilisateurs = $participantRepository->findAll();
-        return $this->render('admin/participant/list.html.twig',[
-        'utilisateurs' => $utilisateurs]);
+    #[Route('/participants', name: 'participant')]
+    public function afficherParticipants(
+        Request $request,
+        ParticipantRepository $participantRepository
+    ): Response {
+
+        $page = $request->query->getInt('page', 1);
+        $limit = 10;
+
+        $filters = [
+            'email' => $request->query->get('email'),
+            'nom' => $request->query->get('nom'),
+            'prenom' => $request->query->get('prenom'),
+            'telephone' => $request->query->get('telephone'),
+            'actif' => $request->query->get('actif'),
+        ];
+
+        $participants = $participantRepository->findFilteredPaginated(
+            $filters,
+            $page,
+            $limit
+        );
+
+        $hasMore = count($participants) > $limit;
+
+        if ($hasMore) {
+            array_pop($participants);
+        }
+
+        return $this->render('admin/participant/list.html.twig', [
+            'participants' => $participants,
+            'page' => $page,
+            'hasMore' => $hasMore,
+        ]);
     }
     #[Route('/participant/{id}/edit', name: 'participant_edit')]
     public function edit(

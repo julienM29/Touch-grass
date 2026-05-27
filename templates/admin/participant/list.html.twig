@@ -1,11 +1,15 @@
-{% extends 'layout/admin_base.html.twig' %}
+{% extends 'layout/base.html.twig' %}
 
 {% block title %}Dashboard Admin{% endblock %}
-
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/openModal.js') }}" defer></script>
+{% endblock %}
 {% block main %}
-    <h1 class="text-2xl font-bold mb-8 text-[#5C7D5C]">
+    <h1 class="">
         Gestion des utilisateurs
     </h1>
+    {% include 'layout/fragments/admin/nav-bar.html.twig' %}
     <form method="get">
 
         <section>
@@ -61,7 +65,8 @@
             Filtrer
         </button>
 
-    </form>    <section>
+    </form>
+    <section class="admin-dashboard overflow-x-auto">
         <table>
             <thead>
             <tr>
@@ -73,14 +78,14 @@
             </tr>
             </thead>
             <tbody>
-            {% for utilisateur in utilisateurs %}
+            {% for participant in participants %}
                 <tr>
-                    <td><p>{{ utilisateur.email }}</p></td>
-                    <td><p>{{ utilisateur.nom }}</p></td>
-                    <td><p>{{ utilisateur.prenom }}</p></td>
-                    <td><p>{{ utilisateur.telephone }}</p></td>
+                    <td><p>{{ participant.email }}</p></td>
+                    <td><p>{{ participant.nom }}</p></td>
+                    <td><p>{{ participant.prenom }}</p></td>
+                    <td><p>{{ participant.telephone }}</p></td>
                     <td>
-                        <a class="btn" href="{{ path('admin_participant_edit', {id: utilisateur.id}) }}">
+                        <a class="btn" href="{{ path('admin_participant_edit', {id: participant.id}) }}">
                             Edit
                         </a>
                     </td>

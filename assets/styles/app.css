@@ -372,6 +372,23 @@ button#burger-btn {
 }
 
 /* =================== ADMIN TABLE ================= */
+/* NAV BAR */
+.nav-admin-dashboard{
+    @apply bg-surface rounded-2xl shadow-sm border border-gray-200 p-3 flex items-center gap-2
+}
+.link-nav-admin{
+    @apply flex items-center gap-2
+}
+.link-nav-admin-text{
+    @apply hidden md:inline
+}
+/* FIN NAV BAR */
+/* KPIS */
+.kpi-value{
+    @apply text-3xl md:text-4xl font-black text-[#5C7D5C]
+}
+/* FIN KPIS*/
+/* TABLE */
 .pagination {
     display: flex;
     justify-content: center;
@@ -403,3 +420,5 @@ button#burger-btn {
     font-weight: 600;
     color: #333;
 }
+
+

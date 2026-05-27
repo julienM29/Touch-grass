@@ -1,13 +1,15 @@
-{% extends 'layout/admin_base.html.twig' %}
+{% extends 'layout/base.html.twig' %}
 
-{% block title %}Gestion des sorties{% endblock %}
-
+{% block title %}Dashboard Admin{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/openModal.js') }}" defer></script>
+{% endblock %}
 {% block main %}
-
-    <h1 class="text-2xl font-bold mb-8 text-[#5C7D5C]">
+    <h1 class="">
         Gestion des sorties
     </h1>
-
+    {% include 'layout/fragments/admin/nav-bar.html.twig'%}
     {# ===================== FILTERS ===================== #}
     <form method="get">
         <section>
@@ -64,7 +66,7 @@
         </button>
     </form>
     {# ===================== TABLE ===================== #}
-    <section class="mt-4 admin-dashboard">
+    <section class="mt-4 admin-dashboard overflow-x-auto">
 
         <table>
 

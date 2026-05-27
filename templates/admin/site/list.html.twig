@@ -1,4 +1,4 @@
-{% extends 'layout/admin_base.html.twig' %}
+{% extends 'layout/base.html.twig' %}
 
 {% block title %}Dashboard Admin{% endblock %}
 {% block javascripts %}
@@ -6,5 +6,8 @@
     <script src="{{ asset('js/openModal.js') }}" defer></script>
 {% endblock %}
 {% block main %}
-
+    <h1 class="">
+        Gestion des sites
+    </h1>
+    {% include 'layout/fragments/admin/nav-bar.html.twig'%}
 {% endblock %}
