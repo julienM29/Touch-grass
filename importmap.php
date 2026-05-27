@@ -52,4 +52,11 @@ return [
         'path' => './assets/js/mapModals.js',
         'entrypoint' => true,
     ],
+    'formSortie' => [
+        'path' => './assets/js/formSortie.js',
+        'entrypoint' => true,
+    ],
+    'lieuMap' => [
+        'path' => './assets/js/lieuMap.js',
+    ],
 ];

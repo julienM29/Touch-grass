@@ -2,10 +2,17 @@
 
 {% block title %}Créer une sortie{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+{% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('js/dureeNormalizer.js') }}" defer></script>
     <script src="{{ asset('js/imagePrevisualizer.js') }}" defer></script>
+    {{ importmap('formSortie') }}
+    <script src="{{ asset('js/openModal.js') }}" defer></script>
 {% endblock %}
 
 {% block main %}
@@ -97,22 +104,30 @@
         </div>
     </section>
     <hr>
-    <section>
-        <div>
+    <section class="flex">
+        <div class="">
             <!-- Date ouverture inscription -->
             {{ form_label(sortieForm.siteOrganisateur) }}
             {{ form_widget(sortieForm.siteOrganisateur) }}
             {{ form_errors(sortieForm.siteOrganisateur) }}
         </div>
-        <div>
+        <div class="">
             <!-- Date fermeture inscription -->
             {{ form_label(sortieForm.lieu) }}
             {{ form_widget(sortieForm.lieu) }}
             {{ form_errors(sortieForm.lieu) }}
         </div>
     </section>
+    {# Bouton pour créer un nouveau lieu #}
+    <button type="button" onclick="openModal('modal-create-lieu')">
+        + Ajouter un nouveau lieu
+    </button>
+
     {{ form_widget(sortieForm) }}
+    <br>
     <button type="submit">Enregistrer</button>
     {{ form_end(sortieForm) }}
+
+    {% include 'layout/fragments/modals/lieu-create-modal.html.twig' %}
 
 {% endblock %}

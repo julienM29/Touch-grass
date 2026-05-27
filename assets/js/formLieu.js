@@ -1,171 +1,105 @@
-import L from 'leaflet';
-// import 'leaflet/dist/leaflet.css';
+import { creerCarte, rechercheNominatim, geocoderAdresse, reverseGeocode } from './lieuMap.js';
 
-// -------------------------------------------------------------------
-// Recherche globale via Nominatim
-// -------------------------------------------------------------------
-const rechercheInput  = document.getElementById('recherche-globale');
-const suggestionsListe = document.getElementById('liste-suggestions-globale');
-let debounceTimer = null;
+let carteInstance = null;
 
-rechercheInput.addEventListener('input', function() {
-    const saisie = rechercheInput.value.trim();
+function remplirChamps(nom, rue, villeNom, villeCP) {
+    document.getElementById('lieu_form_nom').value             = nom ?? '';
+    document.getElementById('lieu_form_rue').value             = rue ?? '';
+    document.getElementById('lieu_form_villeNom').value        = villeNom ?? '';
+    document.getElementById('lieu_form_villeCodePostal').value = villeCP ?? '';
+}
 
-    if (saisie.length < 5) {
-        suggestionsListe.innerHTML = '';
-        return;
-    }
+function mettreAJourCoords(lat, lng) {
+    document.getElementById('lieu_form_latitude').value  = lat;
+    document.getElementById('lieu_form_longitude').value = lng;
+}
 
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(function() {
-        const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(saisie)}&format=json&addressdetails=1&limit=5&countrycodes=fr`;
-
-        fetch(url, {
-            headers: {
-                'Accept-Language': 'fr',
-                'User-Agent': 'TouchGrass/1.0'
+function reinitialiserCarte(lat, lng) {
+    if (carteInstance) carteInstance.carte.remove();
+    carteInstance = creerCarte('carte', lat, lng, {
+        draggable: true,
+        onDragEnd: async (lat, lng) => {
+            mettreAJourCoords(lat, lng);
+            const data = await reverseGeocode(lat, lng);
+            if (data?.address) {
+                const addr = data.address;
+                remplirChamps(
+                    data.name,
+                    addr.road,
+                    addr.city ?? addr.town ?? addr.village ?? addr.hamlet,
+                    addr.postcode
+                );
             }
-        })
-            .then(response => response.json())
-            .then(data => {
-                suggestionsListe.innerHTML = '';
+        }
+    });
+}
 
-                if (data.length === 0) {
-                    const li = document.createElement('li');
-                    li.textContent = 'Aucun résultat trouvé, vous pouvez compléter les champs manuellement.';
-                    li.style.color = '#888';
-                    li.style.fontStyle = 'italic';
-                    suggestionsListe.appendChild(li);
-                    return;
-                }
+// Init carte
+const carteDiv = document.getElementById('carte');
+reinitialiserCarte(
+    parseFloat(carteDiv.dataset.lat) || 48.1173,
+    parseFloat(carteDiv.dataset.lng) || -1.6778
+);
 
-                data.forEach(function(result) {
-                    const li = document.createElement('li');
-                    li.textContent = result.display_name;
-
-                    li.addEventListener('click', function() {
-                        const addr = result.address;
-
-                        // Préremplir les champs
-                        document.getElementById('lieu_form_nom').value            = result.name;
-                        document.getElementById('lieu_form_rue').value            = addr.road ?? '';
-                        document.getElementById('lieu_form_villeNom').value       = addr.city ?? addr.town ?? addr.village ?? addr.hamlet ?? '';
-                        document.getElementById('lieu_form_villeCodePostal').value = addr.postcode ?? '';
-                        const lat = parseFloat(result.lat).toFixed(6);
-                        const lng = parseFloat(result.lon).toFixed(6);
-                        document.getElementById('lieu_form_latitude').value  = lat;
-                        document.getElementById('lieu_form_longitude').value = lng;
-                        initialiserCarte(parseFloat(lat), parseFloat(lng));
-
-                        suggestionsListe.innerHTML = '';
-                        rechercheInput.value = '';
-                    });
-
-                    suggestionsListe.appendChild(li);
-                });
-            });
-    }, 1500);
-});
-
-// -------------------------------------------------------------------
-// Géocodage automatique quand rue ou ville change manuellement
-// -------------------------------------------------------------------
+// Geocodage auto
 async function geocoder() {
     const rue   = document.getElementById('lieu_form_rue').value.trim();
     const ville = document.getElementById('lieu_form_villeNom').value.trim();
-
     if (!rue || !ville) return;
 
-    // Réinitialiser pour forcer un nouveau géocodage
-    document.getElementById('lieu_form_latitude').value  = '';
-    document.getElementById('lieu_form_longitude').value = '';
-
-    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(rue + ' ' + ville)}&format=json&limit=1&countrycodes=fr`;
-
-    try {
-        const response = await fetch(url, {
-            headers: {
-                'Accept-Language': 'fr',
-                'User-Agent': 'TouchGrass/1.0'
-            }
-        });
-        const data = await response.json();
-
-        if (data.length > 0) {
-            const lat = parseFloat(data[0].lat).toFixed(6);
-            const lng = parseFloat(data[0].lon).toFixed(6);
-            document.getElementById('lieu_form_latitude').value  = lat;
-            document.getElementById('lieu_form_longitude').value = lng;
-            initialiserCarte(parseFloat(lat), parseFloat(lng));
-        }
-    } catch(e) {
-        console.error('Erreur géocodage :', e);
+    const coords = await geocoderAdresse(rue, ville);
+    if (coords) {
+        mettreAJourCoords(coords.lat, coords.lng);
+        reinitialiserCarte(parseFloat(coords.lat), parseFloat(coords.lng));
     }
 }
 
 document.getElementById('lieu_form_rue').addEventListener('blur', geocoder);
 document.getElementById('lieu_form_villeNom').addEventListener('blur', geocoder);
 
+// Recherche Nominatim
+const rechercheInput   = document.getElementById('recherche-globale');
+const suggestionsListe = document.getElementById('liste-suggestions-globale');
+let debounceTimer = null;
 
-// -------------------------------------------------------------------
-// Carte Leaflet
-// -------------------------------------------------------------------
-let carte = null;
-let marqueur = null;
+rechercheInput.addEventListener('input', function() {
+    const saisie = rechercheInput.value.trim();
+    if (saisie.length < 5) { suggestionsListe.innerHTML = ''; return; }
 
-function initialiserCarte(lat, lng) {
-    // Si la carte existe déjà on la supprime
-    if (carte) {
-        carte.remove();
-    }
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(async function() {
+        const data = await rechercheNominatim(saisie);
+        suggestionsListe.innerHTML = '';
 
-    carte = L.map('carte').setView([lat, lng], 16);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
-    }).addTo(carte);
-
-    // Marqueur déplaçable
-    marqueur = L.marker([lat, lng], { draggable: true }).addTo(carte);
-
-    // Mettre à jour lat/lng quand le marqueur est déplacé
-    marqueur.on('dragend', async function() {
-        const position = marqueur.getLatLng();
-        const lat = position.lat.toFixed(6);
-        const lng = position.lng.toFixed(6);
-
-        // Mettre à jour les coordonnées
-        document.getElementById('lieu_form_latitude').value  = lat;
-        document.getElementById('lieu_form_longitude').value = lng;
-
-        // Reverse geocoding
-        const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&addressdetails=1`;
-
-        try {
-            const response = await fetch(url, {
-                headers: {
-                    'Accept-Language': 'fr',
-                    'User-Agent': 'TouchGrass/1.0'
-                }
-            });
-            const data = await response.json();
-
-            if (data && data.address) {
-                const addr = data.address;
-
-                document.getElementById('lieu_form_nom').value             = data.name ?? '';
-                document.getElementById('lieu_form_rue').value             = addr.road ?? '';
-                document.getElementById('lieu_form_villeNom').value        = addr.city ?? addr.town ?? addr.village ?? addr.hamlet ?? '';
-                document.getElementById('lieu_form_villeCodePostal').value = addr.postcode ?? '';
-            }
-        } catch(e) {
-            console.error('Erreur reverse geocoding :', e);
+        if (data.length === 0) {
+            const li = document.createElement('li');
+            li.textContent = 'Aucun résultat, remplissez les champs manuellement.';
+            li.style.color = '#888';
+            suggestionsListe.appendChild(li);
+            return;
         }
-    });
-}
 
-// On récupère les coordonnées depuis les data attributes si elles existent, sinon carte affichée par défaut sur Rennes
-const carteDiv = document.getElementById('carte');
-const latInit = parseFloat(carteDiv.dataset.lat) || 48.1173;
-const lngInit = parseFloat(carteDiv.dataset.lng) || -1.6778;
-initialiserCarte(latInit, lngInit);
+        data.forEach(function(result) {
+            const li = document.createElement('li');
+            li.textContent = result.display_name;
+            li.addEventListener('click', function() {
+                const addr = result.address;
+                const lat  = parseFloat(result.lat).toFixed(6);
+                const lng  = parseFloat(result.lon).toFixed(6);
+
+                remplirChamps(
+                    result.name,
+                    addr.road,
+                    addr.city ?? addr.town ?? addr.village ?? addr.hamlet,
+                    addr.postcode
+                );
+                mettreAJourCoords(lat, lng);
+                reinitialiserCarte(parseFloat(lat), parseFloat(lng));
+
+                suggestionsListe.innerHTML = '';
+                rechercheInput.value = '';
+            });
+            suggestionsListe.appendChild(li);
+        });
+    }, 1000);
+});

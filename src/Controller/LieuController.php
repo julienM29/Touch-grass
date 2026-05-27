@@ -191,4 +191,60 @@ final class LieuController extends AbstractController
             'lieu' => $lieu,
         ]);
     }
+
+    #[Route('/api/create', name: 'api_create', methods: ['POST'])]
+    public function apiCreate(
+        Request                $request,
+        VilleRepository        $villeRepository,
+        LieuRepository         $lieuRepository,
+        EntityManagerInterface $entityManager,
+    ): Response
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $nom      = $data['nom'] ?? null;
+        $rue      = $data['rue'] ?? null;
+        $villeNom = $data['villeNom'] ?? null;
+        $villeCP  = $data['villeCodePostal'] ?? null;
+        $lat      = $data['latitude'] ?? null;
+        $lng      = $data['longitude'] ?? null;
+
+        if (!$nom || !$rue || !$villeNom || !$villeCP) {
+            return $this->json(['error' => 'Champs manquants.'], 400);
+        }
+
+        // Vérif doublon lieu
+        $lieuExistant = $lieuRepository->findOneBy(['rue' => $rue, 'nom' => $nom]);
+        if ($lieuExistant) {
+            return $this->json([
+                'error'  => 'Ce lieu existe déjà.',
+                'lieuId' => $lieuExistant->getId(),
+                'lieuNom' => $lieuExistant->getNom(),
+            ], 409);
+        }
+
+        // Vérif doublon ville
+        $ville = $villeRepository->findOneBy(['nom' => $villeNom, 'codePostal' => $villeCP]);
+        if (!$ville) {
+            $ville = new Ville();
+            $ville->setNom($villeNom);
+            $ville->setCodePostal($villeCP);
+            $entityManager->persist($ville);
+        }
+
+        $lieu = new Lieu();
+        $lieu->setNom($nom);
+        $lieu->setRue($rue);
+        $lieu->setVille($ville);
+        if ($lat) $lieu->setLatitude((float) $lat);
+        if ($lng) $lieu->setLongitude((float) $lng);
+
+        $entityManager->persist($lieu);
+        $entityManager->flush();
+
+        return $this->json([
+            'lieuId'  => $lieu->getId(),
+            'lieuNom' => $lieu->getNom(),
+        ], 201);
+    }
 }
