@@ -1,18 +1,73 @@
-{% extends 'layout/base.html.twig' %}
+{% extends 'layout/admin_base.html.twig' %}
 
-{% block title %}Dashboard Admin{% endblock %}
+{% block title %}Gestion des sorties{% endblock %}
 
 {% block main %}
-
-    <a href="{{ path('admin_dashboard') }}"
-       class="self-start block text-primary text-sm font-semibold py-2 hover:text-gray-400">
-        ← Retour au dashboard
-    </a>
     <h1 class="text-2xl font-bold mb-8 text-[#5C7D5C]">
         Gestion des sorties
     </h1>
 
+    <section class="admin-dashboard">
+        <table>
+            <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Date début</th>
+                <th>Lieu</th>
+                <th>Organisateur</th>
+                <th>Participants</th>
+                <th>Statut</th>
+                <th>Action</th>
+            </tr>
+            </thead>
 
+            <tbody>
+            {% for sortie in sorties %}
+                <tr>
+                    <td>
+                        <p>{{ sortie.nom }}</p>
+                    </td>
 
+                    <td>
+                        <p>
+                            {{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d/m/Y H:i') : '' }}
+                        </p>
+                    </td>
 
+                    <td>
+                        <p>{{ sortie.lieu ? sortie.lieu.nom : '' }}</p>
+                    </td>
+
+                    <td>
+                        <p>{{ sortie.organisateur ? sortie.organisateur.pseudo : '' }}</p>
+                    </td>
+
+                    <td>
+                        <p>
+                            {{ sortie.participants|length }} / {{ sortie.nbInscriptionsMax }}
+                        </p>
+                    </td>
+
+                    <td>
+                        <p>
+                            {% if sortie.motifAnnulation %}
+                                Annulée
+                            {% elseif sortie.dateHeureDebut < date() %}
+                                Terminée
+                            {% else %}
+                                En cours
+                            {% endif %}
+                        </p>
+                    </td>
+
+                    <td>
+                        <a class="btn" href="#">
+                            Voir
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
 {% endblock %}

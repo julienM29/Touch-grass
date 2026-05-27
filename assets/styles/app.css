@@ -150,7 +150,9 @@ table td {
 table td:first-child {
     width: 70px;
 }
-
+.admin-dashboard table td:first-child {
+    width: 170px;
+}
 table td:first-child img {
     display: block;
     margin: 0 auto;
@@ -353,9 +355,18 @@ button#burger-btn {
 /* =================== ADMIN ================== */
 
 .sidebar-link {
-    @apply rounded-lg px-4 py-3 transition hover:bg-white/10;
+    @apply flex items-center justify-between py-2 px-3 rounded-lg transition;
+    @apply hover:bg-white;
+}
+
+.sidebar-link .arrow {
+    @apply opacity-0 transition text-gray-400;
+}
+
+.sidebar-link:hover .arrow {
+    @apply opacity-100;
 }
 
 .sidebar-link.active {
-    @apply bg-white text-[#5C7D5C];
+    @apply bg-white text-[#5C7D5C] font-semibold;
 }
