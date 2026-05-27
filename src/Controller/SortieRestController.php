@@ -29,7 +29,7 @@ final class SortieRestController extends AbstractController
         #[MapRequestPayload] FilterDto $filters
     ): JsonResponse {
 
-        $filteredSorties = $this->sortieRepository->findFilteredSorties($filters);
+        $filteredSorties = $this->sortieRepository->findFilteredSorties($filters, $this->getUser()->getId());
 
         $sortiesData = array_map(static function (Sortie $sortie): array {
             return [
@@ -41,6 +41,7 @@ final class SortieRestController extends AbstractController
                 'nbInscriptionsMax' => $sortie->getNbInscriptionsMax(),
                 'complete' => $sortie->isComplete(),
                 'inscriptionsOpen' => $sortie->areInscriptionsOpen(),
+                'image' => $sortie->getImage(),
             ];
         }, $filteredSorties);
 

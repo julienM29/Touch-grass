@@ -1,0 +1,13 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block title %}Dashboard Admin{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/openModal.js') }}" defer></script>
+{% endblock %}
+{% block main %}
+    <h1 class="">
+        Gestion des villes
+    </h1>
+    {% include 'layout/fragments/admin/nav-bar.html.twig'%}
+{% endblock %}
