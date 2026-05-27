@@ -99,4 +99,72 @@ class SortieRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function findFilteredPaginated(array $filters, int $page, int $limit): array
+    {
+        $qb = $this->createQueryBuilder('s')
+            ->leftJoin('s.lieu', 'l')
+            ->addSelect('l')
+            ->leftJoin('s.organisateur', 'o')
+            ->addSelect('o')
+            ->orderBy('s.dateHeureDebut', 'DESC');
+        // NOM SORTIE
+        if (!empty($filters['nom'])) {
+            $qb->andWhere('s.nom LIKE :nom')
+                ->setParameter('nom', '%' . $filters['nom'] . '%');
+        }
+        // VILLE
+        if (!empty($filters['ville'])) {
+            $qb->andWhere('l.ville LIKE :ville')
+                ->setParameter('ville', '%' . $filters['ville'] . '%');
+        }
+        // LIEU
+        if (!empty($filters['lieu'])) {
+            $qb->andWhere('l.nom LIKE :lieu')
+                ->setParameter('lieu', '%' . $filters['lieu'] . '%');
+        }
+        // DATE
+
+        if (!empty($filters['date'])) {
+            $date = new \DateTimeImmutable($filters['date']);
+            $start = $date->setTime(0, 0);
+            $end = $date->setTime(23, 59, 59);
+
+            $qb->andWhere('s.dateHeureDebut BETWEEN :start AND :end')
+                ->setParameter('start', $start)
+                ->setParameter('end', $end);
+        }
+        // STATUS
+        if (!empty($filters['status'])) {
+
+            $now = new \DateTime();
+
+            switch ($filters['status']) {
+
+                case 'upcoming':
+                    $qb->andWhere('s.dateHeureDebut > :now')
+                        ->setParameter('now', $now);
+                    break;
+
+                case 'past':
+                    $qb->andWhere('s.dateHeureDebut < :now')
+                        ->setParameter('now', $now);
+                    break;
+
+                case 'cancelled':
+                    $qb->andWhere('s.motifAnnulation IS NOT NULL');
+                    break;
+
+                case 'ongoing':
+                    $qb->andWhere('s.dateHeureDebut <= :now')
+                        ->andWhere('DATE_ADD(s.dateHeureDebut, s.duree) >= :now')
+                        ->setParameter('now', $now);
+                    break;
+            }
+        }
+        // PAGINATION
+        $qb->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit + 1)
+            ->orderBy('s.dateHeureDebut', 'ASC');
+        return $qb->getQuery()->getResult();
+    }
 }

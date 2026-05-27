@@ -26,11 +26,10 @@
 <header>
     {% include 'layout/fragments/nav-bar.html.twig' %}
 </header>
-<main class="bg-background min-h-[90vh] flex justify-center gap-4 py-24 px-4">
-    <aside class="w-64 shrink-0">
-        <nav class="bg-surface rounded-2xl shadow p-4 flex flex-col gap-2">
+<main class="bg-background min-h-[90vh] flex flex-col md:flex-row justify-center gap-4 py-24 px-4">
+    <aside class="w-full md:w-64 shrink-0">
+        <nav class="bg-surface rounded-2xl shadow px-4 py-4 md:py-7 flex md:flex-col flex-row gap-2 overflow-x-auto">
             {% set route = app.request.attributes.get('_route') %}
-
             <a href="{{ path('admin_dashboard') }}"
                class="sidebar-link {{ route == 'admin_dashboard' ? 'active' : '' }}">
                 <span>Dashboard</span>

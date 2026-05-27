@@ -6,8 +6,62 @@
     <h1 class="text-2xl font-bold mb-8 text-[#5C7D5C]">
         Gestion des utilisateurs
     </h1>
+    <form method="get">
 
-    <section>
+        <section>
+
+            <div>
+                <input type="text"
+                       name="email"
+                       placeholder="Email"
+                       value="{{ app.request.get('email') }}">
+            </div>
+
+            <div>
+                <input type="text"
+                       name="nom"
+                       placeholder="Nom"
+                       value="{{ app.request.get('nom') }}">
+            </div>
+
+            <div>
+                <input type="text"
+                       name="prenom"
+                       placeholder="Prénom"
+                       value="{{ app.request.get('prenom') }}">
+            </div>
+
+            <div>
+                <input type="text"
+                       name="telephone"
+                       placeholder="Téléphone"
+                       value="{{ app.request.get('telephone') }}">
+            </div>
+            <select name="actif">
+
+                <option value=""
+                        {% if app.request.get('actif') is empty %}selected{% endif %}>
+                    Tous les comptes
+                </option>
+
+                <option value="1"
+                        {% if app.request.get('actif') == '1' %}selected{% endif %}>
+                    Actifs
+                </option>
+
+                <option value="0"
+                        {% if app.request.get('actif') == '0' %}selected{% endif %}>
+                    Supprimés / Désactivés
+                </option>
+
+            </select>
+        </section>
+
+        <button type="submit">
+            Filtrer
+        </button>
+
+    </form>    <section>
         <table>
             <thead>
             <tr>

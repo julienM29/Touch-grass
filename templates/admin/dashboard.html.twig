@@ -12,7 +12,7 @@
             Dashboard
         </h1>
         {# GRID DES STATS #}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+    <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
         {# Participants #}
         <article class=" ">
             <div class="text-4xl font-black text-[#5C7D5C]">
@@ -64,7 +64,7 @@
         </article>
     </div>
     <h2 class="mt-5">Dernières sorties</h2>
-    <section class="admin-dashboard">
+    <section class="admin-dashboard overflow-x-auto">
         <table>
             <thead>
             <tr>
@@ -114,8 +114,8 @@
         </table>
     </section>
     <h2 class="mt-5">Derniers utilisateurs</h2>
-    <section >
-        <table>
+    <section class="admin-dashboard overflow-x-auto">
+        <table class="min-w-full">
             <thead>
             <tr>
                 <th>Email</th>

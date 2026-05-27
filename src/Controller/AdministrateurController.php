@@ -82,11 +82,33 @@ final class AdministrateurController extends AbstractController
     }
     #[Route('/sorties', name: 'sorties')]
     public function afficherSorties(
+        Request $request,
         SortieRepository $sortieRepository
     ): Response {
-        $sorties = $sortieRepository->findAll();
+
+        $page = $request->query->getInt('page', 1);
+        $limit = 10;
+
+        $filters = [
+            'nom' => $request->query->get('nom'),
+            'ville' => $request->query->get('ville'),
+            'lieu' => $request->query->get('lieu'),
+            'status' => $request->query->get('status'),
+            'date' => $request->query->get('date'),
+        ];
+
+        $sorties = $sortieRepository->findFilteredPaginated($filters, $page, $limit);
+
+        $hasMore = count($sorties) > $limit;
+
+        if ($hasMore) {
+            array_pop($sorties);
+        }
+
         return $this->render('admin/sorties/list.html.twig', [
-            'sorties' => $sorties
+            'sorties' => $sorties,
+            'page' => $page,
+            'hasMore' => $hasMore,
         ]);
     }
 }

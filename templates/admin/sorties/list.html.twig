@@ -3,12 +3,71 @@
 {% block title %}Gestion des sorties{% endblock %}
 
 {% block main %}
+
     <h1 class="text-2xl font-bold mb-8 text-[#5C7D5C]">
         Gestion des sorties
     </h1>
 
-    <section class="admin-dashboard">
+    {# ===================== FILTERS ===================== #}
+    <form method="get">
+        <section>
+            <div>
+                <input type="text"
+                       name="nom"
+                       placeholder="Nom sortie"
+                       value="{{ app.request.get('nom') }}">
+            </div>
+            <div>
+                <input type="text"
+                       name="ville"
+                       placeholder="Ville"
+                       value="{{ app.request.get('ville') }}">
+            </div>
+            <div>
+                <input type="text"
+                       name="lieu"
+                       placeholder="Lieu"
+                       value="{{ app.request.get('lieu') }}">
+            </div>
+            <div>
+                <select name="status">
+                    <option value=""
+                            {% if app.request.get('status') is empty %}selected{% endif %}>
+                        Tous
+                    </option>
+                    <option value="upcoming"
+                            {% if app.request.get('status') == 'upcoming' %}selected{% endif %}>
+                        À venir
+                    </option>
+                    <option value="ongoing"
+                            {% if app.request.get('status') == 'ongoing' %}selected{% endif %}>
+                        En cours
+                    </option>
+                    <option value="past"
+                            {% if app.request.get('status') == 'past' %}selected{% endif %}>
+                        Passées
+                    </option>
+                    <option value="cancelled"
+                            {% if app.request.get('status') == 'cancelled' %}selected{% endif %}>
+                        Annulées
+                    </option>
+                </select>
+            </div>
+            <div>
+                <input type="date"
+                       name="date"
+                       value="{{ app.request.get('date') }}">
+            </div>
+        </section>
+        <button type="submit">
+            Filtrer
+        </button>
+    </form>
+    {# ===================== TABLE ===================== #}
+    <section class="mt-4 admin-dashboard">
+
         <table>
+
             <thead>
             <tr>
                 <th>Nom</th>
@@ -22,29 +81,40 @@
             </thead>
 
             <tbody>
+
             {% for sortie in sorties %}
+
                 <tr>
+
                     <td>
                         <p>{{ sortie.nom }}</p>
                     </td>
 
                     <td>
                         <p>
-                            {{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d/m/Y H:i') : '' }}
+                            {{ sortie.dateHeureDebut
+                            ? sortie.dateHeureDebut|date('d/m/Y H:i')
+                            : '' }}
                         </p>
                     </td>
 
                     <td>
-                        <p>{{ sortie.lieu ? sortie.lieu.nom : '' }}</p>
-                    </td>
-
-                    <td>
-                        <p>{{ sortie.organisateur ? sortie.organisateur.pseudo : '' }}</p>
+                        <p>
+                            {{ sortie.lieu ? sortie.lieu.nom : '' }}
+                        </p>
                     </td>
 
                     <td>
                         <p>
-                            {{ sortie.participants|length }} / {{ sortie.nbInscriptionsMax }}
+                            {{ sortie.organisateur ? sortie.organisateur.pseudo : '' }}
+                        </p>
+                    </td>
+
+                    <td>
+                        <p>
+                            {{ sortie.participants|length }}
+                            /
+                            {{ sortie.nbInscriptionsMax }}
                         </p>
                     </td>
 
@@ -61,13 +131,56 @@
                     </td>
 
                     <td>
-                        <a class="btn" href="#">
-                            Voir
+                        <a class="btn" href="{{ path('sortie_edit', {id: sortie.id}) }}">
+                            Edit
                         </a>
                     </td>
+
                 </tr>
+
             {% endfor %}
+
             </tbody>
+
         </table>
+
     </section>
+
+    {# ===================== PAGINATION ===================== #}
+    {% set route = app.request.attributes.get('_route') %}
+    {% set query = app.request.query.all %}
+
+    {% set prevQuery = query|merge({'page': page - 1}) %}
+    {% set nextQuery = query|merge({'page': page + 1}) %}
+    <div class="pagination">
+
+        {# PRECEDENT #}
+        {% if page > 1 %}
+            <a class="pagination-link"
+               href="{{ path(route, prevQuery) }}">
+                ← Précédent
+            </a>
+        {% else %}
+            <span class="pagination-link disabled">
+            ← Précédent
+        </span>
+        {% endif %}
+
+        <span class="pagination-current">
+        Page {{ page }}
+    </span>
+
+        {# SUIVANT #}
+        {% if hasMore %}
+            <a class="pagination-link"
+               href="{{ path(route, nextQuery) }}">
+                Suivant →
+            </a>
+        {% else %}
+            <span class="pagination-link disabled">
+            Suivant →
+        </span>
+        {% endif %}
+
+    </div>
 {% endblock %}

@@ -90,7 +90,7 @@ p {
 
 /* ==================== BODY =================== */
 article {
-    @apply bg-white rounded-xl p-4 shadow-sm text-center;
+    @apply bg-white rounded-xl p-2 md:p-4 shadow-sm text-center;
 }
 
 section {
@@ -369,4 +369,37 @@ button#burger-btn {
 
 .sidebar-link.active {
     @apply bg-white text-[#5C7D5C] font-semibold;
+}
+
+/* =================== ADMIN TABLE ================= */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.pagination-link {
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #5C7D5C;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.pagination-link:hover {
+    background-color: #f4f6f1;
+}
+
+.pagination-link.disabled {
+    color: #b5b5b5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.pagination-current {
+    font-weight: 600;
+    color: #333;
 }

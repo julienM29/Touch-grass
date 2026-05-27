@@ -138,7 +138,7 @@ final class SortieController extends AbstractController
         }
         return $this->render('sortie/edit.html.twig', [
             'sortieForm' => $form,
-            'event_registration' => $sortie,
+            'sortie' => $sortie,
         ]);
     }
 
