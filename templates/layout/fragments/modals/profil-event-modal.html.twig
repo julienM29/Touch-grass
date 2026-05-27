@@ -80,14 +80,6 @@
             </p>
         </div>
 
-        {# DATE LIMITE INSCRIPTION (page détail) #}
-        <div class="space-y-1">
-            <label class="font-semibold text-[var(--color-primary)]">Date limite d'inscription</label>
-            <p class="">
-                {{ event.dateLimiteInscription|date('d/m/Y H:i') }}
-            </p>
-        </div>
-
         {# OUVERTURE INSCRIPTIONS (condition NOW) #}
         {% if event.dateOuvertureInscription and event.dateOuvertureInscription > date() %}
             <div class="space-y-1 pt-2 border-t border-gray-100">
@@ -101,25 +93,26 @@
         {% endif %}
 
         {% include 'layout/fragments/modals/event_registration/registration_block.html.twig' with {
-    sortie: event
-} %}
+            sortie: event
+        } %}
 
-{% if app.user and app.user.administrateur %}
-    <hr>
-    <section>
 
-        <a href="{{ path('sortie_edit', { id: event.id }) }}" class="btn">Modifier</a>
+        {% if app.user and app.user.administrateur %}
+            <hr>
+            <section>
 
-        <form method="post" action="{{ path('sortie_delete', {'id': event.id}) }}"
-              onsubmit="return confirm('Voulez-vous vraiment supprimer cette sortie ?');">
-            <input type="hidden" name="_method" value="DELETE">
-            <input type="hidden" name="_token" value="{{ csrf_token('delete_sortie_' ~ event.id) }}">
+                <a href="{{ path('sortie_edit', { id: event.id }) }}" class="btn">Modifier</a>
 
-            <button type="submit" class="btn">
-                Supprimer
-            </button>
-        </form>
-    </section>
-{% endif %}
+                <form method="post" action="{{ path('sortie_delete', {'id': event.id}) }}"
+                      onsubmit="return confirm('Voulez-vous vraiment supprimer cette sortie ?');">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete_sortie_' ~ event.id) }}">
+
+                    <button type="submit" class="btn">
+                        Supprimer
+                    </button>
+                </form>
+            </section>
+        {% endif %}
 
         <div data-sortie-message="{{ event.id }}"></div>

@@ -107,14 +107,9 @@ main img{
     @apply w-full h-full object-cover max-h-[20vh] rounded-lg mb-3
 }
 
-
-table img {
-    @apply object-cover h-[50px] w-[50px] rounded-lg
-}
-
 /* ==================== TABLE =================== */
-tr {
-    @apply h-[60px]
+table {
+    @apply w-full
 }
 
 table img {
@@ -144,12 +139,13 @@ tbody tr p {
 }
 
 table td {
-    @apply align-middle text-center p-2
+    @apply align-middle text-center p-1
 }
 
 table td:first-child {
     width: 70px;
 }
+
 .admin-dashboard table td:first-child {
     width: 170px;
 }
@@ -197,11 +193,10 @@ button, .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
     background-color: var(--color-primary);
     color: var(--color-surface);
     border-radius: 0.5rem;
-    padding: 0.75rem 1.4rem;
+    padding: 0.5rem 1.4rem;
     transition: background-color 200ms ease;
     cursor: pointer;
     text-decoration: none;

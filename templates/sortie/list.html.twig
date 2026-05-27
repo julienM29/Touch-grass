@@ -59,7 +59,7 @@
     <hr>
 
     <div class="btn-group">
-        <a class="btn" href="{{ path('sortie_create') }}">Proposer une sortie</a>
+
 
         {% if is_granted('ROLE_ADMIN') %}
             <form method="post" action="{{ path('sortie_reset') }}" onsubmit="return confirm('Attention : toutes les données vont être supprimées. Continuer ?');">

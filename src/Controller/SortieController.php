@@ -113,8 +113,14 @@ final class SortieController extends AbstractController
     ): Response
     {
         $sortie = $em->getRepository(Sortie::class)->find($id);
+        $participants = [];
+        foreach ($sortie->getParticipants() as $participant) {
+            $participants[] = $participant;
+        }
+
         return $this->render('sortie/detail.html.twig', [
             'sortie' => $sortie,
+            'participants' => $participants,
         ]);
     }
 

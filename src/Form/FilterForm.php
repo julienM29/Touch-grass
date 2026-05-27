@@ -56,11 +56,11 @@ class FilterForm extends AbstractType
                 'required' => false,
             ])
             ->add('registered', CheckboxType::class, [
-                'label' => 'Sorties auxquelles je suis inscrit',
+                'label' => 'Sorties où je suis inscrit',
                 'required' => false,
             ])
             ->add('notRegistered', CheckboxType::class, [
-                'label' => 'Sorties auxquelles je ne suis pas inscrit',
+                'label' => 'Sorties où je ne suis pas inscrit',
                 'required' => false,
             ])
             ->add('finished', CheckboxType::class, [

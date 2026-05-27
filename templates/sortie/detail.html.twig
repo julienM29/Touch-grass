@@ -3,7 +3,6 @@
 {% block title %}{{ sortie.nom }}{% endblock %}
 
 {% block main %}
-
     <h1>
         {{ sortie.nom }}
     </h1>
@@ -19,33 +18,55 @@
             alt="image par défaut"
         >
     {% endif %}
-    <label>Description</label>
-    <p>{{ sortie.description }}</p>
+    <section>
+        <div>
+            <label>Description</label>
+            <p>{{ sortie.description }}</p>
 
-    {% set dateFin = sortie.dateHeureDebut | date_modify('+' ~ sortie.duree.h ~ ' hours +' ~ sortie.duree.i ~ ' minutes') %}
+            {% set dateFin = sortie.dateHeureDebut | date_modify('+' ~ sortie.duree.h ~ ' hours +' ~ sortie.duree.i ~ ' minutes') %}
 
-    <label>Horaires</label>
-    <p>
-        le {{ sortie.dateHeureDebut | date('d/m/Y') }}
-        de {{ sortie.dateHeureDebut | date('H') }}H{{ sortie.dateHeureDebut | date('i') }}
-        à
-        {% if sortie.dateHeureDebut | date('d/m/Y') != dateFin | date('d/m/Y') %}
-            le {{ dateFin | date('d/m/Y') }}
-        {% endif %}
-        {{ dateFin | date('H') }}H{{ dateFin | date('i') }}
-    </p>
+            <label>Horaires</label>
+            <p>
+                le {{ sortie.dateHeureDebut | date('d/m/Y') }}
+                de {{ sortie.dateHeureDebut | date('H') }}H{{ sortie.dateHeureDebut | date('i') }}
+                à
+                {% if sortie.dateHeureDebut | date('d/m/Y') != dateFin | date('d/m/Y') %}
+                    le {{ dateFin | date('d/m/Y') }}
+                {% endif %}
+                {{ dateFin | date('H') }}H{{ dateFin | date('i') }}
+            </p>
 
-    <label>Lieu</label>
-    <p>{{ sortie.lieu.nom }} - {{ sortie.lieu.rue }}
-        - {{ sortie.lieu.ville.codePostal }} {{ sortie.lieu.ville.nom }}</p>
+            <label>Lieu</label>
+            <p>{{ sortie.lieu.nom }} - {{ sortie.lieu.rue }}
+                - {{ sortie.lieu.ville.codePostal }} {{ sortie.lieu.ville.nom }}</p>
 
-    <label>Date limite d'inscription</label>
-    <p>{{ sortie.dateLimiteInscription | date('d/m/Y H:i') }}</p>
+        </div>
+        <div>
+            <label>Date limite d'inscription</label>
+            <p>{{ sortie.dateLimiteInscription | date('d/m/Y H:i') }}</p>
 
-    <label>Inscriptions</label>
-    <p>
-        {{ sortie.nbParticipantsInscrits }} / {{ sortie.nbInscriptionsMax }} participant(s)
-    </p>
+            <label>Inscriptions</label>
+            <table>
+                <thead>
+                <tr>
+                    <th>Inscrit</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for participant in sortie.participants %}
+                    <tr>
+                        <td>{{ participant.pseudo }}</td>
+                        <td><a class="btn" href="{{ path('participant_profil',  { id: participant.id }) }}">Voir le profil</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+
+
 
     {% if app.user %}
         {% if sortie.hasParticipant(app.user) %}
