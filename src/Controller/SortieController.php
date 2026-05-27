@@ -4,12 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Participant;
 use App\Entity\Sortie;
+use App\Form\FilterForm;
 use App\Form\SortieType;
 use App\Services\InitializerService;
 use App\Utils\ImageLoader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -24,6 +24,8 @@ final class SortieController extends AbstractController
         EntityManagerInterface $em
     ): Response
     {
+        $filterForm = $this->createForm(FilterForm::class);
+
         $siteId = $request->query->get('site');
 
         if ($siteId === null && $this->getUser()?->getSite() !== null) {
@@ -44,7 +46,8 @@ final class SortieController extends AbstractController
         return $this->render('sortie/list.html.twig',[
             'sorties' => $sorties,
             'sites' => $sites,
-            'selectedSiteId' => $siteId
+            'selectedSiteId' => $siteId,
+            'filterForm' => $filterForm->createView(),
         ]);
     }
 

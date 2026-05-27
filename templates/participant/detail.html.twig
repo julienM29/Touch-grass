@@ -110,6 +110,32 @@
             <article>
                 <h2>Activité récente</h2>
                 <div class="">
+                    {% for event in recentEvents %}
+
+                        <div
+                            onclick="openModal('modal-{{ event.id }}')"
+                            class="group flex items-center justify-between py-2 px-3 rounded-lg cursor-pointer hover:bg-[#F4F6F1] transition"
+                        >
+
+                            <div class=" text-left">
+                                <h6 class="text-xs font-bold uppercase text-[var(--color-primary)] truncate">
+                                    {{ event.nom|length > 26 ? event.nom|slice(0, 24) ~ '…' : event.nom }}
+                                </h6>
+                                <label class="">
+                                    {{ event.dateHeureDebut|date('d/m/Y') }}
+                                </label>
+                            </div>
+
+                            <span class="opacity-0 group-hover:opacity-100 transition text-gray-400">
+                            →
+                        </span>
+
+                        </div>
+
+                        {% include 'layout/fragments/modals/profil-event-modal.html.twig' with {
+                            event: event
+                        } %}
+                    {% endfor %}
                 </div>
             </article>
         </section>

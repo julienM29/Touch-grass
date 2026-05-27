@@ -15,7 +15,7 @@
 
     {% if app.user %}
         <div data-sortie-event_registration-action>
-            {% if sortie.hasParticipant(app.user) %}
+            {% if sortie.hasParticipant(app.user) and sortie.areInscriptionsOpen %}
                 <form method="post"
                       action="{{ path('api_sortie_unregister', {'id': sortie.id}) }}"
                       class="js-sortie-event_registration-form">

@@ -52,6 +52,7 @@ final class ParticipantController extends AbstractController
         $eventsCreated = $this->sortieRepository->countByOrganisateur($user->getId());
         $participations = $this->sortieRepository->countPastByParticipant($user->getId());
         $userEvents = $this->sortieRepository->findFuturSortiesByOrganisateur($user->getId());
+        $recentEvents = $this->sortieRepository->findRecentSortiesByParticipant($user->getId());
         $upcomingEvents = count($userEvents);
 
         return $this->render('participant/detail.html.twig', [
@@ -60,6 +61,7 @@ final class ParticipantController extends AbstractController
             'eventsCreated' => $eventsCreated,
             'participations' => $participations,
             'upcomingEvents' => $upcomingEvents,
+            'recentEvents' => $recentEvents,
         ]);
     }
 

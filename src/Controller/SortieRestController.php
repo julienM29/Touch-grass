@@ -2,18 +2,54 @@
 
 namespace App\Controller;
 
+use App\Dto\FilterDto;
 use App\Entity\Participant;
 use App\Entity\Sortie;
+use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/api/sortie', name: 'api_sortie_')]
 final class SortieRestController extends AbstractController
 {
+    private SortieRepository $sortieRepository;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->sortieRepository = $entityManager->getRepository(Sortie::class);
+    }
+
+    #[Route('-filtered', name: 'list_filtered', methods: ['POST'])]
+    public function listFiltered(
+        #[MapRequestPayload] FilterDto $filters
+    ): JsonResponse {
+
+        $filteredSorties = $this->sortieRepository->findFilteredSorties($filters);
+
+        $sortiesData = array_map(static function (Sortie $sortie): array {
+            return [
+                'id' => $sortie->getId(),
+                'nom' => $sortie->getNom(),
+                'dateHeureDebut' => $sortie->getDateHeureDebut()?->format('Y-m-d H:i:s'),
+                'site' => $sortie->getSiteOrganisateur()?->getNom(),
+                'nbParticipantsInscrits' => $sortie->getNbParticipantsInscrits(),
+                'nbInscriptionsMax' => $sortie->getNbInscriptionsMax(),
+                'complete' => $sortie->isComplete(),
+                'inscriptionsOpen' => $sortie->areInscriptionsOpen(),
+            ];
+        }, $filteredSorties);
+
+        return new JsonResponse([
+            'success' => true,
+            'sorties' => $sortiesData,
+        ]);
+    }
+
     #[Route('/{id}/register', name: 'register', methods: ['POST'])]
     public function register(
         Request                $request,

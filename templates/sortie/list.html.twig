@@ -11,32 +11,7 @@
 {% block main %}
     <h1>Liste des sorties</h1>
 
-    <div class="btn-group">
-        <a class="btn" href="{{ path('sortie_create') }}">Proposer une sortie</a>
-
-        {% if is_granted('ROLE_ADMIN') %}
-            <form method="post" action="{{ path('sortie_reset') }}" onsubmit="return confirm('Attention : toutes les données vont être supprimées. Continuer ?');">
-                <input type="hidden" name="_token" value="{{ csrf_token('reset_data') }}">
-                <button type="submit" class="btn">
-                    Réinitialiser toutes les données
-                </button>
-            </form>
-        {% endif %}
-    </div>
-
-    <form method="get" action="{{ path('sortie') }}" id="sortie-filter-form">
-        <label for="site">Filtrer par site</label>
-        <select name="site" id="site" data-filter-submit>
-            <option value="">Tous les sites</option>
-            {% for site in sites %}
-                <option value="{{ site.id }}" {% if selectedSiteId == site.id %}selected{% endif %}>
-                    {{ site.nom }}
-                </option>
-            {% endfor %}
-        </select>
-    </form>
-
-
+    {% include 'sortie/_filter_form.html.twig' %}
 
     <hr>
 
@@ -80,4 +55,19 @@
             </table>
         </section>
     {% endif %}
+
+    <hr>
+
+    <div class="btn-group">
+        <a class="btn" href="{{ path('sortie_create') }}">Proposer une sortie</a>
+
+        {% if is_granted('ROLE_ADMIN') %}
+            <form method="post" action="{{ path('sortie_reset') }}" onsubmit="return confirm('Attention : toutes les données vont être supprimées. Continuer ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('reset_data') }}">
+                <button type="submit" class="btn">
+                    Réinitialiser toutes les données
+                </button>
+            </form>
+        {% endif %}
+    </div>
 {% endblock %}

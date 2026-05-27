@@ -1,0 +1,54 @@
+{{ form_start(filterForm, {
+    attr: {
+        id: 'sortie-filter-form'
+    }
+}) }}
+
+
+    {# Recherche par mot-clefs #}
+    {{ form_label(filterForm.word) }}
+    {{ form_widget(filterForm.word) }}
+
+<section>
+    <div>
+        {# Compris entre : #}
+        {{ form_label(filterForm.dateMin) }}
+        {{ form_widget(filterForm.dateMin) }}
+    </div>
+    <div>
+        {# Et : #}
+        {{ form_label(filterForm.dateMax) }}
+        {{ form_widget(filterForm.dateMax) }}
+    </div>
+</section>
+
+<section>
+    <div>
+        {# Sélection du site #}
+        {{ form_label(filterForm.site) }}
+        {{ form_widget(filterForm.site) }}
+    </div>
+    <div>
+        <div class="flex flex-row gap-2">
+            {# Sorties dont je suis l'organisateur #}
+            {{ form_widget(filterForm.organisateur) }}{{ form_label(filterForm.organisateur) }}
+        </div>
+
+        <div class="flex flex-row gap-2">
+            {# Sorties auxquelles je suis inscrit #}
+            {{ form_widget(filterForm.registered) }}{{ form_label(filterForm.registered) }}
+        </div>
+
+        <div class="flex flex-row gap-2">
+            {# Sorties auxquelles je ne suis pas inscrit #}
+            {{ form_widget(filterForm.notRegistered) }}{{ form_label(filterForm.notRegistered) }}
+        </div>
+
+        <div class="flex flex-row gap-2">
+            {# Sorties passées #}
+            {{ form_widget(filterForm.finished) }}{{ form_label(filterForm.finished) }}
+        </div>
+    </div>
+</section>
+{{ form_end(filterForm) }}
+

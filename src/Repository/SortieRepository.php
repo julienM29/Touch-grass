@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Dto\FilterDto;
 use App\Entity\Sortie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -14,6 +15,16 @@ class SortieRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Sortie::class);
+    }
+
+    public function findAllActiveSorties(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.dateHeureDebut > :now')
+            ->setParameter('now', new \DateTimeImmutable())
+            ->orderBy('s.dateHeureDebut', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 
     public function findFuturSortiesByOrganisateur($organisateurId): array
@@ -166,5 +177,41 @@ class SortieRepository extends ServiceEntityRepository
             ->setMaxResults($limit + 1)
             ->orderBy('s.dateHeureDebut', 'ASC');
         return $qb->getQuery()->getResult();
+    }
+
+    public function findRecentSortiesByParticipant(int $userId): array
+    {
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.participants', 'p')
+            ->andWhere('s.dateHeureDebut < :now')
+            ->andWhere('p.id = :userId OR IDENTITY(s.organisateur) = :userId')
+            ->setParameter('userId', $userId)
+            ->setParameter('now', new \DateTime())
+            ->orderBy('s.dateHeureDebut', 'DESC')
+            ->setMaxResults(3)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findFilteredSorties(FilterDto $filters): array
+    {
+        $queryBuilder = $this->createQueryBuilder('s');
+
+        if ($filters->dateMin !== null) {
+            $queryBuilder
+                ->andWhere('s.dateHeureDebut >= :dateMin')
+                ->setParameter('dateMin', $filters->dateMin);
+        }
+
+        if ($filters->dateMax !== null) {
+            $queryBuilder
+                ->andWhere('s.dateHeureDebut <= :dateMax')
+                ->setParameter('dateMax', $filters->dateMax);
+        }
+
+        return $queryBuilder
+            ->orderBy('s.dateHeureDebut', 'DESC')
+            ->getQuery()
+            ->getResult();
     }
 }
