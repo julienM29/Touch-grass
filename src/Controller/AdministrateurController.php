@@ -22,7 +22,7 @@ final class AdministrateurController extends AbstractController
     )
     {
     }
-    #[Route('/dashboard', name: 'dashboard')]
+    #[Route('/', name: 'dashboard')]
     public function index(
         ParticipantRepository $participantRepository,
         SortieRepository $sortieRepository
@@ -32,16 +32,20 @@ final class AdministrateurController extends AbstractController
         $sortiesAVenir = $sortieRepository->countFuturSorties();
         $sortiesPassees = $sortieRepository->countPastSorties();
         $sortiesAnnulees = $sortieRepository->countCancelledSorties();
+        $dernieresSorties = $sortieRepository->findLastSorties();
+        $derniersUtilisateurs = $participantRepository->findLastParticipants();
         return $this->render('admin/dashboard.html.twig', [
             'nbSorties' => $nbSorties,
             'nbUtilisateurs' => $nbUtilisateurs,
             'sortiesAVenir' => $sortiesAVenir,
             'sortiesPassees' => $sortiesPassees,
             'sortiesAnnulees' => $sortiesAnnulees,
+            'dernieresSorties' => $dernieresSorties,
+            'dernieresUtilisateurs' => $derniersUtilisateurs
         ]);
     }
     #[Route('/participant', name: 'participant')]
-    public function modifierParticipants(ParticipantRepository $participantRepository ): Response {
+    public function afficherParticipants(ParticipantRepository $participantRepository ): Response {
         $utilisateurs = $participantRepository->findAll();
         return $this->render('admin/participant/list.html.twig',[
         'utilisateurs' => $utilisateurs]);
@@ -77,13 +81,12 @@ final class AdministrateurController extends AbstractController
         ]);
     }
     #[Route('/sorties', name: 'sorties')]
-    public function modifierSorties(
-        ParticipantRepository $participantRepository,
+    public function afficherSorties(
         SortieRepository $sortieRepository
     ): Response {
-
+        $sorties = $sortieRepository->findAll();
         return $this->render('admin/sorties/list.html.twig', [
-
+            'sorties' => $sorties
         ]);
     }
 }

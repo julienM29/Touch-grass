@@ -1,31 +1,18 @@
-{% extends 'layout/base.html.twig' %}
+{% extends 'layout/admin_base.html.twig' %}
 
 {% block title %}Dashboard Admin{% endblock %}
-
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/openModal.js') }}" defer></script>
+{% endblock %}
 {% block main %}
 
 
         <h1 class="text-2xl font-bold mb-8 text-[#5C7D5C]">
-            Dashboard Administrateur
+            Dashboard
         </h1>
-    {# SECTION ACTIONS #}
-    <div class="mb-4">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <a href="{{ path('admin_participant') }}"
-               class="btn">
-                Gérer les participants
-            </a>
-
-            <a href="{{ path('admin_sorties') }}"
-               class="btn">
-                Gérer les événements
-            </a>
-
-        </div>
-
-    </div>
         {# GRID DES STATS #}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {# Participants #}
         <article class=" ">
             <div class="text-4xl font-black text-[#5C7D5C]">
@@ -75,10 +62,88 @@
                 Sorties annulés
             </p>
         </article>
-
     </div>
+    <h2 class="mt-5">Dernières sorties</h2>
+    <section class="admin-dashboard">
+        <table>
+            <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Date début</th>
+                <th>Lieu</th>
+                <th>Organisateur</th>
+                <th>Inscriptions</th>
+                <th>Action</th>
+            </tr>
+            </thead>
 
+            <tbody>
+            {% for sortie in dernieresSorties %}
+                <tr>
+                    <td><p>{{ sortie.nom }}</p></td>
 
+                    <td>
+                        <p>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d/m/Y H:i') : '' }}</p>
+                    </td>
 
+                    <td>
+                        <p>{{ sortie.lieu ? sortie.lieu.nom : '' }}</p>
+                    </td>
 
+                    <td>
+                        <p>{{ sortie.organisateur ? sortie.organisateur.pseudo : '' }}</p>
+                    </td>
+
+                    <td>
+                        <p>
+                            {{ sortie.participants|length }} / {{ sortie.nbInscriptionsMax }}
+                        </p>
+                    </td>
+
+                    <td>
+                        <div onclick="openModal('modal-{{ sortie.id }}')" class="btn" href="#">
+                            Voir
+                        </div>
+                    </td>
+                </tr>
+                {% include 'layout/fragments/modals/profil-event-modal.html.twig' with {
+                    event: sortie
+                } %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    <h2 class="mt-5">Derniers utilisateurs</h2>
+    <section >
+        <table>
+            <thead>
+            <tr>
+                <th>Email</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Pseudo</th>
+                <th>Téléphone</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for utilisateur in dernieresUtilisateurs %}
+                <tr>
+                    <td><p>{{ utilisateur.email }}</p></td>
+                    <td><p>{{ utilisateur.nom }}</p></td>
+                    <td><p>{{ utilisateur.prenom }}</p></td>
+                    <td><p>{{ utilisateur.pseudo }}</p></td>
+                    <td><p>{{ utilisateur.telephone }}</p></td>
+
+                    <td>
+                        <a class="btn" href="{{ path('admin_participant_edit', {id: utilisateur.id}) }}">
+                            Edit
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
 {% endblock %}

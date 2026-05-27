@@ -150,7 +150,9 @@ table td {
 table td:first-child {
     width: 70px;
 }
-
+.admin-dashboard table td:first-child {
+    width: 170px;
+}
 table td:first-child img {
     display: block;
     margin: 0 auto;
@@ -229,7 +231,11 @@ button#burger-btn {
     width: auto;
     padding: 0;
 }
-
+.image-upload-overlay {
+    @apply absolute inset-0 flex items-center justify-center
+    bg-primary/80 text-surface opacity-0
+    group-hover:opacity-100 transition duration-300 rounded-lg;
+}
 /* ==================== ERRORS ================== */
 .form-error {
     @apply text-red-600 text-sm font-medium mt-1 leading-snug;
@@ -344,4 +350,23 @@ button#burger-btn {
 .link-danger:hover {
     color: #b91c1c;
     text-decoration: underline;
+}
+
+/* =================== ADMIN ================== */
+
+.sidebar-link {
+    @apply flex items-center justify-between py-2 px-3 rounded-lg transition;
+    @apply hover:bg-white;
+}
+
+.sidebar-link .arrow {
+    @apply opacity-0 transition text-gray-400;
+}
+
+.sidebar-link:hover .arrow {
+    @apply opacity-100;
+}
+
+.sidebar-link.active {
+    @apply bg-white text-[#5C7D5C] font-semibold;
 }
