@@ -108,7 +108,7 @@ class UserScenarioTest extends WebTestCase
         $site = $this->em->getRepository(Site::class)->findOneBy(['nom' => 'Campus Test']);
 
         $this->client->submitForm('Enregistrer', [
-            'profil_form[pseudo]'     => 'test_scenario_modifié',
+            'profil_form[pseudo]'     => 'test_modifie',  // max 20 caractères
             'profil_form[prenom]'     => 'TestModifié',
             'profil_form[nom]'        => 'ScenarioModifié',
             'profil_form[telephone]'  => '0698765432',

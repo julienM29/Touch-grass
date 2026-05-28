@@ -47,6 +47,31 @@ final class ParticipantController extends AbstractController
         ]);
     }
 
+    #[Route('/profil/modify', name: 'participant_profil_modify')]
+    #[IsGranted('ROLE_USER')]
+    public function modifyProfil(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+        $form = $this->createForm(ProfilFormType::class, $user);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('image')->getData();
+            if ($imageFile instanceof UploadedFile) {
+                $filename = $this->participantService->replaceImage($imageFile, $user->getImage());
+                if ($filename) {
+                    $user->setImage($filename);
+                }
+            }
+            $entityManager->flush();
+            return $this->redirectToRoute('participant_profil');
+        }
+
+        return $this->render('participant/edit.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
     #[Route('/profil', name: 'participant_profil')]
     #[Route('/profil/{id}', name: 'participant_profil_id')]
     #[IsGranted('ROLE_USER')]
@@ -77,31 +102,6 @@ final class ParticipantController extends AbstractController
             'participations' => $participations,
             'upcomingEvents' => $upcomingEvents,
             'recentEvents' => $recentEvents,
-        ]);
-    }
-
-    #[Route('/profil/modify', name: 'participant_profil_modify')]
-    #[IsGranted('ROLE_USER')]
-    public function modifyProfil(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $user = $this->getUser();
-        $form = $this->createForm(ProfilFormType::class, $user);
-
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $imageFile = $form->get('image')->getData();
-            if ($imageFile instanceof UploadedFile) {
-                $filename = $this->participantService->replaceImage($imageFile, $user->getImage());
-                if ($filename) {
-                    $user->setImage($filename);
-                }
-            }
-            $entityManager->flush();
-            return $this->redirectToRoute('participant_profil');
-        }
-
-        return $this->render('participant/edit.html.twig', [
-            'form' => $form->createView(),
         ]);
     }
 
