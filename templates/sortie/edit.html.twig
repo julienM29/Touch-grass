@@ -6,6 +6,7 @@
     {{ parent() }}
     <script src="{{ asset('js/dureeNormalizer.js') }}" defer></script>
     <script src="{{ asset('js/imagePrevisualizer.js') }}" defer></script>
+    <script src="{{ asset('js/openModal.js') }}" defer></script>
 {% endblock %}
 
 {% block main %}
@@ -128,7 +129,18 @@
     {{ form_rest(sortieForm) }}
 
     <button type="submit">Enregistrer les modifications</button>
-    <a href="{{ path('sortie_show', { id: sortie.id }) }}">Annuler</a>
-
+    {% if is_granted('ROLE_ADMIN') %}
+        <div
+           class="link-danger cursor-pointer"
+           onclick="openCancelSortieModal(event, {{ sortie.id }})">
+            Annuler la sortie
+        </div>
+    {% else %}
+        <a href="{{ path('sortie_show', { id: sortie.id }) }}">
+            Annuler
+        </a>
+    {% endif %}
     {{ form_end(sortieForm) }}
+    {% include 'layout/fragments/modals/admin-annuler-sortie.html.twig' %}
+
 {% endblock %}

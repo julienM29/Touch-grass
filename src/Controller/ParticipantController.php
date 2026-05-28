@@ -138,28 +138,14 @@ final class ParticipantController extends AbstractController
     }
 
     #[Route('/participant/delete', name: 'participant_delete_account')]
-    public function deleteAccount(SortieRepository $sortieRepository, EntityManagerInterface $entityManager, Security $security): Response
+    public function deleteAccount(SortieRepository $sortieRepository,ParticipantRepository $participantRepository, EntityManagerInterface $entityManager, Security $security): Response
     {
         $user = $this->getUser();
         if (!$user) {
             throw $this->createAccessDeniedException();
         }
         // anonymisation email deleted_11 par exemple et en user name deleted_user_11
-        $user->setEmail('deleted_' . $user->getId() . '@deleted.local');
-        $user->setPrenom('Anonymous');
-        $user->setNom('Anonymous');
-        $user->setPseudo('deleted_user_' . $user->getId());
-        $user->setActif(false);
-        $now = new \DateTime();
-        $sorties = $sortieRepository->findFuturSortiesByOrganisateur($user->getId());
-        foreach ($sorties as $sortie) {
-            $sortie->setMotifAnnulation(
-                'Événement annulé suite à la suppression du compte organisateur'
-            );
-            $sortie->setDateModification($now);
-        }
-
-        $entityManager->flush();
+        $participantRepository->anonymizeUser($user, $entityManager, $sortieRepository);
         $security->logout(false);
 
         return $this->redirectToRoute('app_login');

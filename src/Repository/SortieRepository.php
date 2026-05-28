@@ -121,25 +121,30 @@ class SortieRepository extends ServiceEntityRepository
             ->leftJoin('s.organisateur', 'o')
             ->addSelect('o')
             ->orderBy('s.dateHeureDebut', 'DESC');
+
         // NOM SORTIE
         if (!empty($filters['nom'])) {
             $qb->andWhere('s.nom LIKE :nom')
                 ->setParameter('nom', '%' . $filters['nom'] . '%');
         }
+
         // VILLE
         if (!empty($filters['ville'])) {
             $qb->andWhere('l.ville LIKE :ville')
                 ->setParameter('ville', '%' . $filters['ville'] . '%');
         }
+
         // LIEU
         if (!empty($filters['lieu'])) {
             $qb->andWhere('l.nom LIKE :lieu')
                 ->setParameter('lieu', '%' . $filters['lieu'] . '%');
         }
-        // DATE
 
+        // DATE
         if (!empty($filters['date'])) {
+
             $date = new \DateTimeImmutable($filters['date']);
+
             $start = $date->setTime(0, 0);
             $end = $date->setTime(23, 59, 59);
 
@@ -147,6 +152,7 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('start', $start)
                 ->setParameter('end', $end);
         }
+
         // STATUS
         if (!empty($filters['status'])) {
 
@@ -154,31 +160,58 @@ class SortieRepository extends ServiceEntityRepository
 
             switch ($filters['status']) {
 
+                // SORTIES À VENIR
                 case 'upcoming':
-                    $qb->andWhere('s.dateHeureDebut > :now')
+
+                    $qb->andWhere('s.motifAnnulation IS NULL')
+                        ->andWhere('s.dateHeureDebut > :now')
                         ->setParameter('now', $now);
+
                     break;
 
+                // SORTIES PASSÉES
                 case 'past':
-                    $qb->andWhere('s.dateHeureDebut < :now')
+
+                    $qb->andWhere('s.motifAnnulation IS NULL')
+                        ->andWhere('s.dateHeureDebut < :now')
                         ->setParameter('now', $now);
+
                     break;
 
+                // SORTIES ANNULÉES
                 case 'cancelled':
+
                     $qb->andWhere('s.motifAnnulation IS NOT NULL');
+
                     break;
 
+                // SORTIES EN COURS
                 case 'ongoing':
-                    $qb->andWhere('s.dateHeureDebut <= :now')
-                        ->andWhere('DATE_ADD(s.dateHeureDebut, s.duree) >= :now')
-                        ->setParameter('now', $now);
-                    break;
+
+                    $qb->andWhere('s.motifAnnulation IS NULL');
+
+                    $sorties = $qb->getQuery()->getResult();
+
+                    return array_filter($sorties, function ($sortie) use ($now) {
+
+                        $dateDebut = $sortie->getDateHeureDebut();
+                        $dateFin = (clone $dateDebut)->add($sortie->getDuree());
+
+                        return $dateDebut <= $now && $dateFin >= $now;
+                    });
             }
+
+        } else {
+
+            // PAR DÉFAUT : exclure les annulées
+            $qb->andWhere('s.motifAnnulation IS NULL');
         }
+
         // PAGINATION
         $qb->setFirstResult(($page - 1) * $limit)
             ->setMaxResults($limit + 1)
             ->orderBy('s.dateHeureDebut', 'ASC');
+
         return $qb->getQuery()->getResult();
     }
 

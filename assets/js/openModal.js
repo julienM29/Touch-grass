@@ -43,5 +43,14 @@ function closeDeleteModal() {
     document.getElementById('delete-account-modal').classList.add('hidden');
     document.body.classList.remove('overflow-hidden');
 }
+function openCancelSortieModal(event) {
+    event.preventDefault();
+    document.getElementById('delete-sortie-modal').classList.remove('hidden');
+    document.body.classList.add('overflow-hidden');
+}
+function closeCancelSortieModal() {
+    document.getElementById('delete-sortie-modal').classList.add('hidden');
+    document.body.classList.remove('overflow-hidden');
+}
 
 
