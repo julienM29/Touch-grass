@@ -26,29 +26,37 @@
             {% endif %}
             <div class=" ">
                 <h1 class="!text-left">
-                    {{ user.prenom }} {{ user.nom }}
-                </h1>
-                <div class="flex items-center gap-2">
-                    <h5>
+                    {% if app.user == user %}
+                        {{ user.prenom }} {{ user.nom }}
+                    {% else %}
                         @{{ user.pseudo }}
-                    </h5>
-                    {% if user.administrateur %}
-                        <h5
-                            class="px-3 py-1 rounded-full bg-red-200 text-red-600">
-                            Administrateur
-                        </h5>
                     {% endif %}
-                </div>
+                </h1>
+                {% if app.user == user %}
+                    <div class="flex items-center gap-2">
+                        <h5>
+                            @{{ user.pseudo }}
+                        </h5>
+                        {% if user.administrateur %}
+                            <h5
+                                class="px-3 py-1 rounded-full bg-red-200 text-red-600">
+                                Administrateur
+                            </h5>
+                        {% endif %}
+                    </div>
+                {% endif %}
             </div>
         </div>
-        <div class="flex gap-2">
-            <a href="{{ path('participant_profil_modify') }}" class="btn">
-                modifier le profil
-            </a>
-            <a href="{{ path('participant_password_modify') }}" class="btn">
-                modifier le mot de passe
-            </a>
-        </div>
+        {% if app.user == user %}
+            <div class="flex gap-2">
+                <a href="{{ path('participant_profil_modify') }}" class="btn">
+                    modifier le profil
+                </a>
+                <a href="{{ path('participant_password_modify') }}" class="btn">
+                    modifier le mot de passe
+                </a>
+            </div>
+        {% endif %}
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <article>
                 <div class="text-4xl font-black text-[#5C7D5C]">
@@ -75,74 +83,76 @@
                 </p>
             </article>
         </div>
-        <section>
-            <article>
-                <h2>
-                    Informations
-                </h2>
-                <div class="flex flex-col gap-2">
-                    <div class="text-left flex flex-col">
-                        <label>
-                            Email
-                        </label>
-                        <p>
-                            {{ user.email }}
-                        </p>
+        {% if app.user == user %}
+            <section>
+                <article>
+                    <h2>
+                        Informations
+                    </h2>
+                    <div class="flex flex-col gap-2">
+                        <div class="text-left flex flex-col">
+                            <label>
+                                Email
+                            </label>
+                            <p>
+                                {{ user.email }}
+                            </p>
+                        </div>
+                        <div class="text-left flex flex-col ">
+                            <label>
+                                Téléphone
+                            </label>
+                            <p class="!text-sm">
+                                {{ user.telephone ?? 'Non renseigné' }}
+                            </p>
+                        </div>
+                        <div class="text-left flex flex-col">
+                            <label>
+                                Site
+                            </label>
+                            <p class="!text-sm">
+                                {{ user.site.nom ?? 'Non défini' }}
+                            </p>
+                        </div>
                     </div>
-                    <div class="text-left flex flex-col ">
-                        <label>
-                            Téléphone
-                        </label>
-                        <p class="!text-sm">
-                            {{ user.telephone ?? 'Non renseigné' }}
-                        </p>
-                    </div>
-                    <div class="text-left flex flex-col">
-                        <label>
-                            Site
-                        </label>
-                        <p class="!text-sm">
-                            {{ user.site.nom ?? 'Non défini' }}
-                        </p>
-                    </div>
-                </div>
-            </article>
-            <article>
-                <h2>Activité récente</h2>
-                <div class="">
-                    {% for event in recentEvents %}
+                </article>
+                <article>
+                    <h2>Activité récente</h2>
+                    <div class="">
+                        {% for event in recentEvents %}
 
-                        <div
-                            onclick="openModal('modal-{{ event.id }}')"
-                            class="group flex items-center justify-between py-2 px-3 rounded-lg cursor-pointer hover:bg-[#F4F6F1] transition"
-                        >
+                            <div
+                                onclick="openModal('modal-{{ event.id }}')"
+                                class="group flex items-center justify-between py-2 px-3 rounded-lg cursor-pointer hover:bg-[#F4F6F1] transition"
+                            >
 
-                            <div class=" text-left">
-                                <h6 class="text-xs font-bold uppercase text-[var(--color-primary)] truncate">
-                                    {{ event.nom|length > 26 ? event.nom|slice(0, 24) ~ '…' : event.nom }}
-                                </h6>
-                                <label class="">
-                                    {{ event.dateHeureDebut|date('d/m/Y') }}
-                                </label>
-                            </div>
+                                <div class=" text-left">
+                                    <h6 class="text-xs font-bold uppercase text-[var(--color-primary)] truncate">
+                                        {{ event.nom|length > 26 ? event.nom|slice(0, 24) ~ '…' : event.nom }}
+                                    </h6>
+                                    <label class="">
+                                        {{ event.dateHeureDebut|date('d/m/Y') }}
+                                    </label>
+                                </div>
 
-                            <span class="opacity-0 group-hover:opacity-100 transition text-gray-400">
+                                <span class="opacity-0 group-hover:opacity-100 transition text-gray-400">
                             →
                         </span>
 
-                        </div>
+                            </div>
 
-                        {% include 'layout/fragments/modals/profil-event-modal.html.twig' with {
-                            event: event
-                        } %}
-                    {% endfor %}
-                </div>
-            </article>
-        </section>
+                            {% include 'layout/fragments/modals/profil-event-modal.html.twig' with {
+                                event: event
+                            } %}
+                        {% endfor %}
+                    </div>
+                </article>
+            </section>
+        {% endif %}
         <section>
             <article>
                 <h2>
-                    Mes événements
+                    {% if app.user == user %}Mes{% else %}Ses{% endif %} événements
                 </h2>
                 <div class=" h-50 ">
                     {% for event in userEvents %}
@@ -207,10 +217,12 @@
             </article>
         </section>
     </div>
-    <a href="{{ path('participant_delete_account') }}"
-       class="mt-4 text-red-600 hover:text-red-800 hover:underline"
-       onclick="openDeleteModal(event)">
-        Supprimer mon compte
-    </a>
-    {% include 'layout/fragments/modals/profil-delete-account.html.twig' %}
+    {% if app.user == user %}
+        <a href="{{ path('participant_delete_account') }}"
+           class="mt-4 text-red-600 hover:text-red-800 hover:underline"
+           onclick="openDeleteModal(event)">
+            Supprimer mon compte
+        </a>
+        {% include 'layout/fragments/modals/profil-delete-account.html.twig' %}
+    {% endif %}
 {% endblock %}

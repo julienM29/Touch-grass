@@ -57,7 +57,7 @@
                 {% for participant in sortie.participants %}
                     <tr>
                         <td>{{ participant.pseudo }}</td>
-                        <td><a class="btn" href="{{ path('participant_profil',  { id: participant.id }) }}">Voir le profil</a></td>
+                        <td><a class="btn" href="{{ path('participant_profil_id',  { id: participant.id }) }}">Voir le profil</a></td>
                     </tr>
                 {% endfor %}
                 </tbody>

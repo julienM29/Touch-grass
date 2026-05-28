@@ -26,13 +26,17 @@ final class ParticipantController extends AbstractController
 {
     private SortieRepository $sortieRepository;
     private ParticipantService $participantService;
+    private ParticipantRepository $participantRepository;
+
     public function __construct(
-        SortieRepository $sortieRepository,
-        ParticipantService $participantService
+        SortieRepository   $sortieRepository,
+        ParticipantService $participantService,
+        ParticipantRepository $participantRepository
     )
     {
         $this->sortieRepository = $sortieRepository;
         $this->participantService = $participantService;
+        $this->participantRepository = $participantRepository;
     }
 
     #[Route('/participant', name: 'app_participant')]
@@ -44,10 +48,21 @@ final class ParticipantController extends AbstractController
     }
 
     #[Route('/profil', name: 'participant_profil')]
+    #[Route('/profil/{id}', name: 'participant_profil_id')]
     #[IsGranted('ROLE_USER')]
-    public function profil(): Response
+    public function profil(
+        ?int $id = null
+    ): Response
     {
-        $user = $this->getUser();
+        if ($id === null) {
+            $user = $this->getUser();
+        } else {
+            $user = $this->participantRepository->find($id);
+        }
+
+        if (!$user instanceof Participant) {
+            throw $this->createNotFoundException('Participant introuvable.');
+        }
 
         $eventsCreated = $this->sortieRepository->countByOrganisateur($user->getId());
         $participations = $this->sortieRepository->countPastByParticipant($user->getId());

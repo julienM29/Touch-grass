@@ -68,8 +68,6 @@ function updateSortiesList(sorties) {
     sorties.forEach((sortie) => {
         const row = document.createElement('tr');
 
-        console.log(sortie);
-
         const imageSrc = sortie.image
             ? `/uploads/${sortie.image}`
             : '/img/default-image.png';
