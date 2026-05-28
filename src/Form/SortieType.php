@@ -31,17 +31,17 @@ class SortieType extends AbstractType
                     'label' => 'Nom de la sortie',
                     'required' => true,
                     'attr' => [
-                        'placeholder' => 'Renseignez ici le nom de votre event_registration',
+                        'placeholder' => 'Renseignez ici le nom de votre sortie',
                         'maxlength' => 255,
                         'minlength' => 5,
                     ],
                     'constraints' => [
                         new NotBlank([
-                            'message' => 'Le nom de la event_registration est obligatoire.',
+                            'message' => 'Le nom de la sortie est obligatoire.',
                         ]),
                         new Length([
                             'max' => 255,
-                            'maxMessage' => 'Le nom de la event_registration ne peut pas dépasser {{ limit }} caractères.',
+                            'maxMessage' => 'Le nom de la sortie ne peut pas dépasser {{ limit }} caractères.',
                         ]),
                     ],
                 ])

@@ -166,6 +166,14 @@ final class SortieRestController extends AbstractController
         );
     }
 
+    #[Route('/{id}/modal', name: 'modal', methods: ['GET'])]
+    public function sortieModal(Sortie $sortie): Response
+    {
+        return $this->render('layout/fragments/modals/profil-event-modal.html.twig', [
+            'event' => $sortie,
+        ]);
+    }
+
     private function sortieRegistrationResponse(
         Sortie $sortie,
         string $message,

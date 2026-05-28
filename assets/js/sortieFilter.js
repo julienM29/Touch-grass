@@ -16,10 +16,11 @@ async function sendFilterRequest() {
     const registeredData = document.querySelector('#filter_form_registered').checked;
     const notRegisteredData = document.querySelector('#filter_form_notRegistered').checked;
     const finishedData = document.querySelector('#filter_form_finished').checked;
+    const today = new Date().toISOString().slice(0,10);
 
     const filters = {
         word: wordData,
-        dateMin: dateMinData || null,
+        dateMin: dateMinData || today,
         dateMax: dateMaxData || null,
         site: siteData || null,
         organisateur: organisateurData,
@@ -78,12 +79,13 @@ function updateSortiesList(sorties) {
             </td>
             <td>${sortie.nom}</td>
             <td>
-                <a href="/sortie/${sortie.id}" class="btn btn-primary">
+                <button type="button"
+                        onclick="openSortieModal(${sortie.id})"
+                        class="btn btn-primary">
                     Voir
-                </a>
+                </button>
             </td>
         `;
-
         sortiesList.appendChild(row);
     });
 }
