@@ -54,6 +54,7 @@ class SortieRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('s')
             ->select('COUNT(s.id)')
             ->andWhere('s.dateHeureDebut > :now')
+            ->andWhere('s.motifAnnulation IS NULL')
             ->setParameter('now', new \DateTimeImmutable())
             ->getQuery()
             ->getSingleScalarResult();
@@ -64,6 +65,7 @@ class SortieRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('s')
             ->select('COUNT(s.id)')
             ->andWhere('s.dateHeureDebut < :now')
+            ->andWhere('s.motifAnnulation IS NULL')
             ->setParameter('now', new \DateTimeImmutable())
             ->getQuery()
             ->getSingleScalarResult();
