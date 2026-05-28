@@ -3,7 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Participant;
+use App\Entity\Site;
+use App\Form\LieuFormType;
 use App\Form\ProfilFormType;
+use App\Form\SiteFormType;
 use App\Repository\LieuRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\SiteRepository;
@@ -193,10 +196,74 @@ final class AdministrateurController extends AbstractController
     ############################### SITES ################################
 
     #[Route('/site', name: 'site')]
-    public function afficherSite(SiteRepository $siteRepository  ): Response {
-        $sites = $siteRepository->findAll();
+    public function afficherSite(
+        Request $request,
+        SiteRepository $siteRepository
+    ): Response {
+
+        $page = $request->query->getInt('page', 1);
+        $limit = 10;
+
+        $filters = [
+            'nom' => $request->query->get('nom'),
+        ];
+
+        $sites = $siteRepository->findFilteredPaginated(
+            $filters,
+            $page,
+            $limit
+        );
+
+        $hasMore = count($sites) > $limit;
+
+        if ($hasMore) {
+            array_pop($sites);
+        }
+
         return $this->render('admin/site/list.html.twig', [
             'sites' => $sites,
+            'page' => $page,
+            'hasMore' => $hasMore,
+        ]);
+    }
+    #[Route('/site/create', name: 'site_create', methods: ['GET', 'POST'])]
+    public function createSite( Request $request, EntityManagerInterface $entityManager ): Response {
+        $site = new Site();
+        $form = $this->createForm(SiteFormType::class, $site);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($site);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_home');
+        }
+
+        return $this->render('admin/site/create.html.twig', [
+            'siteForm' => $form->createView(),
+        ]);
+    }
+    #[Route('/site/update/{id}', name: 'site_update', methods: ['GET', 'POST'])]
+    public function updateSite(
+        Site $site,
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
+
+        $form = $this->createForm(SiteFormType::class, $site);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('site');
+        }
+
+        return $this->render('admin/site/edit.html.twig', [
+            'siteForm' => $form->createView(),
+            'site' => $site,
         ]);
     }
     ############################### LIEUX ################################

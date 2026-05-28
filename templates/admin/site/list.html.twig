@@ -9,5 +9,83 @@
     <h1 class="">
         Gestion des sites
     </h1>
-    {% include 'layout/fragments/admin/nav-bar.html.twig'%}
+    {% include 'layout/fragments/admin/nav-bar.html.twig' %}
+    <form method="get">
+        <section>
+            <div>
+                <input type="text"
+                       name="nom"
+                       placeholder="Nom du site"
+                       value="{{ app.request.get('nom') }}">
+            </div>
+        </section>
+        <div class="w-full flex justify-start gap-6">
+            <button type="submit">
+                Filtrer les sites
+            </button>
+            <a class="btn" href="{{ path('admin_site_create') }}">Ajouter un site</a>
+        </div>
+    </form>
+    <hr>
+    {% if sites is empty %}
+        <br>
+        <p>Il n'y actuellement aucuns sites disponibles.</p>
+    {% else %}
+        <section>
+            <table>
+                <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for site in sites %}
+                    <tr>
+                        <td><p>{{ site.nom }}</p></td>
+                        <td>
+                            {# Bouton qui ouvre la modal #}
+                            <a href="{{ path('admin_site_update', { id: site.id }) }}" class="btn">Edit</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    {% endif %}
+    {% set route = app.request.attributes.get('_route') %}
+    {% set query = app.request.query.all %}
+
+    {% set prevQuery = query|merge({'page': page - 1}) %}
+    {% set nextQuery = query|merge({'page': page + 1}) %}
+    <div class="pagination">
+
+        {# PRECEDENT #}
+        {% if page > 1 %}
+            <a class="pagination-link"
+               href="{{ path(route, prevQuery) }}">
+                ← Précédent
+            </a>
+        {% else %}
+            <span class="pagination-link disabled">
+            ← Précédent
+        </span>
+        {% endif %}
+
+        <span class="pagination-current">
+        Page {{ page }}
+    </span>
+
+        {# SUIVANT #}
+        {% if hasMore %}
+            <a class="pagination-link"
+               href="{{ path(route, nextQuery) }}">
+                Suivant →
+            </a>
+        {% else %}
+            <span class="pagination-link disabled">
+            Suivant →
+        </span>
+        {% endif %}
+    </div>
 {% endblock %}
