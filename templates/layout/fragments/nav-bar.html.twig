@@ -68,12 +68,6 @@
                 </a>
             </li>
 
-            <li>
-                <a href="#" class="block text-primary text-lg font-semibold py-2 hover:text-gray-400">
-                    Contact
-                </a>
-            </li>
-
             {% if is_granted('ROLE_ADMIN') %}
                 <li>
                     <a href="{{ path('admin_dashboard') }}" class="block text-primary text-lg font-semibold py-2 hover:text-gray-400">
