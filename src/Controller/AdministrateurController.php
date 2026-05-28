@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Participant;
 use App\Form\ProfilFormType;
+use App\Repository\LieuRepository;
 use App\Repository\ParticipantRepository;
+use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
 use App\Services\ParticipantService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,6 +24,7 @@ final class AdministrateurController extends AbstractController
     )
     {
     }
+
     #[Route('/', name: 'dashboard')]
     public function index(
         ParticipantRepository $participantRepository,
@@ -44,6 +47,7 @@ final class AdministrateurController extends AbstractController
             'dernieresUtilisateurs' => $derniersUtilisateurs
         ]);
     }
+    ############################### PARTICIPANTS ################################
     #[Route('/participants', name: 'participant')]
     public function afficherParticipants(
         Request $request,
@@ -120,6 +124,8 @@ final class AdministrateurController extends AbstractController
 
         return $this->redirectToRoute('admin_participant');
     }
+
+    ############################### SORTIES ################################
     #[Route('/sorties', name: 'sorties')]
     public function afficherSorties(
         Request $request,
@@ -184,12 +190,48 @@ final class AdministrateurController extends AbstractController
 
         return $this->redirectToRoute('admin_sorties');
     }
+    ############################### SITES ################################
+
     #[Route('/site', name: 'site')]
-    public function afficherSite(  ): Response {
-        return $this->render('admin/site/list.html.twig');
+    public function afficherSite(SiteRepository $siteRepository  ): Response {
+        $sites = $siteRepository->findAll();
+        return $this->render('admin/site/list.html.twig', [
+            'sites' => $sites,
+        ]);
     }
-    #[Route('/ville', name: 'ville')]
-    public function afficherVille(  ): Response {
-        return $this->render('admin/ville/list.html.twig');
+    ############################### LIEUX ################################
+    #[Route('/lieux', name: 'lieux')]
+    public function afficherLieux(
+        Request $request,
+        LieuRepository $lieuRepository
+    ): Response {
+
+        $page = $request->query->getInt('page', 1);
+        $limit = 10;
+
+        $filters = [
+            'lieu' => $request->query->get('lieu'),
+            'ville' => $request->query->get('ville'),
+            'codePostal' => $request->query->get('codePostal'),
+        ];
+
+        $lieux = $lieuRepository->findFilteredPaginated(
+            $filters,
+            $page,
+            $limit
+        );
+
+        // pagination logic (+1 record trick)
+        $hasMore = count($lieux) > $limit;
+
+        if ($hasMore) {
+            array_pop($lieux);
+        }
+
+        return $this->render('admin/lieu/list.html.twig', [
+            'lieux' => $lieux,
+            'page' => $page,
+            'hasMore' => $hasMore,
+        ]);
     }
 }

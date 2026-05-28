@@ -13,8 +13,11 @@
 {% endblock %}
 
 {% block main %}
+    <a href="{{ path('admin_lieux') }}"
+       class="self-start block text-primary text-sm font-semibold py-2 hover:text-gray-400">
+        ← Retour à la liste
+    </a>
     <h1>Modifier un lieu</h1>
-
     <input type="text" id="recherche-globale" placeholder="Rechercher un lieu (ex: ENI Rennes)..." autocomplete="off">
     <ul id="liste-suggestions-globale"></ul>
 
