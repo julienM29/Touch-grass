@@ -39,6 +39,7 @@ class FilterForm extends AbstractType
                 'required' => false,
                 'attr' => [
                     'placeholder' => 'Rechercher une sortie',
+                    'onkeydown' => 'return event.key !== "Enter";',
                 ],
             ])
             ->add('dateMin', DateType::class, [
