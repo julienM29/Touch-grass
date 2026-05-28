@@ -2,10 +2,13 @@
 
 namespace App\Controller;
 
+use App\Dto\FilterDto;
 use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Form\FilterForm;
 use App\Form\SortieType;
+use App\Repository\SiteRepository;
+use App\Repository\SortieRepository;
 use App\Services\InitializerService;
 use App\Utils\ImageLoader;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,6 +20,21 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/sortie', name: 'sortie')]
 final class SortieController extends AbstractController
 {
+    private SortieRepository $sortieRepository;
+    private SiteRepository $siteRepository;
+
+    /**
+     * @param SortieRepository $sortieRepository
+     * @param SiteRepository $siteRepository
+     */
+    public function __construct(
+        SortieRepository $sortieRepository,
+        SiteRepository $siteRepository)
+    {
+        $this->sortieRepository = $sortieRepository;
+        $this->siteRepository = $siteRepository;
+    }
+
 
     #[Route('/', name: '', methods: ['GET'])]
     public function list(
@@ -26,27 +44,24 @@ final class SortieController extends AbstractController
     {
         $filterForm = $this->createForm(FilterForm::class);
 
-        $siteId = $request->query->get('site');
+        $defaultFilters = new FilterDto(
+            $this->getUser()?->getSite()?->getId(),
+            null,
+            new \DateTime(),
+            null,
+            false,
+            false,
+            false,
+            false
+        );
 
-        if ($siteId === null && $this->getUser()?->getSite() !== null) {
-            $siteId = $this->getUser()->getSite()->getId();
-        }
-
-        $sites = $em->getRepository(\App\Entity\Site::class)->findBy([],
-        ['nom' => 'ASC']);
-
-        if ($siteId) {
-            $sorties = $em->getRepository(Sortie::class)->findBy([
-                'siteOrganisateur' => $siteId,
-            ]);
-        } else {
-            $sorties = $em->getRepository(Sortie::class)->findAll();
-        }
+        $sorties = $this->sortieRepository->findFilteredSorties($defaultFilters, $this->getUser()->getId());
+        $sites = $this->siteRepository->findAll();
 
         return $this->render('sortie/list.html.twig',[
             'sorties' => $sorties,
             'sites' => $sites,
-            'selectedSiteId' => $siteId,
+            'selectedSiteId' => $this->getUser()?->getSite()?->getId(),
             'filterForm' => $filterForm->createView(),
         ]);
     }
