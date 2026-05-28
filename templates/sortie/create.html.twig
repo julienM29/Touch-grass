@@ -111,17 +111,20 @@
             {{ form_widget(sortieForm.siteOrganisateur) }}
             {{ form_errors(sortieForm.siteOrganisateur) }}
         </div>
-        <div class="">
+        <div>
             <!-- Date fermeture inscription -->
             {{ form_label(sortieForm.lieu) }}
-            {{ form_widget(sortieForm.lieu) }}
-            {{ form_errors(sortieForm.lieu) }}
+            <div class="flex flex-row gap-2">
+                {{ form_widget(sortieForm.lieu) }}
+                {{ form_errors(sortieForm.lieu) }}
+                {# Bouton pour créer un nouveau lieu #}
+                <button type="button" class="h-10 w-10" onclick="openModal('modal-create-lieu')">
+                    +
+                </button>
+
+            </div>
         </div>
     </section>
-    {# Bouton pour créer un nouveau lieu #}
-    <button type="button" onclick="openModal('modal-create-lieu')">
-        + Ajouter un nouveau lieu
-    </button>
 
     {{ form_widget(sortieForm) }}
     <br>
