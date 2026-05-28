@@ -218,11 +218,12 @@
         </section>
     </div>
     {% if app.user == user %}
-        <a href="{{ path('participant_delete_account') }}"
+        <div
            class="mt-4 text-red-600 hover:text-red-800 hover:underline"
            onclick="openDeleteModal(event)">
             Supprimer mon compte
-        </a>
-        {% include 'layout/fragments/modals/profil-delete-account.html.twig' %}
+        </div>
+{% include 'layout/fragments/modals/profil-delete-account.html.twig' with {
+    confirm_path: path('admin_user_delete', { id: app.user.id }) } %}
     {% endif %}
 {% endblock %}

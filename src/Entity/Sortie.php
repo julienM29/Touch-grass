@@ -279,5 +279,8 @@ class Sortie
             && $this->dateHeureDebut > $now;
     }
 
-
+    public function getDateFin(): \DateTimeInterface
+    {
+        return (clone $this->dateHeureDebut)->add($this->duree);
+    }
 }

@@ -11,16 +11,13 @@
     </h1>
     {% include 'layout/fragments/admin/nav-bar.html.twig' %}
     <form method="get">
-
         <section>
-
             <div>
                 <input type="text"
                        name="email"
                        placeholder="Email"
                        value="{{ app.request.get('email') }}">
             </div>
-
             <div>
                 <input type="text"
                        name="nom"
@@ -60,12 +57,15 @@
 
             </select>
         </section>
+        <div class="w-full flex justify-start">
+            <button type="submit">
+                Filtrer les utilisateurs
+            </button>
+        </div>
 
-        <button type="submit">
-            Filtrer
-        </button>
 
     </form>
+    <hr>
     <section class="admin-dashboard overflow-x-auto">
         <table>
             <thead>
@@ -94,4 +94,41 @@
             </tbody>
         </table>
     </section>
+{# ===================== PAGINATION ===================== #}
+    {% set route = app.request.attributes.get('_route') %}
+    {% set query = app.request.query.all %}
+
+    {% set prevQuery = query|merge({'page': page - 1}) %}
+    {% set nextQuery = query|merge({'page': page + 1}) %}
+<div class="pagination">
+
+    {# PRECEDENT #}
+    {% if page > 1 %}
+        <a class="pagination-link"
+           href="{{ path(route, prevQuery) }}">
+            ← Précédent
+        </a>
+    {% else %}
+        <span class="pagination-link disabled">
+            ← Précédent
+        </span>
+    {% endif %}
+
+    <span class="pagination-current">
+        Page {{ page }}
+    </span>
+
+    {# SUIVANT #}
+    {% if hasMore %}
+        <a class="pagination-link"
+           href="{{ path(route, nextQuery) }}">
+            Suivant →
+        </a>
+    {% else %}
+        <span class="pagination-link disabled">
+            Suivant →
+        </span>
+    {% endif %}
+
+</div>
 {% endblock %}

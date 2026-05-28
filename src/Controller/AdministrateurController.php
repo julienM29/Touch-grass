@@ -103,11 +103,22 @@ final class AdministrateurController extends AbstractController
 
             return $this->redirectToRoute('admin_participant');
         }
-        dump($form);
         return $this->render('admin/participant/edit.html.twig', [
             'form' => $form->createView(),
             'utilisateur' => $utilisateur
         ]);
+    }
+    #[Route('/user/{id}/delete', name: 'user_delete')]
+    public function deleteUser(
+        Participant $user,
+        ParticipantRepository $participantRepository,
+        EntityManagerInterface $entityManager,
+        SortieRepository $sortieRepository
+    ): Response {
+
+        $participantRepository->anonymizeUser($user, $entityManager, $sortieRepository);
+
+        return $this->redirectToRoute('admin_participant');
     }
     #[Route('/sorties', name: 'sorties')]
     public function afficherSorties(
@@ -125,20 +136,53 @@ final class AdministrateurController extends AbstractController
             'status' => $request->query->get('status'),
             'date' => $request->query->get('date'),
         ];
+        $results = $sortieRepository->findFilteredPaginated($filters, $page, $limit);
+        $now = new \DateTime();
 
-        $sorties = $sortieRepository->findFilteredPaginated($filters, $page, $limit);
+        // FILTRAGE MÉTIER
+        if (($filters['status'] ?? null) === 'past') {
+            // On trie les résultats car on a pas de date fin en bdd donc pas de between etc
+            $results = array_filter($results, function ($sortie) use ($now) {
+                return $sortie->getDateFin() < $now;
+            });
 
-        $hasMore = count($sorties) > $limit;
+        } elseif (($filters['status'] ?? null) === 'ongoing') {
 
+            $results = array_filter($results, function ($sortie) use ($now) {
+                return $sortie->getDateHeureDebut() <= $now
+                    && $sortie->getDateFin() >= $now;
+            });
+        }
+
+        // PAGINATION calcul du nb res et comparaison limit
+        $hasMore = count($results) > $limit;
+        // Enleve le reste du tab actuelle
         if ($hasMore) {
-            array_pop($sorties);
+            array_pop($results);
         }
 
         return $this->render('admin/sorties/list.html.twig', [
-            'sorties' => $sorties,
+            'sorties' => $results,
             'page' => $page,
             'hasMore' => $hasMore,
         ]);
+    }
+    #[Route('/sortie/cancel/{id}', name: 'sortie_cancel', methods: ['POST'])]
+    public function annulerSortie( int $id, Request $request, SortieRepository $sortieRepository, EntityManagerInterface $entityManager
+    ): Response {
+        $sortie = $sortieRepository->find($id);
+        if (!$sortie) {
+            throw $this->createNotFoundException('Sortie introuvable');
+        }
+        $sortie->setMotifAnnulation('Événement jugé inapproprié par l\'administrateur');
+
+        $sortie->setDateModification(new \DateTime());
+
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Sortie annulée avec succès');
+
+        return $this->redirectToRoute('admin_sorties');
     }
     #[Route('/site', name: 'site')]
     public function afficherSite(  ): Response {

@@ -1,4 +1,4 @@
-<div id="delete-account-modal"
+<div id="delete-sortie-modal"
      class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
 
     <div class="bg-surface rounded-lg p-6 w-full max-w-md shadow-lg">
@@ -8,27 +8,25 @@
         </h2>
 
         <p class="mt-3 text-gray-600">
-            Êtes-vous sûr de vouloir supprimer votre compte ?
+            Êtes-vous sûr de vouloir annuler cette sortie ?
             Cette action est <span class="text-red-600 font-semibold">définitive</span>.
         </p>
 
         <div class="mt-6 flex justify-center gap-3">
-
+            <!-- fermeture UI uniquement -->
             <button type="button"
-                    onclick="closeDeleteModal()"
+                    onclick="closeCancelSortieModal()"
                     class="bg-[var(--color-primary)] px-4 py-2 rounded text-white">
-                Annuler
+                Retour
             </button>
-
-            <form method="post" action="{{ confirm_path }}">
-                <input type="hidden" name="_token" value="{{ csrf_token(csrf_token_id|default('action')) }}">
-
+            <!-- action serveur -->
+            <form method="post" action="{{ path('admin_sortie_cancel', { id: sortie.id }) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('cancel_sortie_' ~ sortie.id) }}">
                 <button type="submit"
-                        class="px-4 py-2 rounded bg-red-600 text-white">
-                    {{ confirm_label|default('Confirmer') }}
+                        class="!bg-red-600">
+                    Confirmer l'annulation
                 </button>
             </form>
-
         </div>
 
     </div>
