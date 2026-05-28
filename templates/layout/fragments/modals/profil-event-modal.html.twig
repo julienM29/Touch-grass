@@ -48,13 +48,15 @@
         {# DESCRIPTION #}
         <div class="space-y-1">
             <label class="font-semibold text-[var(--color-primary)]">Description</label>
-            <p class="  leading-relaxed ">
-                {{ event.description }}
-            </p>
-        </div>
+            <div class="max-h-28 overflow-y-auto pr-2">
+                    <p class="leading-relaxed">
+                        {{ event.description }}
+                    </p>
+                </div>
+            </div>
 
-        {# HORAIRES (comme ta page détail) #}
-        {% set dateFin = event.dateHeureDebut|date_modify('+' ~ event.duree.h ~ ' hours +' ~ event.duree.i ~ ' minutes') %}
+            {# HORAIRES (comme ta page détail) #}
+            {% set dateFin = event.dateHeureDebut|date_modify('+' ~ event.duree.h ~ ' hours +' ~ event.duree.i ~ ' minutes') %}
 
         <div class="space-y-1">
             <label class="font-semibold text-[var(--color-primary)]">Horaires</label>
@@ -97,21 +99,22 @@
         } %}
 
 
-        {% if app.user and app.user.administrateur %}
-            <hr>
+        {% if (app.user and app.user.administrateur) or (app.user === event.organisateur) %}
             <section>
+                <div>
+                    <a href="{{ path('sortie_edit', { id: event.id }) }}" class="btn">Modifier</a>
+                </div>
+                <div>
+                    <form method="post" action="{{ path('sortie_delete', {'id': event.id}) }}"
+                          onsubmit="return confirm('Voulez-vous vraiment supprimer cette sortie ?');">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete_sortie_' ~ event.id) }}">
 
-                <a href="{{ path('sortie_edit', { id: event.id }) }}" class="btn">Modifier</a>
-
-                <form method="post" action="{{ path('sortie_delete', {'id': event.id}) }}"
-                      onsubmit="return confirm('Voulez-vous vraiment supprimer cette sortie ?');">
-                    <input type="hidden" name="_method" value="DELETE">
-                    <input type="hidden" name="_token" value="{{ csrf_token('delete_sortie_' ~ event.id) }}">
-
-                    <button type="submit" class="btn">
-                        Supprimer
-                    </button>
-                </form>
+                        <button type="submit" class="btn">
+                            Supprimer
+                        </button>
+                    </form>
+                </div>
             </section>
         {% endif %}
 
