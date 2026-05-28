@@ -1,51 +1,76 @@
 {% extends 'layout/base.html.twig' %}
 
-{% block title %}Dashboard Admin{% endblock %}
+{% block title %}Gestion des Lieux{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+{% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
+    {{ importmap('mapModals') }}
     <script src="{{ asset('js/openModal.js') }}" defer></script>
 {% endblock %}
 {% block main %}
-    <h1 class="">
-        Gestion des sites
-    </h1>
+    <h1>Gestion des lieux</h1>
     {% include 'layout/fragments/admin/nav-bar.html.twig' %}
     <form method="get">
         <section>
             <div>
                 <input type="text"
-                       name="nom"
-                       placeholder="Nom du site"
-                       value="{{ app.request.get('nom') }}">
+                       name="lieu"
+                       placeholder="Lieu"
+                       value="{{ app.request.get('lieu') }}">
+            </div>
+            <div>
+                <input type="text"
+                       name="ville"
+                       placeholder="Ville"
+                       value="{{ app.request.get('ville') }}">
+            </div>
+            <div>
+                <input type="number"
+                       name="codePostal"
+                       placeholder="Code postal"
+                       value="{{ app.request.get('codePostal') }}">
             </div>
         </section>
         <div class="w-full flex justify-start gap-6">
             <button type="submit">
-                Filtrer les sites
+                Filtrer les lieux
             </button>
-            <a class="btn" href="{{ path('admin_site_create') }}">Ajouter un site</a>
+            <a class="btn" href="{{ path('lieu_create') }}">Ajouter un lieu</a>
         </div>
     </form>
     <hr>
-    {% if sites is empty %}
+    {% if lieux is empty %}
         <br>
-        <p>Il n'y actuellement aucuns sites disponibles.</p>
+        <p>Il n'y actuellement aucuns lieux disponibles.</p>
     {% else %}
         <section>
             <table>
                 <thead>
                 <tr>
                     <th>Nom</th>
+                    <th>Rue</th>
+                    <th>Ville</th>
+                    <th>Code postal</th>
                     <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% for site in sites %}
+                {% for lieu in lieux %}
                     <tr>
-                        <td><p>{{ site.nom }}</p></td>
+                        <td><p>{{ lieu.nom }}</p></td>
+                        <td><p>{{ lieu.rue }}</p></td>
+                        <td><p>{{ lieu.ville.nom }}</p></td>
+                        <td><p>{{ lieu.ville.codePostal }}</p></td>
                         <td>
                             {# Bouton qui ouvre la modal #}
-                            <a href="{{ path('admin_site_update', { id: site.id }) }}" class="btn">Edit</a>
+{#                            <a href="{{ path('lieu_update', { id: lieu.id }) }}" class="btn">Edit</a>#}
+                            <button onclick="openModal('modal-lieu-{{ lieu.id }}')">
+                                Détail
+                            </button>
                         </td>
                     </tr>
                 {% endfor %}
@@ -88,4 +113,8 @@
         </span>
         {% endif %}
     </div>
+    {# Inclusion de la modal #}
+    {% for lieu in lieux %}
+        {% include 'layout/fragments/modals/lieu-detail-modal.html.twig' with { lieu: lieu } %}
+    {% endfor %}
 {% endblock %}

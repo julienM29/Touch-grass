@@ -1,0 +1,17 @@
+{# erreurs globales du form #}
+    {{ form_errors(siteForm) }}
+
+    {{ form_start(siteForm, {'attr': {'class': 'space-y-4'}}) }}
+
+<div>
+    {{ form_row(siteForm.nom, {
+        'attr': {'class': 'input'},
+        'label': 'Nom du site'
+    }) }}
+</div>
+
+<button type="submit">
+    Ajouter le site
+</button>
+
+{{ form_end(siteForm) }}

@@ -15,7 +15,23 @@ class SiteRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Site::class);
     }
+    public function findFilteredPaginated(array $filters, int $page, int $limit): array
+    {
+        $qb = $this->createQueryBuilder('s')
+            ->orderBy('s.nom', 'ASC');
 
+        // NOM DU SITE
+        if (!empty($filters['nom'])) {
+            $qb->andWhere('s.nom LIKE :nom')
+                ->setParameter('nom', '%' . $filters['nom'] . '%');
+        }
+
+        // PAGINATION (+1 trick)
+        $qb->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit + 1);
+
+        return $qb->getQuery()->getResult();
+    }
     //    /**
     //     * @return Site[] Returns an array of Site objects
     //     */

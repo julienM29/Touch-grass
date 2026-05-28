@@ -1,7 +1,6 @@
 <div class="flex justify-center mb-4">
     <nav class="nav-admin-dashboard">
     {% set route = app.request.attributes.get('_route') %}
-
     <a href="{{ path('admin_dashboard') }}"
        class="sidebar-link {{ route == 'admin_dashboard' ? 'active' : '' }}">
             <span class="link-nav-admin">
@@ -9,7 +8,6 @@
                 <span class="link-nav-admin-text">Dashboard</span>
             </span>
     </a>
-
     <a href="{{ path('admin_participant') }}"
        class="sidebar-link {{ route starts with 'admin_participant' ? 'active' : '' }}">
             <span class="link-nav-admin">
@@ -17,7 +15,6 @@
                 <span class="link-nav-admin-text">Participants</span>
             </span>
     </a>
-
     <a href="{{ path('admin_sorties') }}"
        class="sidebar-link {{ route starts with 'admin_sorties' ? 'active' : '' }}">
             <span class="link-nav-admin">
@@ -25,7 +22,6 @@
                 <span class="link-nav-admin-text">Sorties</span>
             </span>
     </a>
-
     <a href="{{ path('admin_site') }}"
        class="sidebar-link {{ route starts with 'admin_site' ? 'active' : '' }}">
             <span class="link-nav-admin">
@@ -33,14 +29,12 @@
                 <span class="link-nav-admin-text">Site</span>
             </span>
     </a>
-
-    <a href="{{ path('admin_ville') }}"
-       class="sidebar-link {{ route starts with 'admin_ville' ? 'active' : '' }}">
+    <a href="{{ path('admin_lieux') }}"
+       class="sidebar-link {{ route starts with 'admin_lieux' ? 'active' : '' }}">
             <span class="link-nav-admin">
                 <i class="fa-solid fa-city"></i>
-                <span class="link-nav-admin-text">Ville</span>
+                <span class="link-nav-admin-text">Lieux</span>
             </span>
     </a>
-
 </nav>
 </div>

@@ -1,0 +1,16 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block title %}Modifier un site{% endblock %}
+
+{% block main %}
+
+    <a href="{{ path('admin_site') }}"class="self-start block text-primary text-sm font-semibold py-2 hover:text-gray-400">← Retour à la liste</a>
+
+    <h1>Modifier le site</h1>
+
+    {% include 'admin/site/form.html.twig' with {
+        siteForm: siteForm,
+        button_label: 'Modifier le site'
+    } %}
+
+{% endblock %}
