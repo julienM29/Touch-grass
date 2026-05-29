@@ -9,7 +9,7 @@
     {# ACTIONS ADMIN #}
     {% if app.user and app.user.administrateur %}
         <hr>
-        <section class="flex gap-3 justify-center">
+        <section>
             <a href="{{ path('ville_update', { id: ville.id }) }}" class="btn">Modifier</a>
             <form method="post" action="{{ path('ville_delete', { id: ville.id }) }}"
                   onsubmit="return confirm('Voulez-vous vraiment supprimer cette ville ?');">
@@ -20,3 +20,5 @@
     {% endif %}
 
 {% endblock %}
+
+

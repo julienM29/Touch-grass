@@ -25,9 +25,11 @@ final class SortieRestController extends AbstractController
     }
 
     #[Route('-filtered', name: 'list_filtered', methods: ['POST'])]
-    public function listFiltered(
-        #[MapRequestPayload] FilterDto $filters
-    ): JsonResponse {
+        public function listFiltered(#[MapRequestPayload] FilterDto $filters): JsonResponse
+    {
+        if (!$this->getUser()) {
+            return $this->json(['error' => 'User not authenticated'], Response::HTTP_UNAUTHORIZED);
+        }
 
         $filteredSorties = $this->sortieRepository->findFilteredSorties($filters, $this->getUser()->getId());
 
