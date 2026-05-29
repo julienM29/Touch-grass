@@ -74,6 +74,7 @@
                 <th>Nom</th>
                 <th>Prénom</th>
                 <th>Téléphone</th>
+                <th>Profil</th>
                 <th>Action</th>
             </tr>
             </thead>
@@ -84,6 +85,11 @@
                     <td><p>{{ participant.nom }}</p></td>
                     <td><p>{{ participant.prenom }}</p></td>
                     <td><p>{{ participant.telephone }}</p></td>
+                    <td>
+                        <a class="btn" href="{{ path('participant_profil_id', {id: participant.id}) }}">
+                            Voir
+                        </a>
+                    </td>
                     <td>
                         <a class="btn" href="{{ path('admin_participant_edit', {id: participant.id}) }}">
                             Edit
