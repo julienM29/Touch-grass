@@ -137,7 +137,6 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
         // Enlever le user des sorties pas encore commencé
         $sortiesInscrit = $user->getSorties();
         foreach ($sortiesInscrit as $sortie) {
-            $sortie->removeParticipant($user);
             $user->removeSorty($sortie);
         }
         $entityManager->flush();

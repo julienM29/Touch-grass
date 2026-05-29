@@ -95,13 +95,13 @@ class UserScenarioTest extends WebTestCase
         $this->client->followRedirect();
 
         // Vérifier qu'on est bien connecté WIP
-//        $this->assertSelectorNotExists('a[href="/login"]');
+        //        $this->assertSelectorNotExists('a[href="/login"]');
 
         dump('✅ Étape 2 : Connexion réussie');
 
         // -------------------------------------------------------
-// ÉTAPE 3 : Modification du profil
-// -------------------------------------------------------
+        // ÉTAPE 3 : Modification du profil
+        // -------------------------------------------------------
         $this->client->request('GET', '/profil/modify');
         $this->assertResponseIsSuccessful();
 
@@ -119,5 +119,33 @@ class UserScenarioTest extends WebTestCase
         $this->client->followRedirect();
 
         dump('✅ Étape 3 : Profil modifié avec succès');
+
+        // -------------------------------------------------------
+        // ÉTAPE 4 : Parcourir les sorties
+        // -------------------------------------------------------
+        $this->client->request('GET', '/sortie/');
+        $this->assertResponseIsSuccessful();
+
+        dump('✅ Étape 4 : Liste des sorties accessible');
+
+        // -------------------------------------------------------
+        // ÉTAPE 5 : Inscription à une sortie
+        // -------------------------------------------------------
+//        $sortie = $this->em->getRepository(\App\Entity\Sortie::class)->findOneBy([]);
+//
+//        if ($sortie) {
+//            // Visiter la page de la sortie pour initialiser la session et récupérer le token
+//            $crawler = $this->client->request('GET', '/sortie/' . $sortie->getId());
+//            // La route d'inscription retourne du JSON, pas une redirection
+//            $this->assertResponseIsSuccessful();
+//
+//            $responseData = json_decode($this->client->getResponse()->getContent(), true);
+//            $this->assertTrue($responseData['success']);
+//            $this->assertTrue($responseData['registered']);
+//
+//            dump('✅ Étape 5 : Inscription à une sortie réussie - ' . $responseData['message']);
+//        } else {
+//            dump('⚠️ Étape 5 : Aucune sortie disponible en BDD de test');
+//        }
     }
 }

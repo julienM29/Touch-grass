@@ -224,6 +224,6 @@
             Supprimer mon compte
         </div>
 {% include 'layout/fragments/modals/profil-delete-account.html.twig' with {
-    confirm_path: path('admin_user_delete', { id: app.user.id }) } %}
+    confirm_path: path('participant_delete_account', { id: app.user.id }) } %}
     {% endif %}
 {% endblock %}
