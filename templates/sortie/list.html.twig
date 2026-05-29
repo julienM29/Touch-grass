@@ -11,7 +11,9 @@
 {% block main %}
     <h1>Liste des sorties</h1>
 
-    {% include 'sortie/_filter_form.html.twig' %}
+    {% if app.user %}
+        {% include 'sortie/_filter_form.html.twig' %}
+    {% endif %}
 
     <hr>
 
@@ -62,7 +64,8 @@
 
 
         {% if is_granted('ROLE_ADMIN') %}
-            <form method="post" action="{{ path('sortie_reset') }}" onsubmit="return confirm('Attention : toutes les données vont être supprimées. Continuer ?');">
+            <form method="post" action="{{ path('sortie_reset') }}"
+                  onsubmit="return confirm('Attention : toutes les données vont être supprimées. Continuer ?');">
                 <input type="hidden" name="_token" value="{{ csrf_token('reset_data') }}">
                 <button type="submit" class="btn">
                     Réinitialiser toutes les données

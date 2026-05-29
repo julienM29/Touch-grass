@@ -29,7 +29,7 @@ final class SortieController extends AbstractController
      */
     public function __construct(
         SortieRepository $sortieRepository,
-        SiteRepository $siteRepository)
+        SiteRepository   $siteRepository)
     {
         $this->sortieRepository = $sortieRepository;
         $this->siteRepository = $siteRepository;
@@ -38,14 +38,12 @@ final class SortieController extends AbstractController
 
     #[Route('/', name: '', methods: ['GET'])]
     public function list(
-        Request $request,
+        Request                $request,
         EntityManagerInterface $em
     ): Response
     {
-        $filterForm = $this->createForm(FilterForm::class);
-
         $defaultFilters = new FilterDto(
-            $this->getUser()?->getSite()?->getId(),
+            $this->getUser()?->getSite(),
             null,
             new \DateTime(),
             null,
@@ -55,7 +53,13 @@ final class SortieController extends AbstractController
             false
         );
 
-        $sorties = $this->sortieRepository->findFilteredSorties($defaultFilters, $this->getUser()->getId());
+        $filterForm = $this->createForm(FilterForm::class, $defaultFilters);
+
+        if ($this->getUser()){
+            $sorties = $this->sortieRepository->findFilteredSorties($defaultFilters, $this->getUser()->getId());
+        } else {
+            $sorties = $this->sortieRepository->findAllActiveSorties();
+        }
         $sites = $this->siteRepository->findAll();
 
         return $this->render('sortie/list.html.twig',[
@@ -68,9 +72,9 @@ final class SortieController extends AbstractController
 
     #[Route('/create', name: '_create', methods: ['GET', 'POST'])]
     public function create(
-        Request $request,
+        Request                $request,
         EntityManagerInterface $em,
-        ImageLoader $imageLoader
+        ImageLoader            $imageLoader
     ): Response
     {
         $organisateur = $this->getUser();
@@ -104,7 +108,7 @@ final class SortieController extends AbstractController
 
     #[Route('/reset', name: '_reset', methods: ['POST'])]
     public function resetData(
-        Request $request,
+        Request            $request,
         InitializerService $initializerService,
     ): Response
     {
@@ -123,7 +127,7 @@ final class SortieController extends AbstractController
 
     #[Route('/{id}', name: '_show', methods: ['GET'])]
     public function show(
-        int $id,
+        int                    $id,
         EntityManagerInterface $em,
     ): Response
     {

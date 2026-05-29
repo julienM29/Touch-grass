@@ -1,13 +1,13 @@
 <?php
 
 namespace App\Dto;
+
+use App\Entity\Site;
 use DateTime;
 
 class FilterDto
 {
-
-
-    public ?string $site = null;
+    public ?Site $site = null;
     public ?string $word = null;
     public ?DateTime $dateMin = null;
     public ?DateTime $dateMax = null;
@@ -16,18 +16,16 @@ class FilterDto
     public ?bool $notRegistered = null;
     public ?bool $finished = null;
 
-    /**
-     * @param string|null $site
-     * @param string|null $word
-     * @param DateTime|null $dateMin
-     * @param DateTime|null $dateMax
-     * @param bool|null $organisateur
-     * @param bool|null $registered
-     * @param bool|null $notRegistered
-     * @param bool|null $finished
-     */
-    public function __construct(?string $site, ?string $word, ?DateTime $dateMin, ?DateTime $dateMax, ?bool $organisateur, ?bool $registered, ?bool $notRegistered, ?bool $finished)
-    {
+    public function __construct(
+        ?Site $site = null,
+        ?string $word = null,
+        ?DateTime $dateMin = null,
+        ?DateTime $dateMax = null,
+        ?bool $organisateur = null,
+        ?bool $registered = null,
+        ?bool $notRegistered = null,
+        ?bool $finished = null
+    ) {
         $this->site = $site;
         $this->word = $word;
         $this->dateMin = $dateMin;
