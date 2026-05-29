@@ -37,7 +37,7 @@ class Sortie
     #[ORM\Column]
     private ?\DateTime $dateOuvertureInscription = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -163,7 +163,7 @@ class Sortie
         return $this->image;
     }
 
-    public function setImage(string $image): static
+    public function setImage(?string $image): static
     {
         $this->image = $image;
 
@@ -274,8 +274,11 @@ class Sortie
     {
         $now = new \DateTime();
 
-        return $this->dateOuvertureInscription <= $now
-            && $this->dateLimiteInscription >= $now
+        $ouverture = (clone $this->dateOuvertureInscription)->setTime(0, 0, 0);
+        $limite = (clone $this->dateLimiteInscription)->setTime(23, 59, 59);
+
+        return $ouverture <= $now
+            && $limite >= $now
             && $this->dateHeureDebut > $now;
     }
 
